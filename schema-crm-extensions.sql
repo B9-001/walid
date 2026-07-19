@@ -334,3 +334,50 @@ begin
   return v_result;
 end;
 $$;
+
+-- ── Storage buckets ──────────────────────────────────────────────────────
+-- Automates SETUP-GUIDE.md Step 3 (previously a manual dashboard task).
+-- Write-only RLS: public buckets already serve objects by direct URL without
+-- a SELECT policy, and the app only ever uploads then builds the URL itself
+-- (lib/upload.ts) — it never lists bucket contents. A broad SELECT policy
+-- would let anyone enumerate every uploaded file, so it's deliberately
+-- omitted (see Supabase's "Public Bucket Allows Listing" advisor).
+insert into storage.buckets (id, name, public)
+values ('diamond-products', 'diamond-products', true)
+on conflict (id) do nothing;
+
+insert into storage.buckets (id, name, public)
+values ('diamond-hero', 'diamond-hero', true)
+on conflict (id) do nothing;
+
+drop policy if exists diamond_products_bucket_all on storage.objects;
+drop policy if exists diamond_hero_bucket_all on storage.objects;
+
+drop policy if exists diamond_products_bucket_write on storage.objects;
+create policy diamond_products_bucket_write on storage.objects
+  for insert with check (bucket_id = 'diamond-products');
+drop policy if exists diamond_products_bucket_update on storage.objects;
+create policy diamond_products_bucket_update on storage.objects
+  for update using (bucket_id = 'diamond-products') with check (bucket_id = 'diamond-products');
+drop policy if exists diamond_products_bucket_delete on storage.objects;
+create policy diamond_products_bucket_delete on storage.objects
+  for delete using (bucket_id = 'diamond-products');
+
+drop policy if exists diamond_hero_bucket_write on storage.objects;
+create policy diamond_hero_bucket_write on storage.objects
+  for insert with check (bucket_id = 'diamond-hero');
+drop policy if exists diamond_hero_bucket_update on storage.objects;
+create policy diamond_hero_bucket_update on storage.objects
+  for update using (bucket_id = 'diamond-hero') with check (bucket_id = 'diamond-hero');
+drop policy if exists diamond_hero_bucket_delete on storage.objects;
+create policy diamond_hero_bucket_delete on storage.objects
+  for delete using (bucket_id = 'diamond-hero');
+
+-- ── Lock down internal-only functions ───────────────────────────────────
+-- Postgres grants EXECUTE on new functions to PUBLIC by default. These three
+-- are never meant to be called directly by a client (only from a trigger, or
+-- from the CONTROL_PASSWORD-gated service-role route) — revoke the default
+-- grant so an anon-key holder can't call them straight over PostgREST.
+revoke execute on function public.diamond_analytics_summary(int) from anon, authenticated;
+revoke execute on function public.diamond_sync_customer_from_order() from anon, authenticated;
+revoke execute on function public.diamond_check_referral_reward(uuid) from anon, authenticated;
