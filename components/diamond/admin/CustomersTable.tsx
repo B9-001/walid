@@ -3,12 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import CustomerDetail from "./CustomerDetail";
+import type { Customer } from "@/lib/types";
 
 export default function CustomersTable() {
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<any | null>(null);
+  const [selected, setSelected] = useState<Customer | null>(null);
 
   const load = useCallback(() => {
     supabase
@@ -16,7 +17,7 @@ export default function CustomersTable() {
       .select("*")
       .order("created_at", { ascending: false })
       .then(({ data }) => {
-        if (data) setCustomers(data);
+        if (data) setCustomers(data as Customer[]);
         setLoading(false);
       });
   }, []);
@@ -31,7 +32,7 @@ export default function CustomersTable() {
   const shortDate = (d: string) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
   // Member = has an account; Customer = bought but no account; Lead = neither.
-  const acctTag = (c: any) =>
+  const acctTag = (c: Customer) =>
     c.user_id
       ? { label: "Member", cls: "bg-green-100 text-green-700" }
       : (c.orders_count ?? 0) > 0
@@ -59,7 +60,7 @@ export default function CustomersTable() {
       ) : visible.length === 0 ? (
         <div className="py-24 border-2 border-dashed border-brand-line rounded-2xl text-center">
           <p className="font-display text-2xl text-brand-dark/40">No customers yet.</p>
-          <p className="font-sans text-sm text-brand-grey mt-2">They'll appear here once they sign in.</p>
+          <p className="font-sans text-sm text-brand-grey mt-2">They&apos;ll appear here once they sign in.</p>
         </div>
       ) : (
         <div className="border border-brand-line rounded-2xl overflow-hidden bg-brand-light">

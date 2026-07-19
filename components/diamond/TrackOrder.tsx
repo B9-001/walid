@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { formatNaira } from "@/lib/format";
 import OrderStatus from "@/components/diamond/OrderStatus";
+import type { Order } from "@/lib/types";
 
 const statusBadge: Record<string, string> = {
   pending: "bg-amber-100 text-amber-700",
@@ -22,11 +23,11 @@ export default function TrackOrder() {
   const params = useSearchParams();
   const presetOrder = params.get("order") || "";
 
-  const [myOrders, setMyOrders] = useState<any[]>([]);
+  const [myOrders, setMyOrders] = useState<Order[]>([]);
   const [loadingMine, setLoadingMine] = useState(false);
 
   const [orderNo, setOrderNo] = useState(presetOrder);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<Order | null>(null);
   const [looking, setLooking] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,7 +40,7 @@ export default function TrackOrder() {
       .select("*")
       .or(`customer_id.eq.${user.id},customer_email.eq.${user.email}`)
       .order("created_at", { ascending: false })
-      .then(({ data }) => { setMyOrders(data || []); setLoadingMine(false); });
+      .then(({ data }) => { setMyOrders((data as Order[]) || []); setLoadingMine(false); });
   }, [user]);
 
   // Auto-open a specific order passed via ?order= (e.g. straight from checkout)
@@ -50,7 +51,7 @@ export default function TrackOrder() {
       .select("*")
       .eq("order_number", presetOrder.trim().toUpperCase())
       .maybeSingle()
-      .then(({ data }) => { if (data) setResult(data); });
+      .then(({ data }) => { if (data) setResult(data as Order); });
   }, [presetOrder]);
 
   const lookup = async (e: React.FormEvent) => {
@@ -67,7 +68,7 @@ export default function TrackOrder() {
       .select("*")
       .eq("order_number", num)
       .maybeSingle();
-    if (data) setResult(data);
+    if (data) setResult(data as Order);
     else setError("No order found with that ID. Please check and try again.");
     setLooking(false);
   };
@@ -111,7 +112,7 @@ export default function TrackOrder() {
             <div className="border-t border-brand-line mt-6 pt-6">
               <h3 className="font-display text-lg text-brand-dark mb-4">Summary</h3>
               <div className="space-y-3">
-                {(result.items || []).map((it: any, i: number) => (
+                {(result.items || []).map((it, i) => (
                   <div key={i} className="flex justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-sans text-sm font-semibold text-brand-dark">{it.name}</p>

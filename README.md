@@ -215,6 +215,23 @@ the Resend-backed edge functions).
 8. **Contact page** shows "Contact details coming soon" only when `diamond_site_settings` has no
    phone/email/WhatsApp/Instagram/pickup address filled in — this is a graceful empty state, not
    a bug; fill those fields in `/admin/settings`.
+9. **`npm run build` failed out of the box — fixed.** `tsconfig.json` type-checked the whole repo
+   including the dead `client/` scaffold, which imports packages that were never installed
+   (`drizzle-kit`, `wouter`, shadcn `sonner`/`tooltip`). Excluded the scaffold dirs/configs from
+   both `tsconfig.json` and `eslint.config.mjs`; verified with a clean production build afterward.
+10. **~170 `no-explicit-any` / lint errors — mostly cleared.** Added `Order`, `Coupon`, `Customer`,
+    `DeliveryFee`, and `HeroImage` to `lib/types.ts` and typed the admin dashboard, cart, and order
+    components against them instead of `any` (plus a shared `errorMessage()` helper in
+    `lib/format.ts` to replace the `catch (err: any) { alert(err.message) }` pattern). Verified
+    with `npm run build` after every batch — it caught two real nullability gaps this surfaced
+    (`Coupon.min_order_amount` and `Order.customer_phone` being optional) which are now handled
+    correctly instead of silently assumed non-null.
+    Left alone: ~26 `react-hooks/set-state-in-effect` warnings (a React Compiler-oriented rule
+    flagging the very common "fetch in `useEffect`, `setState` in the callback" pattern across
+    checkout, cart, auth, and admin) and ~39 `@next/next/no-img-element` warnings (suggesting
+    `next/image`). Neither blocks `npm run build`, neither is a functional bug, and "fixing" the
+    first properly means restructuring data-loading in high-traffic flows (cart, checkout, login)
+    without a live database to verify against — not a safe trade to make blind.
 
 ## 10. Setup
 

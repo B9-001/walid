@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { errorMessage } from "@/lib/format";
 
 export default function AdminSettings() {
   const [id, setId] = useState<string | null>(null);
@@ -57,8 +58,8 @@ export default function AdminSettings() {
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert(errorMessage(err));
     } finally {
       setSaving(false);
     }

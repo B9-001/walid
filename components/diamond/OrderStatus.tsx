@@ -18,7 +18,7 @@ export default function OrderStatus({
   method = "delivery",
 }: {
   status: string;
-  method?: "delivery" | "pickup";
+  method?: string;
 }) {
   if (status === "cancelled") {
     return (

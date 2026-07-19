@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { formatNaira } from "@/lib/format";
+import { formatNaira, errorMessage } from "@/lib/format";
 import { motion, AnimatePresence } from "framer-motion";
+import type { DeliveryFee } from "@/lib/types";
 
 const blank = () => ({ location: "", fee: 0, is_active: true });
 
 export default function AdminDelivery() {
-  const [fees, setFees] = useState<any[]>([]);
+  const [fees, setFees] = useState<DeliveryFee[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<any>(null);
+  const [editing, setEditing] = useState<DeliveryFee | null>(null);
   const [form, setForm] = useState(blank());
 
   useEffect(() => { fetchFees(); }, []);
@@ -28,7 +29,7 @@ export default function AdminDelivery() {
   }
 
   const openAdd = () => { setEditing(null); setForm(blank()); setOpen(true); };
-  const openEdit = (f: any) => {
+  const openEdit = (f: DeliveryFee) => {
     setEditing(f);
     setForm({ location: f.location, fee: f.fee, is_active: f.is_active });
     setOpen(true);
@@ -54,20 +55,20 @@ export default function AdminDelivery() {
       }
       setOpen(false);
       fetchFees();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert(errorMessage(err));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async (f: any) => {
+  const handleDelete = async (f: DeliveryFee) => {
     if (!window.confirm(`Remove delivery area "${f.location}"?`)) return;
     await supabase.from("diamond_delivery_fees").delete().eq("id", f.id);
     fetchFees();
   };
 
-  const toggleActive = async (f: any) => {
+  const toggleActive = async (f: DeliveryFee) => {
     await supabase.from("diamond_delivery_fees").update({ is_active: !f.is_active }).eq("id", f.id);
     fetchFees();
   };

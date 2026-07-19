@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import type { Coupon } from "./types";
 
 export type CouponResult = {
   valid: boolean;
@@ -29,11 +30,11 @@ async function categoriesFor(productIds: string[]): Promise<Record<string, strin
   if (!productIds.length) return {};
   const { data } = await supabase.from("diamond_products").select("product_id, category").in("product_id", productIds);
   const map: Record<string, string> = {};
-  (data || []).forEach((p: any) => { map[p.product_id] = p.category; });
+  (data || []).forEach((p: { product_id: string; category: string }) => { map[p.product_id] = p.category; });
   return map;
 }
 
-function computeDiscount(c: any, baseKobo: number): number {
+function computeDiscount(c: Coupon, baseKobo: number): number {
   let discount: number;
   if (c.discount_type === "percentage") {
     discount = Math.round((baseKobo * Number(c.discount_value)) / 100);
@@ -126,7 +127,7 @@ export async function getAvailableVouchers(
   const cats = items.length ? await categoriesFor(items.map((l) => l.product_id)) : {};
   const now = new Date(new Date().toDateString());
 
-  return data.map((c: any) => {
+  return (data as Coupon[]).map((c) => {
     let blockedBy: AvailableVoucher["blockedBy"] = null;
     let reason = "";
 

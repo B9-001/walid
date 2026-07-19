@@ -8,11 +8,12 @@ import { supabase } from "@/lib/supabase";
 import { formatNaira } from "@/lib/format";
 import OrderStatus from "@/components/diamond/OrderStatus";
 import { fbTrack } from "@/lib/fbpixel";
+import type { Order } from "@/lib/types";
 
 export default function OrderSuccess() {
   const params = useSearchParams();
   const orderNumber = params.get("order") || "";
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export default function OrderSuccess() {
       .eq("order_number", orderNumber)
       .maybeSingle()
       .then(({ data }) => {
-        setOrder(data);
+        setOrder(data as Order | null);
         setLoading(false);
       });
   }, [orderNumber]);
@@ -40,7 +41,7 @@ export default function OrderSuccess() {
       {
         value: (order.total_price || 0) / 100, // kobo -> NGN
         currency: "NGN",
-        num_items: (order.items || []).reduce((n: number, i: any) => n + (i.quantity || 0), 0),
+        num_items: (order.items || []).reduce((n, i) => n + (i.quantity || 0), 0),
       },
       {
         eventId: `purchase_${order.order_number}`,
@@ -98,7 +99,7 @@ export default function OrderSuccess() {
         <div className="mt-6 bg-brand-light border border-brand-line rounded-2xl p-6 text-left">
           <h2 className="font-display text-xl text-brand-dark mb-4">Order summary</h2>
           <div className="space-y-3">
-            {(order.items || []).map((it: any, i: number) => (
+            {(order.items || []).map((it, i) => (
               <div key={i} className="flex justify-between gap-3">
                 <div className="min-w-0">
                   <p className="font-sans text-sm font-semibold text-brand-dark">{it.name}</p>

@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { formatNaira, formatDate } from "@/lib/format";
+import type { Order } from "@/lib/types";
 
 export default function AdminOverview() {
   const [stats, setStats] = useState({ products: 0, orders: 0, pending: 0, revenue: 0 });
-  const [recent, setRecent] = useState<any[]>([]);
+  const [recent, setRecent] = useState<Order[]>([]);
 
   useEffect(() => {
     async function load() {
@@ -18,14 +19,14 @@ export default function AdminOverview() {
         supabase.from("diamond_orders").select("total_price").eq("payment_status", "paid"),
         supabase.from("diamond_orders").select("*").order("created_at", { ascending: false }).limit(5),
       ]);
-      const revenue = (paidOrders.data || []).reduce((s, o: any) => s + (o.total_price || 0), 0);
+      const revenue = (paidOrders.data || []).reduce((s, o) => s + (o.total_price || 0), 0);
       setStats({
         products: products.count || 0,
         orders: orders.count || 0,
         pending: pending.count || 0,
         revenue,
       });
-      setRecent(recentOrders.data || []);
+      setRecent((recentOrders.data as Order[]) || []);
     }
     load();
   }, []);

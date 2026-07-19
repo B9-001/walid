@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
-import { formatNaira } from "@/lib/format";
+import { formatNaira, errorMessage } from "@/lib/format";
+import type { Coupon } from "@/lib/types";
 
 const blank = () => ({
   code: "",
@@ -24,18 +25,18 @@ const blank = () => ({
 });
 
 export default function AdminCoupons() {
-  const [coupons, setCoupons] = useState<any[]>([]);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<any>(null);
+  const [editing, setEditing] = useState<Coupon | null>(null);
   const [form, setForm] = useState(blank());
 
   useEffect(() => {
     fetchCoupons();
     supabase.from("diamond_categories").select("name").order("sort_order").then(({ data }) => {
-      if (data) setCategories(data.map((c: any) => c.name));
+      if (data) setCategories(data.map((c: { name: string }) => c.name));
     });
   }, []);
 
@@ -47,7 +48,7 @@ export default function AdminCoupons() {
   }
 
   const openAdd = () => { setEditing(null); setForm(blank()); setOpen(true); };
-  const openEdit = (c: any) => {
+  const openEdit = (c: Coupon) => {
     setEditing(c);
     setForm({
       code: c.code,
@@ -99,20 +100,20 @@ export default function AdminCoupons() {
       }
       setOpen(false);
       fetchCoupons();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert(errorMessage(err));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async (c: any) => {
+  const handleDelete = async (c: Coupon) => {
     if (!window.confirm(`Delete coupon ${c.code}?`)) return;
     await supabase.from("diamond_coupons").delete().eq("id", c.id);
     fetchCoupons();
   };
 
-  const toggleActive = async (c: any) => {
+  const toggleActive = async (c: Coupon) => {
     await supabase.from("diamond_coupons").update({ is_active: !c.is_active }).eq("id", c.id);
     fetchCoupons();
   };
@@ -143,7 +144,7 @@ export default function AdminCoupons() {
                 <span className="font-sans text-sm font-bold text-brand-plum">{c.discount_type === "percentage" ? `${c.discount_value}%` : formatNaira(c.discount_value)}</span>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-[11px] text-brand-grey">
-                {c.min_order_amount > 0 && <span>Min {formatNaira(c.min_order_amount)}</span>}
+                {!!c.min_order_amount && c.min_order_amount > 0 && <span>Min {formatNaira(c.min_order_amount)}</span>}
                 {c.usage_limit && <span>Used {c.usage_count}/{c.usage_limit}</span>}
                 {!c.usage_limit && <span>Used {c.usage_count}×</span>}
                 {c.expiry_date && <span>Exp {c.expiry_date}</span>}
@@ -181,7 +182,7 @@ export default function AdminCoupons() {
                 <CLabel l="Description"><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary" /></CLabel>
                 <div className="grid grid-cols-2 gap-3">
                   <CLabel l="Type">
-                    <select value={form.discount_type} onChange={(e) => setForm({ ...form, discount_type: e.target.value as any })} className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary">
+                    <select value={form.discount_type} onChange={(e) => setForm({ ...form, discount_type: e.target.value as "percentage" | "fixed" })} className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary">
                       <option value="percentage">Percentage (%)</option>
                       <option value="fixed">Fixed (₦)</option>
                     </select>

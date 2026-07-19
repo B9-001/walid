@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { errorMessage } from "@/lib/format";
 
 type Summary = {
   range_days: number;
@@ -43,8 +44,9 @@ export default function ControlCenter() {
       setData(json.data);
       localStorage.setItem(PW_KEY, k);
       setAuthed(true);
-    } catch (e: any) {
-      setErr(e.message === "unauthorized" ? "Wrong password" : e.message);
+    } catch (e) {
+      const msg = errorMessage(e);
+      setErr(msg === "unauthorized" ? "Wrong password" : msg);
       setAuthed(false);
     } finally { setLoading(false); }
   }, []);

@@ -6,6 +6,9 @@ import { useCart } from "@/lib/cart";
 import { supabase } from "@/lib/supabase";
 import { formatNaira } from "@/lib/format";
 import { isQuickAdd } from "@/lib/product";
+import type { Product } from "@/lib/types";
+
+type SuggestionProduct = Pick<Product, "id" | "product_id" | "name" | "image_url" | "base_price" | "sizes" | "stock_level">;
 
 // Quick-add suggestions. When `gap` > 0, items that would close the gap (e.g.
 // reach the free-delivery threshold) are surfaced first and badged.
@@ -19,7 +22,7 @@ export default function CartSuggestions({
   note?: string;
 }) {
   const { items, addItem } = useCart();
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<SuggestionProduct[]>([]);
 
   useEffect(() => {
     supabase
@@ -29,7 +32,7 @@ export default function CartSuggestions({
       .gt("base_price", 0)
       .order("base_price", { ascending: true })
       .limit(20)
-      .then(({ data }) => setProducts((data || []).filter((p: any) => isQuickAdd(p))));
+      .then(({ data }) => setProducts(((data as SuggestionProduct[]) || []).filter((p) => isQuickAdd(p))));
   }, []);
 
   const cartIds = new Set(items.map((it) => it.product_id));

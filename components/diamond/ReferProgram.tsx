@@ -99,7 +99,7 @@ export default function ReferProgram() {
           {rewardCode && (
             <div className="bg-brand-primary/5 border border-brand-primary/30 rounded-3xl p-6 text-center">
               <p className="font-display text-2xl text-brand-dark">🍰 Free milk cake unlocked!</p>
-              <p className="font-sans text-sm text-brand-grey mt-1">Use this code at checkout (it's in your vouchers too):</p>
+              <p className="font-sans text-sm text-brand-grey mt-1">Use this code at checkout (it&apos;s in your vouchers too):</p>
               <p className="font-display text-3xl text-brand-primary tracking-wide mt-3">{rewardCode}</p>
             </div>
           )}

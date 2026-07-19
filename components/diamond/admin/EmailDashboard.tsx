@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { errorMessage } from "@/lib/format";
 
 // Live view of the Resend-based email system: tiers + pipeline, the AI broadcast queue (each email
 // expandable to read the FULL email + the AI's logged reasoning; sent ones show that reasoning against
@@ -110,7 +111,7 @@ export default function EmailDashboard() {
       const d = await res.json();
       if (!res.ok) { setErr(d.error || "Couldn't load."); return; }
       setData(d);
-    } catch (e: any) { setErr(e.message || "Failed."); }
+    } catch (e) { setErr(errorMessage(e, "Failed.")); }
     finally { setLoading(false); }
   };
   useEffect(() => { load(); }, []);

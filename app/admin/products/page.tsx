@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { compressImage, getPublicUrl } from "@/lib/upload";
-import { formatNaira } from "@/lib/format";
+import { formatNaira, errorMessage } from "@/lib/format";
 import type { Product, Category } from "@/lib/types";
 
 type FormState = {
@@ -109,8 +109,8 @@ export default function AdminProducts() {
     try {
       const url = await uploadOne(file);
       setForm((f) => ({ ...f, image_url: url }));
-    } catch (err: any) {
-      alert(err.message || "Upload failed");
+    } catch (err) {
+      alert(errorMessage(err, "Upload failed"));
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -130,8 +130,8 @@ export default function AdminProducts() {
         }
         return { ...f, images: [...f.images, ...urls] };
       });
-    } catch (err: any) {
-      alert(err.message || "Upload failed");
+    } catch (err) {
+      alert(errorMessage(err, "Upload failed"));
     } finally {
       setUploading(false);
       if (galleryRef.current) galleryRef.current.value = "";
@@ -177,8 +177,8 @@ export default function AdminProducts() {
       }
       setOpen(false);
       fetchAll();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert(errorMessage(err));
     } finally {
       setSaving(false);
     }

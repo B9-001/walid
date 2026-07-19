@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
 import { cartPath } from "@/lib/offer";
+import type { User } from "@supabase/supabase-js";
 
 const links = [
   { href: "/shop", label: "Shop" },
@@ -185,7 +186,7 @@ export default function Navbar() {
   );
 }
 
-function UserButton({ user, openLogin, openProfile }: { user: any; openLogin: () => void; openProfile: () => void }) {
+function UserButton({ user, openLogin, openProfile }: { user: User | null; openLogin: () => void; openProfile: () => void }) {
   if (!user) {
     return (
       <button

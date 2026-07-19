@@ -20,8 +20,11 @@ import {
   UPGRADE_PRICE,
   UPGRADE_PRODUCT_ID,
 } from "@/lib/bundles";
+import type { Product } from "@/lib/types";
 
 const COUPON_KEY = "diamond_coupon";
+
+type SuggestionProduct = Pick<Product, "product_id" | "name" | "image_url" | "base_price">;
 
 export default function CartView() {
   const { items, subtotal, updateQty, removeItem, addItem, reconcile, ready } = useCart();
@@ -37,7 +40,7 @@ export default function CartView() {
   const [vouchersOpen, setVouchersOpen] = useState(false);
   const [vouchers, setVouchers] = useState<AvailableVoucher[]>([]);
   const [loadingVouchers, setLoadingVouchers] = useState(true);
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<SuggestionProduct[]>([]);
 
   const couponCtx = { userId: user?.id ?? null, email: user?.email ?? null };
   const cartLines = items.map((it) => ({ product_id: it.product_id, price: it.price, quantity: it.quantity }));
@@ -62,7 +65,7 @@ export default function CartView() {
       .gt("base_price", 0)
       .order("base_price", { ascending: true })
       .limit(12)
-      .then(({ data }) => setSuggestions(data || []));
+      .then(({ data }) => setSuggestions((data as SuggestionProduct[]) || []));
   }, []);
 
   // The closest voucher the customer can unlock by spending a little more
@@ -167,7 +170,7 @@ export default function CartView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [suggestions, items, gap]);
 
-  const addSuggestion = (p: any) => {
+  const addSuggestion = (p: SuggestionProduct) => {
     addItem({ product_id: p.product_id, name: p.name, image: p.image_url, price: p.base_price });
   };
 

@@ -1,5 +1,11 @@
 // Shared display helpers — money is stored in KOBO (₦ × 100).
 
+export function errorMessage(err: unknown, fallback = "Something went wrong."): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  return fallback;
+}
+
 export function formatNaira(kobo: number, opts?: { showZero?: boolean }): string {
   if (!kobo || kobo <= 0) return opts?.showZero ? "₦0" : "₦0";
   const naira = kobo / 100;

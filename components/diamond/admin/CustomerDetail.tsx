@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { formatNaira } from "@/lib/format";
+import { formatNaira, errorMessage } from "@/lib/format";
 import { tagInfo } from "@/lib/segments";
+import type { Customer, Order } from "@/lib/types";
+
+type EmailLogRow = { subject: string | null; type: string; sent_at: string };
 
 const STAGES = [
   { id: "lead", label: "Lead" },
@@ -14,9 +17,9 @@ const STAGES = [
   { id: "lapsed", label: "Lapsed" },
 ];
 
-export default function CustomerDetail({ customer, onClose, onUpdated }: { customer: any; onClose: () => void; onUpdated: () => void }) {
-  const [orders, setOrders] = useState<any[]>([]);
-  const [sends, setSends] = useState<any[]>([]);
+export default function CustomerDetail({ customer, onClose, onUpdated }: { customer: Customer; onClose: () => void; onUpdated: () => void }) {
+  const [orders, setOrders] = useState<Pick<Order, "order_number" | "status" | "total_price" | "created_at">[]>([]);
+  const [sends, setSends] = useState<EmailLogRow[]>([]);
   const [stage, setStage] = useState<string>(customer.lifecycle_stage || "lead");
   const [savingStage, setSavingStage] = useState(false);
 
@@ -79,7 +82,7 @@ export default function CustomerDetail({ customer, onClose, onUpdated }: { custo
       const data = await res.json();
       setMailMsg(res.ok && data.ok ? `✓ Sent to ${customer.email}.` : (data.error || "Send failed."));
       if (res.ok && data.ok) setShowCompose(false);
-    } catch (e: any) { setMailMsg(e.message || "Send failed."); }
+    } catch (e) { setMailMsg(errorMessage(e, "Send failed.")); }
     finally { setSending(false); }
   };
 

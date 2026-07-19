@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { compressImage, getPublicUrl } from "@/lib/upload";
+import { errorMessage } from "@/lib/format";
 import type { Category } from "@/lib/types";
 
 const blank = () => ({ name: "", slug: "", description: "", image_url: null as string | null, sort_order: 0 });
@@ -44,8 +45,8 @@ export default function AdminCategories() {
       const { error } = await supabase.storage.from("diamond-products").upload(fileName, compressed);
       if (error) throw error;
       setForm((f) => ({ ...f, image_url: getPublicUrl("diamond-products", fileName) }));
-    } catch (err: any) {
-      alert(err.message || "Upload failed");
+    } catch (err) {
+      alert(errorMessage(err, "Upload failed"));
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -67,8 +68,8 @@ export default function AdminCategories() {
       }
       setOpen(false);
       fetchCategories();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert(errorMessage(err));
     } finally {
       setSaving(false);
     }

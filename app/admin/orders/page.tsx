@@ -6,14 +6,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatNaira, formatDate } from "@/lib/format";
 import { formatPreorderDate } from "@/lib/product";
 import { getBundle } from "@/lib/bundles";
+import type { Order, OrderItem } from "@/lib/types";
 
 const STATUSES = ["pending", "confirmed", "baking", "ready", "completed", "cancelled"];
 
+type BundleGroupItem = OrderItem & { label?: string };
+
 // Split order items into bundle groups (by bundle slug) + loose single items so
 // the admin sees exactly which bundle was bought and what's inside it.
-function groupOrderItems(items: any[]) {
-  const bundles: Record<string, { slug: string; name: string; components: any[]; subtotal: number }> = {};
-  const singles: any[] = [];
+function groupOrderItems(items: BundleGroupItem[]) {
+  const bundles: Record<string, { slug: string; name: string; components: BundleGroupItem[]; subtotal: number }> = {};
+  const singles: BundleGroupItem[] = [];
   for (const it of items || []) {
     if (it?.bundle) {
       const name = getBundle(it.bundle)?.name || it.bundle;
@@ -39,11 +42,11 @@ const statusColor: Record<string, string> = {
 };
 
 export default function AdminOrders() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<Order | null>(null);
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -57,7 +60,7 @@ export default function AdminOrders() {
   async function updateStatus(id: string, status: string) {
     await supabase.from("diamond_orders").update({ status, updated_at: new Date().toISOString() }).eq("id", id);
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
-    setSelected((s: any) => (s && s.id === id ? { ...s, status } : s));
+    setSelected((s) => (s && s.id === id ? { ...s, status } : s));
   }
 
   const visible = orders.filter((o) => {
@@ -112,7 +115,7 @@ export default function AdminOrders() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="font-sans text-sm font-semibold text-brand-dark truncate">{o.customer_name}</p>
-                  {(o.items || []).some((it: any) => it?.bundle) && (
+                  {(o.items || []).some((it) => it?.bundle) && (
                     <span className="shrink-0 text-[8px] font-bold uppercase tracking-widest bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">🎁 Bundle</span>
                   )}
                 </div>
@@ -209,7 +212,7 @@ export default function AdminOrders() {
                               <span className="font-sans text-[13px] font-semibold text-brand-plum whitespace-nowrap">{formatNaira(b.subtotal)}</span>
                             </div>
                             <div className="space-y-1.5 pl-1">
-                              {b.components.map((c: any, i: number) => (
+                              {b.components.map((c, i) => (
                                 <div key={i} className="flex items-center gap-2.5">
                                   <div className="w-8 h-8 rounded-md overflow-hidden bg-brand-blush shrink-0">{c.image && <img src={c.image} alt="" className="w-full h-full object-cover" />}</div>
                                   <p className="flex-1 min-w-0 font-sans text-[12px] text-brand-dark">{c.label} ×{c.quantity}</p>
@@ -220,7 +223,7 @@ export default function AdminOrders() {
                         ))}
 
                         {/* Regular single items */}
-                        {singles.map((it: any, i: number) => (
+                        {singles.map((it, i) => (
                           <div key={i} className="flex gap-3 bg-brand-light border border-brand-line rounded-xl p-3">
                             <div className="w-12 h-12 rounded-lg overflow-hidden bg-brand-blush shrink-0">{it.image && <img src={it.image} alt="" className="w-full h-full object-cover" />}</div>
                             <div className="flex-1 min-w-0">
@@ -255,7 +258,7 @@ export default function AdminOrders() {
   );
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null;
   return (
     <div className="flex justify-between gap-3">

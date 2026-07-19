@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
 import { compressImage, getPublicUrl } from "@/lib/upload";
+import { errorMessage } from "@/lib/format";
+import type { HeroImage } from "@/lib/types";
 
 export default function AdminHero() {
-  const [slides, setSlides] = useState<any[]>([]);
+  const [slides, setSlides] = useState<HeroImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [replacingId, setReplacingId] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function AdminHero() {
       const { error } = await supabase.from("diamond_hero_images").insert([{ image_url, order_index: slides.length }]);
       if (error) throw error;
       fetchSlides();
-    } catch (err: any) { alert(err.message || "Upload failed"); }
+    } catch (err) { alert(errorMessage(err, "Upload failed")); }
     finally { setUploading(false); if (addRef.current) addRef.current.value = ""; }
   };
 
@@ -52,7 +54,7 @@ export default function AdminHero() {
       const { error } = await supabase.from("diamond_hero_images").update({ image_url }).eq("id", replacingId);
       if (error) throw error;
       fetchSlides();
-    } catch (err: any) { alert(err.message || "Replace failed"); }
+    } catch (err) { alert(errorMessage(err, "Replace failed")); }
     finally { setUploading(false); setReplacingId(null); if (replaceRef.current) replaceRef.current.value = ""; }
   };
 
