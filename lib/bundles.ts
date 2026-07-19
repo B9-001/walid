@@ -86,14 +86,27 @@ export const UPGRADE_MIN = 1_500_000;               // ₦15,000 threshold
 export const UPGRADE_PRICE = 50_000;                // ₦500
 export const UPGRADE_PRODUCT_ID = "classic-pancake-stack";
 
+// ── The Pufflette Duo Box — fixed combo promo, no picker ────────────────────
+// A single named product (create it in /admin/products with this exact
+// product_id) rather than a `bundle` cart line: the picker-based bundles
+// above need every component to be a real live product so reconcile() can
+// validate it, but a Duo Box is one fixed SKU — it just needs to exist.
+// Price/old_price/image/stock are read live from that product; the
+// marketing copy (composition, badges) is fixed in DuoBoxSection.tsx.
+export const DUO_BOX_PRODUCT_ID = "the-pufflette-duo-box"; // = the auto-slug of the product name "The Pufflette Duo Box"
+export const DUO_BOX_COMPARE_AT_KOBO = 1_599_800; // ₦15,998 — fallback if old_price isn't set
+
 // ── Cart helpers ────────────────────────────────────────────────────────────
 
 export function isBundleLine(it: CartItem): boolean {
   return !!it.bundle;
 }
 
+// The Duo Box isn't a `bundle` cart line (see above) but gets the same
+// free-delivery + no-coupon-stacking treatment as a real bundle — it's
+// already a fixed combo deal.
 export function hasBundle(items: CartItem[]): boolean {
-  return items.some((it) => !!it.bundle);
+  return items.some((it) => !!it.bundle || it.product_id === DUO_BOX_PRODUCT_ID);
 }
 
 // Sum of the real prices of a set of picked components (kobo).

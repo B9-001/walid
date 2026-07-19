@@ -23,15 +23,19 @@ export default function About() {
         >
           <span className="eyebrow">Our story</span>
           <h2 className="font-display text-4xl md:text-5xl text-brand-dark leading-tight mt-4">
-            Baked fresh, <span className="italic text-brand-primary">made with love</span>
+            Golden, fluffy, <span className="italic text-brand-primary">made with love</span>
           </h2>
           <p className="text-brand-dark/70 leading-relaxed mt-6">
-            thepufflette.co is a boutique kitchen crafting gourmet puff puff and
-            fluffy pancakes. Every order is made fresh and with care, just for you.
+            We believe the best things in life are golden, fluffy, and made with love.
           </p>
           <p className="text-brand-dark/70 leading-relaxed mt-4">
-            Browse the menu, add your favourites to the cart, and check out in minutes. We handle
-            the cooking, you enjoy the treat.
+            At The Pufflette Co, every puff puff is hand-rolled and every pancake is poured
+            fresh — no shortcuts, no rush. Just real ingredients, rich flavor, and that
+            unmistakable creamy goodness in every bite.
+          </p>
+          <p className="text-brand-dark/70 leading-relaxed mt-4">
+            What started as a passion for getting it right has grown into a promise:
+            you&rsquo;ll never have a boring bite here.
           </p>
 
           <div className="mt-10 grid grid-cols-3 gap-6">
@@ -64,7 +68,7 @@ export default function About() {
             </div>
             <div className="relative">
               <p className="font-display italic text-2xl md:text-3xl leading-snug text-brand-light/90">
-                &ldquo;Every bite tells a story. Let&rsquo;s make yours unforgettable.&rdquo;
+                &ldquo;Taste the difference, taste thepufflette.co.&rdquo;
               </p>
               <div className="mt-6 h-px w-16 bg-brand-light/30" />
               <p className="mt-4 text-[11px] tracking-[0.2em] uppercase text-brand-light/60">
