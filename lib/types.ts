@@ -66,7 +66,7 @@ export type CartItem = {
   // bundle: `price` is the fixed bundle price and `product_id` is a synthetic
   // per-instance id so two differently-picked boxes never merge.
   bundle?: BundleMeta;
-  // The ₦500 Classic Milkcake upgrade line. product_id is the real slug; it never
+  // The ₦500 Classic Pancake Stack upgrade line. product_id is the real slug; it never
   // merges with a full-price line of the same product.
   upgrade?: boolean;
   // Real value (kobo) of this line for savings display (upgrade lines). Bundles
@@ -81,7 +81,7 @@ export type OrderItem = {
   price: number; // kobo, unit price
   quantity: number;
   bundle?: string; // bundle slug, set when this line came from a Build-Your-Box bundle
-  upgrade?: boolean; // the ₦500 Classic Milkcake upgrade line
+  upgrade?: boolean; // the ₦500 Classic Pancake Stack upgrade line
   preorder_release_at?: string | null;
 };
 

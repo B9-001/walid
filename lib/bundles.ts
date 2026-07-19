@@ -1,9 +1,9 @@
-// Build-Your-Box bundle offers (Diamond Taste).
+// Build-Your-Box bundle offers (thepufflette.co).
 //
 // Two "build your own" bundles + one add-on upgrade. Money is kobo everywhere.
 // Every bundle INCLUDES FREE DELIVERY, and coupons NEVER apply while a bundle is
 // in the cart — see BUNDLE-OFFERS-PLAN.md.
-//   • Sweet Box  — pick any 3 from our milkcakes, cake tubs & cheesecakes, pay the
+//   • Sweet Box  — pick any 3 from our gourmet pancakes & puff puff, pay the
 //                  picked items' price, free delivery is the perk (payItemPrice: no discount).
 //   • Box of 5   — pick any 5 for a fixed ₦25,500 (save up to ₦4,500) + free delivery.
 // Bundles are stored as a single cart line carrying `bundle.components` (real
@@ -47,11 +47,11 @@ export const BUNDLES: BundleConfig[] = [
     priceKobo: 0,          // dynamic — you pay the picked items' price
     payItemPrice: true,
     image: "/bundles/sweet-box.jpg",
-    blurb: "Pick any 3 of our milkcakes, cake tubs & cheesecakes and we deliver them free — no ₦20,000 minimum.",
+    blurb: "Pick any 3 of our gourmet pancakes & puff puff and we deliver them free — no ₦20,000 minimum.",
     worthUpToKobo: 2_100_000, // 3 × ₦7,000 (priciest picks)
     saveUpToKobo: 0,          // free delivery is the deal, not a product discount
     fromKobo: 1_350_000,      // 3 × ₦4,500 (cheapest picks)
-    poolCategories: ["Cake Tubs", "Milkcakes", "Cheesecakes"],
+    poolCategories: ["Gourmet Puff Puff", "Gourmet Pancakes"],
     floorGuard: false,
   },
   {
@@ -61,11 +61,10 @@ export const BUNDLES: BundleConfig[] = [
     picks: 5,
     priceKobo: 2_550_000, // ₦25,500
     image: "/bundles/box-of-5.jpg",
-    blurb: "Any five cake tubs & milkcakes for ₦25,500 — save up to ₦4,500, delivered free.",
+    blurb: "Any five gourmet puff puff & pancakes for ₦25,500 — save up to ₦4,500, delivered free.",
     worthUpToKobo: 3_000_000, // 5 × ₦6,000
     saveUpToKobo: 450_000,    // up to ₦4,500
-    poolCategories: ["Cake Tubs", "Milkcakes"],
-    excludeSlugs: ["london-chocolate-fudge-tub"],
+    poolCategories: ["Gourmet Puff Puff", "Gourmet Pancakes"],
     floorGuard: true,
   },
 ];
@@ -82,10 +81,10 @@ export function inPool(cfg: BundleConfig, p: { product_id: string; category: str
   return false;
 }
 
-// ── ₦500 Classic Milkcake upgrade ──────────────────────────────────────────
+// ── ₦500 Classic Pancake Stack upgrade ─────────────────────────────────────
 export const UPGRADE_MIN = 1_500_000;               // ₦15,000 threshold
 export const UPGRADE_PRICE = 50_000;                // ₦500
-export const UPGRADE_PRODUCT_ID = "classic-milkcake";
+export const UPGRADE_PRODUCT_ID = "classic-pancake-stack";
 
 // ── Cart helpers ────────────────────────────────────────────────────────────
 
@@ -136,7 +135,7 @@ export type OrderLine = {
   quantity: number;
   image: string | null;
   bundle?: string;   // slug, for reporting
-  upgrade?: boolean; // the ₦500 milkcake add-on, for reporting
+  upgrade?: boolean; // the ₦500 pancake stack add-on, for reporting
 };
 
 export function expandForOrder(items: CartItem[]): OrderLine[] {

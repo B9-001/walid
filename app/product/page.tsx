@@ -12,10 +12,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await searchParams;
   const fallbackDescription =
-    "Handcrafted cakes baked fresh and made to celebrate. Order online from Diamond Taste.";
+    "Gourmet puff puff and pancakes made fresh to celebrate. Order online from thepufflette.co.";
 
   if (!id) {
-    return { title: "Our Cakes | Diamond Taste", description: fallbackDescription };
+    return { title: "Our Menu | thepufflette.co", description: fallbackDescription };
   }
 
   const { data } = await supabase
@@ -26,7 +26,7 @@ export async function generateMetadata({
     .maybeSingle();
 
   if (!data) {
-    return { title: "Our Cakes | Diamond Taste", description: fallbackDescription };
+    return { title: "Our Menu | thepufflette.co", description: fallbackDescription };
   }
 
   const product = data as { name: string; description: string | null; image_url: string | null };
@@ -35,7 +35,7 @@ export async function generateMetadata({
     trimmed.length > 155 ? `${trimmed.slice(0, 152).trimEnd()}...` : trimmed || fallbackDescription;
 
   return {
-    title: `${product.name} | Diamond Taste`,
+    title: `${product.name} | thepufflette.co`,
     description,
     openGraph: product.image_url ? { images: [product.image_url] } : undefined,
   };

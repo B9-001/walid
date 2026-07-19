@@ -11,16 +11,16 @@ type Slide = { id: string; image_url: string; heading: string | null; subheading
 // Text-first hero, stacked vertically: HEADLINE, then SUBHEADING, then the IMAGE, then the CTA.
 // The headline and subheading render instantly as real text (editable per slide in admin), so the
 // visitor reads the message before any image loads. Sensible defaults show even before data arrives.
-const DEFAULT_HEADING = "Freshly baked, delivered across Abuja";
-const DEFAULT_SUB = "Soft milkcakes, creamy cake tubs and rich cheesecakes, made fresh to order and brought straight to your door.";
+const DEFAULT_HEADING = "Freshly made, delivered across Abuja";
+const DEFAULT_SUB = "Gourmet puff puff and fluffy pancakes, made fresh to order and brought straight to your door.";
 
 // Default slides with local images
 const DEFAULT_SLIDES: Slide[] = [
   {
     id: "hero-1",
     image_url: "/heroes/hero-1.jpg",
-    heading: "Freshly Baked Daily",
-    subheading: "Premium cakes made with love and the finest ingredients"
+    heading: "Freshly Made Daily",
+    subheading: "Gourmet puff puff and pancakes made with love and the finest ingredients"
   },
   {
     id: "hero-2",
@@ -32,13 +32,13 @@ const DEFAULT_SLIDES: Slide[] = [
     id: "hero-3",
     image_url: "/heroes/hero-3.jpg",
     heading: "Custom Orders Welcome",
-    subheading: "Celebrate your special moments with our custom cake designs"
+    subheading: "Celebrate your special moments with our custom puff puff & pancake platters"
   },
   {
     id: "hero-4",
     image_url: "/heroes/hero-4.jpg",
     heading: "Taste the Difference",
-    subheading: "Experience the finest quality cakes in Abuja"
+    subheading: "Experience the best puff puff and pancakes in Abuja"
   }
 ];
 
@@ -99,7 +99,7 @@ export default function Hero() {
       <div className="container py-12 md:py-16 text-center">
         <div className="max-w-2xl mx-auto">
           {/* 1. Headline (bold), the very first thing the visitor sees */}
-          <span className="eyebrow">Freshly baked in Abuja</span>
+          <span className="eyebrow">Freshly made in Abuja</span>
           <AnimatePresence mode="wait">
             <motion.h1
               key={heading}
@@ -130,8 +130,8 @@ export default function Hero() {
 
         {/* 3. Image carousel with enhanced animations */}
         <div className="mx-auto w-full max-w-[420px] mt-9">
-          <div className="relative aspect-[4/5] rounded-[1.75rem] overflow-hidden ring-1 ring-brand-line shadow-[0_30px_70px_-25px_rgba(43,23,34,0.3)] bg-brand-blush group">
-            <span className="absolute inset-0 flex items-center justify-center font-script text-5xl text-brand-primary/20 select-none z-0">Diamond Taste</span>
+          <div className="relative aspect-[4/5] rounded-[1.75rem] overflow-hidden ring-1 ring-brand-line shadow-[0_30px_70px_-25px_rgba(28,22,19,0.3)] bg-brand-blush group">
+            <span className="absolute inset-0 flex items-center justify-center font-script text-5xl text-brand-primary/20 select-none z-0">thepufflette.co</span>
             
             <AnimatePresence mode="wait">
               {slide?.image_url && (
@@ -200,7 +200,7 @@ export default function Hero() {
                     initial={false}
                     animate={{
                       width: i === current ? 24 : 6,
-                      backgroundColor: i === current ? "rgb(var(--color-brand-primary))" : "rgba(255,255,255,0.4)"
+                      backgroundColor: i === current ? "var(--color-brand-primary)" : "rgba(255,255,255,0.4)"
                     }}
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="h-1.5 rounded-full cursor-pointer"
@@ -220,7 +220,7 @@ export default function Hero() {
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
           <Link href="/shop" className="btn-brand">Order Now</Link>
-          <Link href="/shop?category=milkcakes" className="btn-ghost">Our Milkcakes</Link>
+          <Link href="/shop?category=gourmet-pancakes" className="btn-ghost">Our Pancakes</Link>
         </motion.div>
       </div>
     </section>

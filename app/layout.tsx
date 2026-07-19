@@ -32,9 +32,9 @@ const siteUrl =
   (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
   "http://localhost:3000";
 
-const title = "Diamond Taste | Cakes, Cupcakes & Sweet Treats";
+const title = "thepufflette.co | Gourmet Puff Puff & Pancakes";
 const description =
-  "Diamond Taste: handcrafted milk cakes, birthday cakes, cupcakes and pastries. Order your custom cake online.";
+  "thepufflette.co: gourmet puff puff and fluffy pancakes, handcrafted fresh in Abuja. Order your sweet treats online.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: "/",
-    siteName: "Diamond Taste",
+    siteName: "thepufflette.co",
     type: "website",
     locale: "en_NG",
   },

@@ -3,7 +3,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import ReferProgram from "@/components/diamond/ReferProgram";
 
-export const metadata = { title: "Refer & Earn | Diamond Taste" };
+export const metadata = { title: "Refer & Earn | thepufflette.co" };
 
 export default function ReferPage() {
   return (

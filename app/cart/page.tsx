@@ -3,7 +3,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import CartView from "@/components/diamond/CartView";
 
-export const metadata = { title: "Cart | Diamond Taste" };
+export const metadata = { title: "Cart | thepufflette.co" };
 
 export default function CartPage() {
   return (

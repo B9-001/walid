@@ -9,9 +9,8 @@ import type { User } from "@supabase/supabase-js";
 
 const links = [
   { href: "/shop", label: "Shop" },
-  { href: "/shop?category=milkcakes", label: "Milkcakes" },
-  { href: "/shop?category=cake-tubs", label: "Cake Tubs" },
-  { href: "/shop?category=cheesecakes", label: "Cheesecakes" },
+  { href: "/shop?category=gourmet-pancakes", label: "Gourmet Pancakes" },
+  { href: "/shop?category=gourmet-puff-puff", label: "Gourmet Puff Puff" },
   { href: "/about", label: "About" },
   { href: "/track", label: "Track Order" },
   { href: "/refer", label: "Refer & Earn" },
@@ -46,17 +45,17 @@ export default function Navbar() {
     <header
       className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || mobileOpen
-          ? "bg-brand-paper/90 backdrop-blur-md border-b border-brand-line py-3 shadow-[0_10px_30px_-12px_rgba(43,23,34,0.18)]"
+          ? "bg-brand-paper/90 backdrop-blur-md border-b border-brand-line py-3 shadow-[0_10px_30px_-12px_rgba(28,22,19,0.18)]"
           : "bg-transparent py-5"
       }`}
     >
       <div className="container flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <div className="rounded-full overflow-hidden h-10 w-10 md:h-11 md:w-11 bg-brand-light border border-brand-line">
-            <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
           </div>
           <span className="font-display text-xl md:text-2xl text-brand-dark leading-none">
-            Diamond <span className="italic text-brand-primary">Taste</span>
+            thepufflette<span className="italic text-brand-primary">.co</span>
           </span>
         </Link>
 
@@ -128,10 +127,10 @@ export default function Navbar() {
       <div className="flex items-center justify-between p-5 border-b border-brand-line shrink-0">
         <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5">
           <div className="rounded-full overflow-hidden h-9 w-9 bg-brand-light border border-brand-line">
-            <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
           </div>
           <span className="font-display text-xl text-brand-dark leading-none">
-            Diamond <span className="italic text-brand-primary">Taste</span>
+            thepufflette<span className="italic text-brand-primary">.co</span>
           </span>
         </Link>
         <button onClick={() => setMobileOpen(false)} aria-label="close menu" className="p-2 text-brand-primary">

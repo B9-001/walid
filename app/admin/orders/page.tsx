@@ -228,7 +228,7 @@ export default function AdminOrders() {
                             <div className="w-12 h-12 rounded-lg overflow-hidden bg-brand-blush shrink-0">{it.image && <img src={it.image} alt="" className="w-full h-full object-cover" />}</div>
                             <div className="flex-1 min-w-0">
                               <p className="font-sans text-[13px] font-semibold text-brand-dark">{it.name} ×{it.quantity}</p>
-                              {it.upgrade && <p className="font-sans text-[11px] font-semibold text-brand-plum mt-0.5">🎁 ₦500 milkcake add-on</p>}
+                              {it.upgrade && <p className="font-sans text-[11px] font-semibold text-brand-plum mt-0.5">🎁 ₦500 pancake stack add-on</p>}
                               {it.preorder_release_at && (
                                 <p className="font-sans text-[11px] font-semibold text-brand-plum mt-0.5">⏳ Pre-order · available {formatPreorderDate(it.preorder_release_at)}</p>
                               )}

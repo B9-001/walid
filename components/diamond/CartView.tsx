@@ -203,9 +203,9 @@ export default function CartView() {
   const total = Math.max(0, subtotal - couponDiscount);
   const totalSaved = cartSavings(items); // Box of 5 product savings
 
-  // ₦500 Classic Milkcake upgrade — a SEPARATE offer for full-price baskets only.
+  // ₦500 Classic Pancake Stack upgrade — a SEPARATE offer for full-price baskets only.
   // Unlocked by ₦15,000+ of full-price items, and NEVER shown when a bundle is in
-  // the cart (a bundle is already discounted — no stacking the milkcake on top).
+  // the cart (a bundle is already discounted — no stacking the upgrade on top).
   const upgradeInCart = items.some((it) => it.upgrade);
   const fullPriceBase = fullPriceSubtotal(items);
   const upgradeEligible = !bundlePresent && fullPriceBase >= UPGRADE_MIN;
@@ -237,7 +237,7 @@ export default function CartView() {
     if (!upgradeProduct) return;
     addItem({
       product_id: UPGRADE_PRODUCT_ID,
-      name: "Classic Milkcake",
+      name: "Classic Pancake Stack",
       image: upgradeProduct.image_url,
       price: UPGRADE_PRICE,
       upgrade: true,
@@ -402,14 +402,14 @@ export default function CartView() {
               </div>
             ) : null)}
 
-            {/* ₦500 Classic Milkcake upgrade — unlocked by a ₦15,000+ full-price basket */}
+            {/* ₦500 Classic Pancake Stack upgrade — unlocked by a ₦15,000+ full-price basket */}
             {upgradeEligible && !upgradeInCart && upgradeProduct && (
               <div className="bg-gradient-to-br from-brand-primary/10 to-brand-blush border border-brand-primary/30 rounded-2xl p-4 flex items-center gap-3">
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-brand-blush shrink-0">
-                  {upgradeProduct.image_url && <img src={upgradeProduct.image_url} alt="Classic Milkcake" className="w-full h-full object-cover" />}
+                  {upgradeProduct.image_url && <img src={upgradeProduct.image_url} alt="Classic Pancake Stack" className="w-full h-full object-cover" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-sans text-[13px] font-bold text-brand-dark leading-tight">Add a Classic Milkcake for ₦500</p>
+                  <p className="font-sans text-[13px] font-bold text-brand-dark leading-tight">Add a Classic Pancake Stack for ₦500</p>
                   <p className="font-sans text-[11px] text-brand-grey mt-0.5">Normally {formatNaira(upgradeProduct.base_price)} — save {formatNaira(upgradeProduct.base_price - UPGRADE_PRICE)}.</p>
                 </div>
                 <button onClick={addUpgrade} className="shrink-0 bg-brand-primary text-brand-light px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase hover:bg-brand-primary-dark transition-colors">Add</button>

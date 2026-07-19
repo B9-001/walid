@@ -156,7 +156,7 @@ export default function ProductDetail({ id }: { id: string }) {
               <img src={gallery[activeImg]} alt={product.name} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="font-script text-5xl text-brand-primary/30">Diamond Taste</span>
+                <span className="font-script text-5xl text-brand-primary/30">thepufflette.co</span>
               </div>
             )}
 

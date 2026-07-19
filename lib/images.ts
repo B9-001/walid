@@ -1,4 +1,4 @@
-// Curated Unsplash fallback imagery for Diamond Taste.
+// Curated Unsplash fallback imagery for thepufflette.co.
 // Used when admin-managed photos (hero slides, product/category images) are
 // not yet uploaded, so the storefront always looks complete.
 // All IDs verified to resolve at images.unsplash.com.

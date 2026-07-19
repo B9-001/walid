@@ -36,8 +36,8 @@ export default function ReferProgram() {
   const share = async () => {
     if (!link) return;
     const shareData = {
-      title: "Diamond Taste",
-      text: "I love Diamond Taste 🍰 order sweet treats with my link!",
+      title: "thepufflette.co",
+      text: "I love thepufflette.co 🍩 order sweet treats with my link!",
       url: link,
     };
     if (typeof navigator !== "undefined" && navigator.share) {
@@ -61,10 +61,10 @@ export default function ReferProgram() {
       <div className="text-center mb-10">
         <span className="eyebrow">Refer &amp; earn</span>
         <h1 className="font-display text-4xl md:text-6xl text-brand-dark mt-3">
-          Give cake, get <span className="font-script text-brand-primary font-normal">cake</span>
+          Share treats, get <span className="font-script text-brand-primary font-normal">treats</span>
         </h1>
         <p className="font-sans text-sm md:text-base text-brand-dark/60 mt-4 max-w-md mx-auto">
-          Share your link with friends. When <span className="font-semibold text-brand-dark">3 of them place an order</span>, you get a <span className="font-semibold text-brand-primary">free milk cake</span> 🍰
+          Share your link with friends. When <span className="font-semibold text-brand-dark">3 of them place an order</span>, you get <span className="font-semibold text-brand-primary">free puff puff</span> 🍩
         </p>
       </div>
 
@@ -91,14 +91,14 @@ export default function ReferProgram() {
               ))}
             </div>
             <p className="font-sans text-[12px] text-brand-grey mt-3">
-              {count >= goal ? "You've hit the goal! 🎉" : `${goal - count} more friend${goal - count !== 1 ? "s" : ""} need to order to unlock your free milk cake.`}
+              {count >= goal ? "You've hit the goal! 🎉" : `${goal - count} more friend${goal - count !== 1 ? "s" : ""} need to order to unlock your free puff puff.`}
             </p>
           </div>
 
           {/* Reward earned */}
           {rewardCode && (
             <div className="bg-brand-primary/5 border border-brand-primary/30 rounded-3xl p-6 text-center">
-              <p className="font-display text-2xl text-brand-dark">🍰 Free milk cake unlocked!</p>
+              <p className="font-display text-2xl text-brand-dark">🍩 Free puff puff unlocked!</p>
               <p className="font-sans text-sm text-brand-grey mt-1">Use this code at checkout (it&apos;s in your vouchers too):</p>
               <p className="font-display text-3xl text-brand-primary tracking-wide mt-3">{rewardCode}</p>
             </div>

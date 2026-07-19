@@ -22,7 +22,7 @@ export default function BundleCards() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="group text-left bg-brand-light border border-brand-line rounded-[26px] overflow-hidden flex flex-col hover:border-brand-primary/50 hover:shadow-[0_24px_60px_rgba(43,23,34,0.12)] transition-all"
+            className="group text-left bg-brand-light border border-brand-line rounded-[26px] overflow-hidden flex flex-col hover:border-brand-primary/50 hover:shadow-[0_24px_60px_rgba(28,22,19,0.12)] transition-all"
           >
             <div className="relative aspect-square overflow-hidden bg-brand-blush">
               <img

@@ -6,8 +6,8 @@ import { STORY_IMAGE } from "@/lib/images";
 
 const stats = [
   { num: "100%", label: "Made to order" },
-  { num: "6", label: "Sweet categories" },
-  { num: "Fresh", label: "Baked daily" },
+  { num: "2", label: "Signature treats" },
+  { num: "Fresh", label: "Made daily" },
 ];
 
 export default function About() {
@@ -26,13 +26,12 @@ export default function About() {
             Baked fresh, <span className="italic text-brand-primary">made with love</span>
           </h2>
           <p className="text-brand-dark/70 leading-relaxed mt-6">
-            Diamond Taste is a boutique bakery crafting soft milk cakes, cake tubs,
-            cheesecakes and pastries. Every order is baked fresh and made with care,
-            just for you.
+            thepufflette.co is a boutique kitchen crafting gourmet puff puff and
+            fluffy pancakes. Every order is made fresh and with care, just for you.
           </p>
           <p className="text-brand-dark/70 leading-relaxed mt-4">
             Browse the menu, add your favourites to the cart, and check out in minutes. We handle
-            the baking, you enjoy the celebration.
+            the cooking, you enjoy the treat.
           </p>
 
           <div className="mt-10 grid grid-cols-3 gap-6">
@@ -61,15 +60,15 @@ export default function About() {
             <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-brand-dark/40" />
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-brand-primary/15 blur-3xl" />
             <div className="relative">
-              <Stamp tone="light" size={84} text="DIAMOND TASTE · EST. SWEET · " />
+              <Stamp tone="light" size={84} text="THEPUFFLETTE.CO · EST. SWEET · " />
             </div>
             <div className="relative">
               <p className="font-display italic text-2xl md:text-3xl leading-snug text-brand-light/90">
-                &ldquo;Every cake tells a story. Let&rsquo;s make yours unforgettable.&rdquo;
+                &ldquo;Every bite tells a story. Let&rsquo;s make yours unforgettable.&rdquo;
               </p>
               <div className="mt-6 h-px w-16 bg-brand-light/30" />
               <p className="mt-4 text-[11px] tracking-[0.2em] uppercase text-brand-light/60">
-                The Diamond Taste kitchen
+                The thepufflette.co kitchen
               </p>
             </div>
           </div>

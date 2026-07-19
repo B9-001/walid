@@ -71,7 +71,7 @@ export default function ProfileModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative w-full max-w-md bg-brand-cream rounded-[28px] shadow-[0_32px_80px_rgba(43,23,34,0.22)] max-h-[90vh] flex flex-col overflow-hidden"
+            className="relative w-full max-w-md bg-brand-cream rounded-[28px] shadow-[0_32px_80px_rgba(28,22,19,0.22)] max-h-[90vh] flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-brand-dark px-7 pt-7 pb-6 shrink-0">

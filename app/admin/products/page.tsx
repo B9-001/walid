@@ -303,7 +303,7 @@ export default function AdminProducts() {
                   </div>
 
                   <div className="space-y-3">
-                    <FieldText label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Lotus Milkcake" />
+                    <FieldText label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Cinnamon Puff Puff" />
                     <div>
                       <Label>Category</Label>
                       <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary">
