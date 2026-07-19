@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #EC008C;       /* Hot pink / magenta — CTAs, accents */
+  --color-brand-primary-dark: #C1006F;  /* Hover/pressed */
+  --color-brand-plum: #8B3A62;          /* Plum — headings, secondary */
+  --color-brand-plum-dark: #6E2E4E;     /* Deep plum */
+  --color-brand-cream: #FFF6FB;         /* Blush background */
+  --color-brand-paper: #F7F2EC;         /* Warm editorial off-white canvas */
+  --color-brand-paper-dark: #EFE7DC;    /* Slightly deeper paper for panels */
+  --color-brand-blush: #FCE7F2;         /* Soft pink tint */
+  --color-brand-dark: #2B1722;          /* Near-black plum text / dark panel */
+  --color-brand-light: #FFFFFF;         /* White */
+  --color-brand-grey: #9B8F95;          /* Muted text */
+  --color-brand-line: #E4DACE;          /* Hairline rule on paper */
+
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
+  /* Script aliased to the editorial serif (italics carry the "script" accent now) */
+  --font-script: var(--font-display), Georgia, serif;
+}
+
+@layer base {
+  :root {
+    --background: var(--color-brand-paper);
+    --foreground: var(--color-brand-dark);
+  }
+
+  body {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(1100px 560px at 100% -8%, rgba(236, 0, 140, 0.07), transparent 60%),
+      radial-gradient(820px 480px at -10% 6%, rgba(139, 58, 98, 0.05), transparent 55%);
+    background-attachment: fixed;
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tighter, more confident display headings */
+  .font-display,
+  h1, h2 {
+    letter-spacing: -0.01em;
+  }
+
+  button, a, [role="button"], label {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar { width: 7px; }
+  ::-webkit-scrollbar-track { background: var(--color-brand-paper-dark); }
+  ::-webkit-scrollbar-thumb { background: var(--color-brand-primary); border-radius: 4px; }
+
+  /* Prevent mobile zoom on focus (Safari) */
+  input, textarea, select { font-size: 16px; }
+
+  ::placeholder {
+    opacity: 1;
+    color: rgba(43, 23, 34, 0.35);
+  }
+}
+
+/* ── Editorial helpers ──────────────────────────────────────────── */
+
+/* Thin uppercase tracked microlabel */
+.label-track,
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+.eyebrow { color: var(--color-brand-primary); }
+
+/* Display serif convenience classes */
+.font-display { font-family: var(--font-display); }
+.font-script { font-family: var(--font-display); font-style: italic; }
+
+/* Centered max-width container */
+.container {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Hairline divider on paper */
+.editorial-rule {
+  height: 1px;
+  background: var(--color-brand-line);
+  border: 0;
+}
+
+/* Soft card on paper */
+.card-soft {
+  background: var(--color-brand-light);
+  border: 1px solid var(--color-brand-line);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(43, 23, 34, 0.04);
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease, border-color .45s ease;
+}
+.card-soft:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px -28px rgba(43, 23, 34, 0.30);
+  border-color: rgba(236, 0, 140, 0.30);
+}
+
+/* Branded placeholder for products/categories without a photo —
+   blush gradient + dotted confetti so empty cards still look designed. */
+.placeholder-sweet {
+  position: relative;
+  background:
+    radial-gradient(130% 120% at 28% 18%, rgba(255, 255, 255, 0.65), transparent 55%),
+    linear-gradient(145deg, #FCE7F2 0%, #F6D6E6 48%, #ECC6DB 100%);
+}
+.placeholder-sweet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(236, 0, 140, 0.12) 1px, transparent 1.5px);
+  background-size: 17px 17px;
+  opacity: 0.45;
+}
+
+/* Dotted decorative divider */
+.deco-dots {
+  height: 6px;
+  color: var(--color-brand-primary);
+  background-image: radial-gradient(currentColor 1.4px, transparent 1.6px);
+  background-size: 15px 6px;
+  background-position: center;
+  opacity: 0.3;
+}
+
+/* Thin-line feature icon chip */
+.feature-icon {
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--color-brand-line);
+  color: var(--color-brand-plum);
+  background: var(--color-brand-light);
+}
+
+/* Brand buttons */
+.btn-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #EC008C 0%, #C1006F 100%);
+  color: var(--color-brand-light);
+  padding: 0.95rem 1.7rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  box-shadow: 0 10px 24px -8px rgba(236, 0, 140, 0.45);
+  transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.btn-brand:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px -8px rgba(236, 0, 140, 0.55);
+}
+
+/* Ghost / outline button (plum on paper, or light on dark panels) */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: var(--color-brand-dark);
+  padding: 0.9rem 1.6rem;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.btn-ghost:hover { transform: translateY(-2px); }
+.btn-ghost.on-dark { color: rgba(255, 255, 255, 0.85); }
+.btn-ghost.on-dark:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* Rotating circular "stamp" badge */
+.stamp {
+  animation: stamp-spin 22s linear infinite;
+  color: var(--color-brand-plum);
+}
+@keyframes stamp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Indeterminate loading bar on the post-payment "confirming" overlay */
+@keyframes loadbar {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stamp { animation: none; }
+}
+
+/* ── Mobile hardening (unlayered → wins over Tailwind utilities) ───── */
+
+/* Never allow the document to scroll sideways. `clip` (not `hidden`) avoids
+   creating a scroll container, so it doesn't break the sticky navbar. */
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Form controls must not blow out their container (native date/select
+   pickers have a wide intrinsic size on iOS). */
+input, textarea, select {
+  max-width: 100%;
+  min-width: 0;
+}
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+}
+
+/* Prevent iOS Safari from zooming in when a field is focused. The zoom is
+   triggered whenever the focused control's font-size is below 16px, so on
+   touch devices we force at least 16px regardless of `text-sm` etc. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
