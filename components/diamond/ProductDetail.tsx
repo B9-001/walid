@@ -25,6 +25,7 @@ export default function ProductDetail({ id }: { id: string }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [note, setNote] = useState("");
   const [added, setAdded] = useState(false);
   const [stockErr, setStockErr] = useState("");
   const [related, setRelated] = useState<Product[]>([]);
@@ -124,8 +125,10 @@ export default function ProductDetail({ id }: { id: string }) {
       price: product.base_price,
       quantity,
       preorder_release_at: preorder ? product.preorder_release_at : null,
+      note: note.trim() || undefined,
     });
     setAdded(true);
+    setNote("");
     setTimeout(() => setAdded(false), 2500);
     return true;
   };
@@ -233,6 +236,21 @@ export default function ProductDetail({ id }: { id: string }) {
               <span className="w-12 text-center font-sans font-semibold tabular-nums">{quantity}</span>
               <button onClick={() => setQuantity((q) => q + 1)} className="w-11 h-11 text-brand-primary text-lg hover:bg-brand-blush transition-colors">+</button>
             </div>
+          </div>
+
+          <div className="mt-8">
+            <label htmlFor="item-note" className="block font-sans text-[10px] label-track text-brand-dark/50 mb-2.5">
+              Special instructions <span className="normal-case text-brand-dark/30">(optional)</span>
+            </label>
+            <textarea
+              id="item-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="e.g. extra syrup, less sugar, write &lsquo;Happy Birthday&rsquo; on the box…"
+              className="w-full resize-none bg-brand-cream border border-brand-line rounded-2xl px-4 py-3 text-sm text-brand-dark placeholder:text-brand-dark/35 focus:outline-none focus:border-brand-primary transition-colors"
+            />
           </div>
 
           {/* Actions */}

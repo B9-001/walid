@@ -149,6 +149,7 @@ export type OrderLine = {
   image: string | null;
   bundle?: string;   // slug, for reporting
   upgrade?: boolean; // the ₦500 pancake stack add-on, for reporting
+  note?: string;     // customer's special instructions for this item
 };
 
 export function expandForOrder(items: CartItem[]): OrderLine[] {
@@ -162,6 +163,7 @@ export function expandForOrder(items: CartItem[]): OrderLine[] {
         quantity: it.quantity,
         image: it.image,
         ...(it.upgrade ? { upgrade: true } : {}),
+        ...(it.note ? { note: it.note } : {}),
       });
       continue;
     }

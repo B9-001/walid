@@ -326,6 +326,12 @@ export default function CartView() {
                     </p>
                   )}
 
+                  {it.note && (
+                    <p className="font-sans text-[12px] text-brand-dark/60 mt-1 leading-relaxed italic">
+                      &ldquo;{it.note}&rdquo;
+                    </p>
+                  )}
+
                   <div className="flex items-baseline gap-2 mt-1.5">
                     <p className="font-sans text-lg font-semibold text-brand-plum">{formatNaira(it.price * it.quantity)}</p>
                     {lineSaving(it) > 0 && (

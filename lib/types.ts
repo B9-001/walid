@@ -72,6 +72,8 @@ export type CartItem = {
   // Real value (kobo) of this line for savings display (upgrade lines). Bundles
   // carry their worth in `bundle.worth` instead.
   worth?: number;
+  // Customer's special instructions for this specific item (e.g. "no nuts please").
+  note?: string;
 };
 
 export type OrderItem = {
@@ -83,6 +85,7 @@ export type OrderItem = {
   bundle?: string; // bundle slug, set when this line came from a Build-Your-Box bundle
   upgrade?: boolean; // the ₦500 Classic Pancake Stack upgrade line
   preorder_release_at?: string | null;
+  note?: string; // customer's special instructions for this item
 };
 
 export type Order = {

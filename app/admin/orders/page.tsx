@@ -232,6 +232,9 @@ export default function AdminOrders() {
                               {it.preorder_release_at && (
                                 <p className="font-sans text-[11px] font-semibold text-brand-plum mt-0.5">⏳ Pre-order · available {formatPreorderDate(it.preorder_release_at)}</p>
                               )}
+                              {it.note && (
+                                <p className="font-sans text-[11px] text-brand-primary mt-0.5 italic">&ldquo;{it.note}&rdquo;</p>
+                              )}
                             </div>
                             <span className="font-sans text-[13px] font-semibold text-brand-plum whitespace-nowrap">{formatNaira(it.price * it.quantity)}</span>
                           </div>
