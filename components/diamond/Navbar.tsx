@@ -9,11 +9,8 @@ import type { User } from "@supabase/supabase-js";
 
 const links = [
   { href: "/shop?pick=1", label: "Shop" },
-  { href: "/shop?category=gourmet-pancakes", label: "Gourmet Pancakes" },
-  { href: "/shop?category=gourmet-puff-puff", label: "Gourmet Puff Puff" },
   { href: "/about", label: "About" },
   { href: "/track", label: "Track Order" },
-  { href: "/refer", label: "Refer & Earn" },
   { href: "/contact", label: "Contact" },
 ];
 
