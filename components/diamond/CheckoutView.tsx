@@ -439,6 +439,13 @@ export default function CheckoutView() {
       },
       onClose: () => {
         setSubmitting(false);
+        // Paystack's popup auto-closes and calls onSuccess a moment after showing
+        // "Payment Successful" — but if the customer taps the X before that
+        // happens, we land here instead with no order ever saved. Always give
+        // them the reference so a real charge is never left untraceable.
+        setError(
+          `Payment window closed before we could confirm your order. If your card was charged, please contact us with this reference and we'll sort it out: ${paymentRef}. Otherwise, you can try paying again.`
+        );
       },
     });
 
