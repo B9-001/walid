@@ -91,10 +91,10 @@ export const UPGRADE_PRODUCT_ID = "classic-pancake-stack";
 // product_id) rather than a `bundle` cart line: the picker-based bundles
 // above need every component to be a real live product so reconcile() can
 // validate it, but a Duo Box is one fixed SKU — it just needs to exist.
-// Price/old_price/image/stock are read live from that product; the
-// marketing copy (composition, badges) is fixed in DuoBoxSection.tsx.
+// Price/old_price/offer_line/image/stock are all read live from that product —
+// see the "Show as Special Offer" toggle in /admin/products and
+// components/diamond/SpecialOffersSection.tsx.
 export const DUO_BOX_PRODUCT_ID = "the-pufflette-duo-box"; // = the auto-slug of the product name "The Pufflette Duo Box"
-export const DUO_BOX_COMPARE_AT_KOBO = 1_599_800; // ₦15,998 — fallback if old_price isn't set
 
 // ── Cart helpers ────────────────────────────────────────────────────────────
 

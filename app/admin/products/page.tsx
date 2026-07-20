@@ -16,6 +16,7 @@ type FormState = {
   base_price: number; // kobo
   old_price: number; // kobo, 0 = no strike-through
   offer_line: string;
+  is_special_offer: boolean;
   stock_level: number | null; // null = unlimited
   featured: boolean;
   active: boolean;
@@ -32,6 +33,7 @@ const blank = (cat: string): FormState => ({
   base_price: 0,
   old_price: 0,
   offer_line: "",
+  is_special_offer: false,
   stock_level: null,
   featured: false,
   active: true,
@@ -89,6 +91,7 @@ export default function AdminProducts() {
       base_price: p.base_price,
       old_price: p.old_price || 0,
       offer_line: p.offer_line || "",
+      is_special_offer: p.is_special_offer ?? false,
       stock_level: p.stock_level ?? null,
       featured: p.featured,
       active: p.active,
@@ -170,6 +173,7 @@ export default function AdminProducts() {
         base_price: form.base_price,
         old_price: form.old_price > 0 ? form.old_price : null,
         offer_line: form.offer_line.trim() || null,
+        is_special_offer: form.is_special_offer,
         stock_level: form.stock_level,
         featured: form.featured,
         active: form.active,
@@ -363,6 +367,17 @@ export default function AdminProducts() {
                 <div className="border-t border-brand-line pt-5 grid grid-cols-2 gap-3">
                   <Toggle label="Featured on home" checked={form.featured} onChange={(v) => setForm({ ...form, featured: v })} />
                   <Toggle label="Visible on site" checked={form.active} onChange={(v) => setForm({ ...form, active: v })} />
+                </div>
+
+                <div>
+                  <Toggle
+                    label="Show as Special Offer"
+                    checked={form.is_special_offer}
+                    onChange={(v) => setForm({ ...form, is_special_offer: v })}
+                  />
+                  <p className="mt-1.5 text-[11px] text-brand-grey">
+                    Gives this product its own promo card on the homepage (photo, badges, savings) and a highlighted line in the cart. Set Old price and Special offer line above to control what it shows.
+                  </p>
                 </div>
 
                 <div className="border-t border-brand-line pt-5">

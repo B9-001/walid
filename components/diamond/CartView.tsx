@@ -19,8 +19,6 @@ import {
   UPGRADE_MIN,
   UPGRADE_PRICE,
   UPGRADE_PRODUCT_ID,
-  DUO_BOX_PRODUCT_ID,
-  DUO_BOX_COMPARE_AT_KOBO,
 } from "@/lib/bundles";
 import type { Product } from "@/lib/types";
 
@@ -235,20 +233,23 @@ export default function CartView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundlePresent, fullPriceBase, upgradeInCart]);
 
-  // Duo Box's strike-through price + composition line are admin-editable
-  // (old_price / offer_line on the product) — fetch live so cart edits made in
-  // /admin/products show up here without a code change.
-  const duoBoxInCart = items.some((it) => it.product_id === DUO_BOX_PRODUCT_ID);
-  const [duoBoxMeta, setDuoBoxMeta] = useState<{ old_price: number | null; offer_line: string | null } | null>(null);
+  // Any product with "Show as Special Offer" switched on in /admin/products
+  // gets a highlighted line here (strike-through price, savings, composition
+  // line) — fetch which cart lines are flagged, and their live old_price /
+  // offer_line, so admin edits show up here without a code change.
+  const cartProductIdsKey = items.map((it) => it.product_id).sort().join(",");
+  const [specialOfferMap, setSpecialOfferMap] = useState<Map<string, { old_price: number | null; offer_line: string | null }>>(new Map());
   useEffect(() => {
-    if (!duoBoxInCart) return;
+    if (!cartProductIdsKey) { setSpecialOfferMap(new Map()); return; }
     supabase
       .from("diamond_products")
-      .select("old_price, offer_line")
-      .eq("product_id", DUO_BOX_PRODUCT_ID)
-      .maybeSingle()
-      .then(({ data }) => setDuoBoxMeta(data ?? null));
-  }, [duoBoxInCart]);
+      .select("product_id, old_price, offer_line")
+      .eq("is_special_offer", true)
+      .in("product_id", cartProductIdsKey.split(","))
+      .then(({ data }) => {
+        setSpecialOfferMap(new Map((data || []).map((p) => [p.product_id, { old_price: p.old_price, offer_line: p.offer_line }])));
+      });
+  }, [cartProductIdsKey]);
 
   const addUpgrade = () => {
     if (!upgradeProduct) return;
@@ -309,16 +310,17 @@ export default function CartView() {
         <div className="lg:col-span-2 space-y-4 min-w-0">
           <AnimatePresence>
             {items.map((it) => {
-              // Duo Box: same fixed-combo perks as a real bundle (see hasBundle
-              // in lib/bundles.ts), but it's a normal product line so it doesn't
-              // carry `bundle`/`worth` — compute its strike-through/savings here,
-              // styled after the homepage promo card so it stands out in the cart.
-              const isDuoBox = it.product_id === DUO_BOX_PRODUCT_ID;
-              const duoCompareAtUnit = duoBoxMeta?.old_price && duoBoxMeta.old_price > it.price ? duoBoxMeta.old_price : DUO_BOX_COMPARE_AT_KOBO;
-              const duoCompareTotal = duoCompareAtUnit * it.quantity;
-              const duoSaving = isDuoBox ? Math.max(0, duoCompareTotal - it.price * it.quantity) : 0;
-              const totalSaving = duoSaving > 0 ? duoSaving : lineSaving(it);
-              const compareTotal = isDuoBox ? duoCompareTotal : it.bundle ? it.bundle.worth : it.worth || 0;
+              // Special Offer products (flagged in /admin/products) are normal
+              // product lines — they don't carry `bundle`/`worth` — so compute
+              // their strike-through/savings here, styled after the homepage
+              // promo card so they stand out in the cart.
+              const offerMeta = specialOfferMap.get(it.product_id);
+              const isSpecialOffer = !!offerMeta;
+              const offerCompareAtUnit = offerMeta?.old_price && offerMeta.old_price > it.price ? offerMeta.old_price : 0;
+              const offerCompareTotal = offerCompareAtUnit * it.quantity;
+              const offerSaving = isSpecialOffer ? Math.max(0, offerCompareTotal - it.price * it.quantity) : 0;
+              const totalSaving = offerSaving > 0 ? offerSaving : lineSaving(it);
+              const compareTotal = offerSaving > 0 ? offerCompareTotal : it.bundle ? it.bundle.worth : it.worth || 0;
 
               return (
               <motion.div
@@ -328,7 +330,7 @@ export default function CartView() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 className={`flex gap-4 rounded-2xl p-4 ${
-                  isDuoBox ? "bg-brand-primary/5 border-2 border-brand-primary/30" : "bg-brand-light border border-brand-line"
+                  isSpecialOffer ? "bg-brand-primary/5 border-2 border-brand-primary/30" : "bg-brand-light border border-brand-line"
                 }`}
               >
                 <div className="w-24 h-24 rounded-xl overflow-hidden bg-brand-blush shrink-0">
@@ -346,16 +348,16 @@ export default function CartView() {
                     <h3 className="font-display text-lg text-brand-dark leading-tight">{it.name}</h3>
                     {it.bundle && <Tag>Bundle</Tag>}
                     {it.upgrade && <Tag>Add-on</Tag>}
-                    {isDuoBox && (
+                    {isSpecialOffer && (
                       <span className="inline-flex items-center gap-1 bg-brand-primary-dark text-white font-sans text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">
                         <span className="text-brand-dark">★</span> Special Offer
                       </span>
                     )}
                   </div>
 
-                  {isDuoBox && (
+                  {isSpecialOffer && offerMeta?.offer_line && (
                     <p className="font-sans text-[11px] font-bold tracking-wide text-brand-primary-dark uppercase mt-1.5">
-                      {duoBoxMeta?.offer_line || "15 Pancakes + 16 Puff Puff Pieces"}
+                      {offerMeta.offer_line}
                     </p>
                   )}
 

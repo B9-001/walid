@@ -26,6 +26,7 @@ export type Product = {
   base_price: number; // kobo
   old_price: number | null; // strike-through "was" price when on sale
   offer_line: string | null; // short caption shown with the sale, e.g. "15 Pancakes + 16 Puff Puff Pieces"
+  is_special_offer: boolean; // gets its own promo card on the homepage + a highlighted line in the cart
   sizes: SizeTier[];  // kept for future use, not shown in UI yet
   featured: boolean;
   active: boolean;
