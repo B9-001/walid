@@ -67,7 +67,7 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${fraunces.variable} scroll-smooth`}
     >
-      <body className="min-h-screen bg-brand-paper text-brand-dark font-sans antialiased selection:bg-brand-primary selection:text-brand-light overflow-x-hidden flex flex-col">
+      <body className="min-h-screen bg-brand-paper text-brand-dark font-sans antialiased selection:bg-brand-primary selection:text-brand-light overflow-x-hidden flex flex-col" suppressHydrationWarning>
         <MetaPixel />
         <SourceCapture />
         <Suspense fallback={null}>
