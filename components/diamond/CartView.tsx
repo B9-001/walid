@@ -19,6 +19,8 @@ import {
   UPGRADE_MIN,
   UPGRADE_PRICE,
   UPGRADE_PRODUCT_ID,
+  DUO_BOX_PRODUCT_ID,
+  DUO_BOX_COMPARE_AT_KOBO,
 } from "@/lib/bundles";
 import type { Product } from "@/lib/types";
 
@@ -291,14 +293,27 @@ export default function CartView() {
         {/* Items */}
         <div className="lg:col-span-2 space-y-4 min-w-0">
           <AnimatePresence>
-            {items.map((it) => (
+            {items.map((it) => {
+              // Duo Box: same fixed-combo perks as a real bundle (see hasBundle
+              // in lib/bundles.ts), but it's a normal product line so it doesn't
+              // carry `bundle`/`worth` — compute its strike-through/savings here,
+              // styled after the homepage promo card so it stands out in the cart.
+              const isDuoBox = it.product_id === DUO_BOX_PRODUCT_ID;
+              const duoCompareTotal = DUO_BOX_COMPARE_AT_KOBO * it.quantity;
+              const duoSaving = isDuoBox ? Math.max(0, duoCompareTotal - it.price * it.quantity) : 0;
+              const totalSaving = duoSaving > 0 ? duoSaving : lineSaving(it);
+              const compareTotal = isDuoBox ? duoCompareTotal : it.bundle ? it.bundle.worth : it.worth || 0;
+
+              return (
               <motion.div
                 key={it.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="flex gap-4 bg-brand-light border border-brand-line rounded-2xl p-4"
+                className={`flex gap-4 rounded-2xl p-4 ${
+                  isDuoBox ? "bg-brand-primary/5 border-2 border-brand-primary/30" : "bg-brand-light border border-brand-line"
+                }`}
               >
                 <div className="w-24 h-24 rounded-xl overflow-hidden bg-brand-blush shrink-0">
                   {it.image ? (
@@ -315,7 +330,18 @@ export default function CartView() {
                     <h3 className="font-display text-lg text-brand-dark leading-tight">{it.name}</h3>
                     {it.bundle && <Tag>Bundle</Tag>}
                     {it.upgrade && <Tag>Add-on</Tag>}
+                    {isDuoBox && (
+                      <span className="inline-flex items-center gap-1 bg-brand-primary-dark text-white font-sans text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">
+                        <span className="text-brand-dark">★</span> Special Offer
+                      </span>
+                    )}
                   </div>
+
+                  {isDuoBox && (
+                    <p className="font-sans text-[11px] font-bold tracking-wide text-brand-primary-dark uppercase mt-1.5">
+                      15 Pancakes + 16 Puff Puff Pieces
+                    </p>
+                  )}
 
                   {/* Bundle: list the picked flavours */}
                   {it.bundle && (
@@ -334,16 +360,16 @@ export default function CartView() {
 
                   <div className="flex items-baseline gap-2 mt-1.5">
                     <p className="font-sans text-lg font-semibold text-brand-plum">{formatNaira(it.price * it.quantity)}</p>
-                    {lineSaving(it) > 0 && (
+                    {totalSaving > 0 && (
                       <span className="font-sans text-[12px] text-brand-grey line-through">
-                        {formatNaira((it.bundle ? it.bundle.worth : it.worth || 0))}
+                        {formatNaira(compareTotal)}
                       </span>
                     )}
                   </div>
 
-                  {lineSaving(it) > 0 && (
+                  {totalSaving > 0 && (
                     <p className="font-sans text-[12px] font-semibold text-brand-primary mt-0.5">
-                      You save {formatNaira(lineSaving(it))}
+                      You save {formatNaira(totalSaving)}
                     </p>
                   )}
 
@@ -367,7 +393,8 @@ export default function CartView() {
                   </svg>
                 </button>
               </motion.div>
-            ))}
+              );
+            })}
           </AnimatePresence>
         </div>
 
