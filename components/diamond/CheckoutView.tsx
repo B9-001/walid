@@ -29,6 +29,7 @@ export default function CheckoutView() {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
   const [method, setMethod] = useState<"delivery" | "pickup">("delivery");
   const [deliveryAreas, setDeliveryAreas] = useState<{ id: string; location: string; fee: number }[]>([]);
+  const [deliveryAreasLoaded, setDeliveryAreasLoaded] = useState(false);
   const [selectedAreaId, setSelectedAreaId] = useState<string>("");
   const [savedArea, setSavedArea] = useState<string>("");
   const [prefilled, setPrefilled] = useState(false);
@@ -115,7 +116,7 @@ export default function CheckoutView() {
       .select("id, location, fee")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
-      .then(({ data }) => { if (data) setDeliveryAreas(data); });
+      .then(({ data }) => { setDeliveryAreas(data || []); setDeliveryAreasLoaded(true); });
 
     try {
       const raw = localStorage.getItem(COUPON_KEY);
@@ -551,8 +552,12 @@ export default function CheckoutView() {
             {method === "delivery" && (
               <div className="mt-4">
                 <label className="block font-sans text-[10px] label-track text-brand-dark/50 mb-2">Delivery area</label>
-                {deliveryAreas.length === 0 ? (
+                {!deliveryAreasLoaded ? (
                   <p className="font-sans text-sm text-brand-grey">Loading areas…</p>
+                ) : deliveryAreas.length === 0 ? (
+                  <p className="font-sans text-sm text-brand-primary font-medium">
+                    No delivery areas are set up yet — please choose Pickup instead, or contact us to arrange delivery.
+                  </p>
                 ) : (
                   <select
                     value={selectedAreaId}
