@@ -78,6 +78,7 @@ export default function ProductDetail({ id }: { id: string }) {
 
   const soldOut = product !== null && product.stock_level !== null && product.stock_level === 0;
   const preorder = product !== null && isPreorder(product);
+  const onSale = product !== null && !!product.old_price && product.old_price > product.base_price;
 
   const gallery = useMemo(() => {
     if (!product) return [];
@@ -209,9 +210,23 @@ export default function ProductDetail({ id }: { id: string }) {
           <span className="eyebrow">{product.category}</span>
           <h1 className="font-display text-4xl md:text-5xl text-brand-dark leading-tight mt-2">{product.name}</h1>
 
-          <div className="mt-4">
+          <div className="mt-4 flex items-baseline gap-3 flex-wrap">
             <span className="font-display text-3xl text-brand-primary">{formatNaira(product.base_price)}</span>
+            {onSale && (
+              <span className="font-sans text-base text-brand-grey line-through">{formatNaira(product.old_price!)}</span>
+            )}
+            {onSale && (
+              <span className="font-sans text-[11px] font-bold text-brand-primary-dark uppercase tracking-wide">
+                Save {formatNaira(product.old_price! - product.base_price)}
+              </span>
+            )}
           </div>
+
+          {product.offer_line && (
+            <p className="font-sans text-[12px] font-bold tracking-wide text-brand-primary-dark uppercase mt-2">
+              {product.offer_line}
+            </p>
+          )}
 
           {preorder && (
             <div className="mt-5 flex items-start gap-3 bg-brand-blush/60 border border-brand-plum/20 rounded-2xl px-4 py-3.5">

@@ -235,6 +235,21 @@ export default function CartView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundlePresent, fullPriceBase, upgradeInCart]);
 
+  // Duo Box's strike-through price + composition line are admin-editable
+  // (old_price / offer_line on the product) — fetch live so cart edits made in
+  // /admin/products show up here without a code change.
+  const duoBoxInCart = items.some((it) => it.product_id === DUO_BOX_PRODUCT_ID);
+  const [duoBoxMeta, setDuoBoxMeta] = useState<{ old_price: number | null; offer_line: string | null } | null>(null);
+  useEffect(() => {
+    if (!duoBoxInCart) return;
+    supabase
+      .from("diamond_products")
+      .select("old_price, offer_line")
+      .eq("product_id", DUO_BOX_PRODUCT_ID)
+      .maybeSingle()
+      .then(({ data }) => setDuoBoxMeta(data ?? null));
+  }, [duoBoxInCart]);
+
   const addUpgrade = () => {
     if (!upgradeProduct) return;
     addItem({
@@ -299,7 +314,8 @@ export default function CartView() {
               // carry `bundle`/`worth` — compute its strike-through/savings here,
               // styled after the homepage promo card so it stands out in the cart.
               const isDuoBox = it.product_id === DUO_BOX_PRODUCT_ID;
-              const duoCompareTotal = DUO_BOX_COMPARE_AT_KOBO * it.quantity;
+              const duoCompareAtUnit = duoBoxMeta?.old_price && duoBoxMeta.old_price > it.price ? duoBoxMeta.old_price : DUO_BOX_COMPARE_AT_KOBO;
+              const duoCompareTotal = duoCompareAtUnit * it.quantity;
               const duoSaving = isDuoBox ? Math.max(0, duoCompareTotal - it.price * it.quantity) : 0;
               const totalSaving = duoSaving > 0 ? duoSaving : lineSaving(it);
               const compareTotal = isDuoBox ? duoCompareTotal : it.bundle ? it.bundle.worth : it.worth || 0;
@@ -339,7 +355,7 @@ export default function CartView() {
 
                   {isDuoBox && (
                     <p className="font-sans text-[11px] font-bold tracking-wide text-brand-primary-dark uppercase mt-1.5">
-                      15 Pancakes + 16 Puff Puff Pieces
+                      {duoBoxMeta?.offer_line || "15 Pancakes + 16 Puff Puff Pieces"}
                     </p>
                   )}
 

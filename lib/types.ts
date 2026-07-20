@@ -24,7 +24,8 @@ export type Product = {
   image_url: string | null;
   images: string[];
   base_price: number; // kobo
-  old_price: number | null; // kept for future sale display
+  old_price: number | null; // strike-through "was" price when on sale
+  offer_line: string | null; // short caption shown with the sale, e.g. "15 Pancakes + 16 Puff Puff Pieces"
   sizes: SizeTier[];  // kept for future use, not shown in UI yet
   featured: boolean;
   active: boolean;

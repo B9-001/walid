@@ -14,6 +14,8 @@ type FormState = {
   image_url: string;
   images: string[];
   base_price: number; // kobo
+  old_price: number; // kobo, 0 = no strike-through
+  offer_line: string;
   stock_level: number | null; // null = unlimited
   featured: boolean;
   active: boolean;
@@ -28,6 +30,8 @@ const blank = (cat: string): FormState => ({
   image_url: "",
   images: [],
   base_price: 0,
+  old_price: 0,
+  offer_line: "",
   stock_level: null,
   featured: false,
   active: true,
@@ -83,6 +87,8 @@ export default function AdminProducts() {
       image_url: p.image_url || "",
       images: p.images || [],
       base_price: p.base_price,
+      old_price: p.old_price || 0,
+      offer_line: p.offer_line || "",
       stock_level: p.stock_level ?? null,
       featured: p.featured,
       active: p.active,
@@ -162,6 +168,8 @@ export default function AdminProducts() {
         image_url: form.image_url || null,
         images: form.images,
         base_price: form.base_price,
+        old_price: form.old_price > 0 ? form.old_price : null,
+        offer_line: form.offer_line.trim() || null,
         stock_level: form.stock_level,
         featured: form.featured,
         active: form.active,
@@ -311,6 +319,25 @@ export default function AdminProducts() {
                       </select>
                     </div>
                     <FieldNaira label="Price" valueKobo={form.base_price} onChangeKobo={(k) => setForm({ ...form, base_price: k })} />
+                    <div>
+                      <FieldNaira
+                        label="Old price"
+                        valueKobo={form.old_price}
+                        onChangeKobo={(k) => setForm({ ...form, old_price: k })}
+                      />
+                      <p className="mt-1.5 text-[11px] text-brand-grey">
+                        Optional — set this higher than Price to show a strike-through &ldquo;was&rdquo; price and savings on the product page and in the cart. Leave at 0 to hide it.
+                      </p>
+                      {form.old_price > 0 && form.old_price <= form.base_price && (
+                        <p className="mt-1.5 text-[11px] text-brand-primary font-medium">Old price should be higher than Price, or it won&apos;t show as a discount.</p>
+                      )}
+                    </div>
+                    <FieldText
+                      label="Special offer line"
+                      value={form.offer_line}
+                      onChange={(v) => setForm({ ...form, offer_line: v })}
+                      placeholder="e.g. 15 Pancakes + 16 Puff Puff Pieces"
+                    />
                     <div>
                       <Label>Stock level <span className="normal-case opacity-60">(leave blank for unlimited)</span></Label>
                       <input

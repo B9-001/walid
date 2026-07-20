@@ -10,10 +10,13 @@ import { DUO_BOX_PRODUCT_ID, DUO_BOX_COMPARE_AT_KOBO } from "@/lib/bundles";
 type DuoProduct = {
   base_price: number;
   old_price: number | null;
+  offer_line: string | null;
   image_url: string | null;
   stock_level: number | null;
   active: boolean;
 };
+
+const DEFAULT_OFFER_LINE = "15 Pancakes + 16 Puff Puff Pieces";
 
 // Fixed promotional combo — see lib/bundles.ts for why this is a real product
 // (create it in /admin/products named exactly "The Pufflette Duo Box", which
@@ -28,7 +31,7 @@ export default function DuoBoxSection() {
   useEffect(() => {
     supabase
       .from("diamond_products")
-      .select("base_price, old_price, image_url, stock_level, active")
+      .select("base_price, old_price, offer_line, image_url, stock_level, active")
       .eq("product_id", DUO_BOX_PRODUCT_ID)
       .maybeSingle()
       .then(({ data }) => setProduct((data as DuoProduct) ?? null));
@@ -85,7 +88,7 @@ export default function DuoBoxSection() {
               Our two bestsellers, in one box. Because why choose when you can have both.
             </p>
             <div className="font-sans text-[13px] font-bold tracking-wide text-brand-primary-dark mb-6 uppercase">
-              15 Pancakes + 16 Puff Puff Pieces
+              {product.offer_line || DEFAULT_OFFER_LINE}
             </div>
 
             <div className="flex items-center justify-between gap-4 flex-wrap">
