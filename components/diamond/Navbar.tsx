@@ -8,7 +8,7 @@ import { cartPath } from "@/lib/offer";
 import type { User } from "@supabase/supabase-js";
 
 const links = [
-  { href: "/shop", label: "Shop" },
+  { href: "/shop?pick=1", label: "Shop" },
   { href: "/shop?category=gourmet-pancakes", label: "Gourmet Pancakes" },
   { href: "/shop?category=gourmet-puff-puff", label: "Gourmet Puff Puff" },
   { href: "/about", label: "About" },
