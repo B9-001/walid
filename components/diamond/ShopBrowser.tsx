@@ -135,7 +135,7 @@ export default function ShopBrowser() {
             </>
           ) : (
             <>
-              Our <span className="italic text-brand-primary font-normal">cakes</span>
+              Our <span className="italic text-brand-primary font-normal">puffs &amp; pancakes</span>
             </>
           )}
         </h1>

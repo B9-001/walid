@@ -8,26 +8,26 @@ const quotes = [
   {
     quote:
       "Honestly the puff puff was so good. My whole family finished it the same day. Already telling my friends to order from you.",
-    name: "Fatima S",
+    name: "Chiamaka O",
     role: "Gourmet Puff Puff, Abuja",
   },
   {
     quote:
       "I ordered for my wife's birthday and she loved it. Delivery came on time and everything was fresh. Will definitely order again.",
-    name: "Salim K",
+    name: "Tunde B",
     role: "Birthday order, Abuja",
   },
   {
     quote:
       "The pancakes are the best I have had in Abuja. You can tell they're made properly. I keep coming back for more.",
-    name: "Abdurrahman A",
+    name: "Ibrahim Y",
     role: "Gourmet Pancakes, Abuja",
   },
   {
     quote:
       "Everything tasted fresh and the packaging was really nice. Got it delivered the same day. Thank you so much.",
-    name: "Salma K",
-    role: "Dessert cups, Abuja",
+    name: "Blessing E",
+    role: "Repeat customer, Abuja",
   },
 ];
 
