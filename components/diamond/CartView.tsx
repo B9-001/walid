@@ -281,7 +281,7 @@ export default function CartView() {
           href="/shop"
           className="inline-block mt-8 bg-brand-primary text-brand-light px-9 py-4 rounded-full font-sans text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-brand-primary-dark transition-all"
         >
-          Browse cakes
+          Browse menu
         </Link>
       </div>
     );
