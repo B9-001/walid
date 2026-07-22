@@ -11,7 +11,7 @@ import { formatNaira } from "@/lib/format";
 import { validateCoupon, incrementCouponUsage } from "@/lib/coupon";
 import { payWithPaystack, generatePaymentRef, generateOrderNumber } from "@/lib/paystack";
 import { attributeReferral } from "@/lib/referral";
-import { getSource, getVisitorId, getFirstSource, getFirstSeen } from "@/lib/source";
+import { getSource } from "@/lib/source";
 import { isOfferMode, setOfferMode, OFFER_FREE_DELIVERY_MIN, serviceFeeFor } from "@/lib/offer";
 import { hasBundle, cartSavings, expandForOrder } from "@/lib/bundles";
 import { getShopStatus, DEFAULT_BUSINESS_HOURS, watTodayISO, addDaysISO, daySlots, isOpenDay, formatDateLabel } from "@/lib/hours";
@@ -227,9 +227,6 @@ export default function CheckoutView() {
     const basePayload = {
       customer_id: user?.id ?? null,
       referral_source: getSource(),
-      referral_origin: getFirstSource(),
-      first_seen_at: getFirstSeen(),
-      visitor_id: getVisitorId(),
       customer_name: form.name.trim(),
       customer_email: form.email.trim(),
       customer_phone: form.phone.trim(),
