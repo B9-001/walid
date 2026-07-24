@@ -43,9 +43,9 @@ const CATEGORY_DEFAULTS = [
   U("1492446845049-9c50cc313f00", 1000),
 ];
 
-// Editorial "about" panel image
-export const ABOUT_IMAGE = U("1606890737304-57a1ca8a5b62", 1000);
-export const STORY_IMAGE = U("1612203985729-70726954388c", 1100);
+// Editorial "about" panel image — real puff puff / pancake product shots
+export const ABOUT_IMAGE = "/heroes/hero-1.jpg";
+export const STORY_IMAGE = "/heroes/hero-2.jpg";
 
 // Testimonial avatars
 export const AVATARS = [
