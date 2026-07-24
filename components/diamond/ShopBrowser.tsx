@@ -149,7 +149,7 @@ export default function ShopBrowser() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search cakes…"
+          placeholder="Search puff puff & pancakes…"
           className="w-full bg-brand-light border border-brand-line rounded-full px-6 py-3 text-sm text-brand-dark focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
@@ -167,7 +167,7 @@ export default function ShopBrowser() {
       {/* Grid */}
       {visible.length === 0 ? (
         <p className="text-center py-24 text-brand-grey font-sans text-sm uppercase tracking-widest">
-          No cakes found here yet.
+          No treats found here yet.
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
