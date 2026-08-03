@@ -1,14 +1,19 @@
 // Paystack inline helper. The inline.js script is loaded once via <Script> in
 // the checkout page. Amounts are passed in KOBO (Paystack's smallest unit for NGN).
 //
-// The public key + subaccount are hardcoded here (both are non-secret) so the
-// checkout uses exactly these regardless of any stale NEXT_PUBLIC_PAYSTACK_*
-// values in the hosting env. To switch between test/live or change the split,
-// edit these two lines.
+// The public key is hardcoded here (it's non-secret) so the checkout uses
+// exactly this regardless of any stale NEXT_PUBLIC_PAYSTACK_* values in the
+// hosting env. To switch between test/live, edit this one line.
 //   TEST key (pk_test_) → Paystack test cards only, no real charges.
-//   LIVE key (pk_live_) → real money. Swap both key + subaccount together.
-const PAYSTACK_PUBLIC_KEY = "pk_test_e77c32b2a3e592600f89c68321e3b5ec1d156946";
-const PAYSTACK_SUBACCOUNT_CODE = "ACCT_uwdbq8slugisbkg";
+//   LIVE key (pk_live_) → real money.
+const PAYSTACK_PUBLIC_KEY = "pk_test_e6adeb158fea543fca96c4eb38a8b4e2c2defc65";
+
+// NO subaccount: payments settle directly to the account that owns the key
+// above (i.e. YOUR account). A subaccount code here would route the money to
+// that subaccount's owner instead — which was sending payments to the wrong
+// account. Leave this empty unless you deliberately want a Paystack split to
+// another account, and only ever with a subaccount you own.
+const PAYSTACK_SUBACCOUNT_CODE = "";
 
 declare global {
   interface Window {
