@@ -193,7 +193,10 @@ Deno.serve(async (req) => {
     .select("contact_email")
     .limit(1)
     .maybeSingle();
-  const adminTo = (settings?.contact_email || SHOP_ADMIN_EMAIL || "").trim();
+  // Lowercase the recipient: email addresses are case-insensitive, but Resend's
+  // free-tier "own address only" check is case-sensitive, so "Thepuffletteco@…"
+  // would be rejected against the registered "thepuffletteco@…".
+  const adminTo = (settings?.contact_email || SHOP_ADMIN_EMAIL || "").trim().toLowerCase();
 
   const results: Record<string, unknown> = {};
 
@@ -214,10 +217,12 @@ Deno.serve(async (req) => {
   }
 
   // 2) Customer confirmation (best-effort; needs a verified sending domain to
-  //    reach arbitrary inboxes on Resend's paid tier).
-  if (o.customer_email) {
+  //    reach arbitrary inboxes — until then Resend only allows the account's
+  //    own address, so this is expected to no-op for real customers).
+  const customerTo = (o.customer_email || "").trim().toLowerCase();
+  if (customerTo) {
     const subject = `Order ${o.order_number} confirmed — thepufflette.co`;
-    const r = await sendEmail(o.customer_email, subject, customerEmail(o));
+    const r = await sendEmail(customerTo, subject, customerEmail(o));
     results.customer = r;
     if (r.ok) {
       await supabase
