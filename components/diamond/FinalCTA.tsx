@@ -20,7 +20,7 @@ export default function FinalCTA() {
           <div className="absolute -bottom-20 -right-10 w-72 h-72 rounded-full bg-brand-plum/30 blur-3xl pointer-events-none" />
 
           <div className="absolute top-8 right-8 hidden md:block">
-            <Stamp tone="light" size={92} text="ORDER ONLINE · DIAMOND TASTE · " />
+            <Stamp tone="light" size={92} text="ORDER ONLINE · THEPUFFLETTE.CO · " />
           </div>
 
           <span className="eyebrow text-brand-primary relative">Special moments</span>

@@ -3,7 +3,7 @@ import AnnouncementBar from "@/components/diamond/AnnouncementBar";
 import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 
-export const metadata = { title: "Page not found | Diamond Taste" };
+export const metadata = { title: "Page not found | thepufflette.co" };
 
 export default function NotFound() {
   return (

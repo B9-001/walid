@@ -1,13 +1,13 @@
 {
-  "name": "Diamond Taste Admin",
-  "short_name": "DT Admin",
-  "description": "Manage Diamond Taste — orders, products, delivery, customers.",
+  "name": "thepufflette.co Admin",
+  "short_name": "Pufflette",
+  "description": "Manage thepufflette.co — orders, products, delivery, customers.",
   "start_url": "/admin",
   "scope": "/admin",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F7F2EC",
-  "theme_color": "#F7F2EC",
+  "background_color": "#FBF6EE",
+  "theme_color": "#FBF6EE",
   "icons": [
     { "src": "/icons/admin-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/admin-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

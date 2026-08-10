@@ -36,11 +36,6 @@ const ROUTES: { store: string; fn?: string; url?: string; match: (sub: string, r
     url: "https://kmfxpeeddtxozbznetzj.supabase.co/functions/v1/sultyz-paystack-webhook",
     match: (sub, ref) => sub === "ACCT_jxfe5v6m1wvh0va" || ref.toUpperCase().startsWith("SZPAY"),
   },
-  {
-    store: "walid",
-    fn: "diamond-paystack-webhook",
-    match: (sub, ref) => sub === "ACCT_ud6yo2g3g2tczpr" || ref.toUpperCase().startsWith("DTPAY"),
-  },
   // Future stores on this account go here, before the default.
 ];
 const DEFAULT_FN = "diamond-paystack-webhook"; // catch-all: Diamond website + IG orders

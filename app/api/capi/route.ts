@@ -1,10 +1,11 @@
 import crypto from "crypto";
+import { FB_PIXEL_ID } from "@/lib/meta";
 
 const hash = (v: string) =>
   crypto.createHash("sha256").update(v.trim().toLowerCase()).digest("hex");
 
 export async function POST(req: Request) {
-  const pixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
+  const pixelId = FB_PIXEL_ID;
   const token = process.env.FB_CAPI_TOKEN;
   if (!pixelId || !token) {
     return Response.json({ ok: false, reason: "missing-config" }, { status: 200 });

@@ -3,7 +3,7 @@
 // Rotating circular "stamp" badge — text runs along a circle with a small
 // mark in the middle. Used as an editorial accent in the hero and CTA.
 export default function Stamp({
-  text = "DIAMOND TASTE · BAKED FRESH · MADE WITH LOVE · ",
+  text = "THEPUFFLETTE.CO · MADE FRESH · MADE WITH LOVE · ",
   className = "",
   size = 116,
   tone = "plum",

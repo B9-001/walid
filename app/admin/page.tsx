@@ -35,7 +35,7 @@ export default function AdminOverview() {
     <div>
       <div className="mb-10 border-b border-brand-line pb-7">
         <h1 className="font-display text-4xl md:text-6xl text-brand-dark leading-none">Overview</h1>
-        <p className="font-script text-2xl text-brand-primary mt-2">your bakery at a glance</p>
+        <p className="font-script text-2xl text-brand-primary mt-2">your puff puff &amp; pancakes at a glance</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

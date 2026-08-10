@@ -11,7 +11,7 @@ import { formatNaira } from "@/lib/format";
 import { validateCoupon, incrementCouponUsage } from "@/lib/coupon";
 import { payWithPaystack, generatePaymentRef, generateOrderNumber } from "@/lib/paystack";
 import { attributeReferral } from "@/lib/referral";
-import { getSource, getVisitorId, getFirstSource, getFirstSeen } from "@/lib/source";
+import { getSource } from "@/lib/source";
 import { isOfferMode, setOfferMode, OFFER_FREE_DELIVERY_MIN, serviceFeeFor } from "@/lib/offer";
 import { hasBundle, cartSavings, expandForOrder } from "@/lib/bundles";
 import { getShopStatus, DEFAULT_BUSINESS_HOURS, watTodayISO, addDaysISO, daySlots, isOpenDay, formatDateLabel } from "@/lib/hours";
@@ -29,6 +29,7 @@ export default function CheckoutView() {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
   const [method, setMethod] = useState<"delivery" | "pickup">("delivery");
   const [deliveryAreas, setDeliveryAreas] = useState<{ id: string; location: string; fee: number }[]>([]);
+  const [deliveryAreasLoaded, setDeliveryAreasLoaded] = useState(false);
   const [selectedAreaId, setSelectedAreaId] = useState<string>("");
   const [savedArea, setSavedArea] = useState<string>("");
   const [prefilled, setPrefilled] = useState(false);
@@ -115,7 +116,7 @@ export default function CheckoutView() {
       .select("id, location, fee")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
-      .then(({ data }) => { if (data) setDeliveryAreas(data); });
+      .then(({ data }) => { setDeliveryAreas(data || []); setDeliveryAreasLoaded(true); });
 
     try {
       const raw = localStorage.getItem(COUPON_KEY);
@@ -226,9 +227,6 @@ export default function CheckoutView() {
     const basePayload = {
       customer_id: user?.id ?? null,
       referral_source: getSource(),
-      referral_origin: getFirstSource(),
-      first_seen_at: getFirstSeen(),
-      visitor_id: getVisitorId(),
       customer_name: form.name.trim(),
       customer_email: form.email.trim(),
       customer_phone: form.phone.trim(),
@@ -438,6 +436,13 @@ export default function CheckoutView() {
       },
       onClose: () => {
         setSubmitting(false);
+        // Paystack's popup auto-closes and calls onSuccess a moment after showing
+        // "Payment Successful" — but if the customer taps the X before that
+        // happens, we land here instead with no order ever saved. Always give
+        // them the reference so a real charge is never left untraceable.
+        setError(
+          `Payment window closed before we could confirm your order. If your card was charged, please contact us with this reference and we'll sort it out: ${paymentRef}. Otherwise, you can try paying again.`
+        );
       },
     });
 
@@ -551,8 +556,12 @@ export default function CheckoutView() {
             {method === "delivery" && (
               <div className="mt-4">
                 <label className="block font-sans text-[10px] label-track text-brand-dark/50 mb-2">Delivery area</label>
-                {deliveryAreas.length === 0 ? (
+                {!deliveryAreasLoaded ? (
                   <p className="font-sans text-sm text-brand-grey">Loading areas…</p>
+                ) : deliveryAreas.length === 0 ? (
+                  <p className="font-sans text-sm text-brand-primary font-medium">
+                    No delivery areas are set up yet — please choose Pickup instead, or contact us to arrange delivery.
+                  </p>
                 ) : (
                   <select
                     value={selectedAreaId}

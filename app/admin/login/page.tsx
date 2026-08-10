@@ -49,15 +49,15 @@ export default function AdminLogin() {
       >
         <div className="flex flex-col items-center text-center mb-11">
           <div className="rounded-full overflow-hidden h-16 w-16 bg-brand-light border border-brand-line shadow-sm">
-            <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
           </div>
           <span className="font-display text-3xl text-brand-dark leading-none mt-5">
-            Diamond <span className="italic text-brand-primary">Taste</span>
+            thepufflette<span className="italic text-brand-primary">.co</span>
           </span>
           <span className="eyebrow mt-3">Admin Studio</span>
         </div>
 
-        <div className="bg-brand-light border border-brand-line rounded-3xl p-7 shadow-[0_22px_48px_rgba(43,23,34,0.06)]">
+        <div className="bg-brand-light border border-brand-line rounded-3xl p-7 shadow-[0_22px_48px_rgba(28,22,19,0.06)]">
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-[10px] label-track text-brand-dark/50 mb-2.5">Email</label>
@@ -99,7 +99,7 @@ export default function AdminLogin() {
         </div>
 
         <p className="text-center text-brand-dark/25 text-[9px] tracking-widest uppercase mt-9 font-semibold">
-          Diamond Taste © {new Date().getFullYear()}
+          thepufflette.co © {new Date().getFullYear()}
         </p>
       </motion.div>
     </div>

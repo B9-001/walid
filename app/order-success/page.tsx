@@ -4,7 +4,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import OrderSuccess from "@/components/diamond/OrderSuccess";
 
-export const metadata = { title: "Order Confirmed | Diamond Taste" };
+export const metadata = { title: "Order Confirmed | thepufflette.co" };
 
 export default function OrderSuccessPage() {
   return (

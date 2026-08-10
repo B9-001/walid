@@ -42,10 +42,10 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-center mb-9">
           <div className="rounded-full overflow-hidden h-14 w-14 bg-brand-light border border-brand-line">
-            <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
           </div>
           <span className="font-display text-2xl text-brand-dark leading-none mt-4">
-            Diamond <span className="italic text-brand-primary">Taste</span>
+            thepufflette<span className="italic text-brand-primary">.co</span>
           </span>
         </div>
 
