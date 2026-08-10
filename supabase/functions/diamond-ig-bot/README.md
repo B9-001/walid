@@ -24,8 +24,8 @@ bots — EA_/EK_/MS_ etc.). The `DT_PAYSTACK_*` ones are already set.
 supabase secrets set \
   TEST_TOKEN="<instagram page access token>" \
   TEST_ID="<instagram business account id>" \
-  DT_PAYSTACK_SECRET="sk_test_..." \
-  DT_PAYSTACK_SUBACCOUNT="ACCT_rkdr66y94q0xz5c"   # optional split \
+  DT_PAYSTACK_SECRET="your-paystack-secret-key" \
+  DT_PAYSTACK_SUBACCOUNT="ACCT_ud6yo2g3g2tczpr"   # optional split \
   RESEND_API_KEY="<optional, for handoff emails>" \
   SHOP_SUPPORT_EMAIL="admin@example.com" \
   SHOP_FROM_EMAIL="onboarding@resend.dev"

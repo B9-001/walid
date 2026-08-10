@@ -2,6 +2,13 @@
 
 const features = [
   {
+    title: "Freshly baked",
+    body: "Baked fresh in small batches and ready to order — never sitting on a shelf.",
+    icon: (
+      <path d="M12 3v2m0 14v2M5.2 5.2l1.4 1.4m10.8 10.8l1.4 1.4M3 12h2m14 0h2M5.2 18.8l1.4-1.4m10.8-10.8l1.4-1.4" />
+    ),
+  },
+  {
     title: "Made with love",
     body: "Crafted with quality ingredients for a rich, indulgent taste every time.",
     icon: <path d="M12 20l-7-7a4 4 0 015.7-5.7L12 8l1.3-0.7A4 4 0 0119 13l-7 7z" />,
@@ -19,7 +26,7 @@ export default function FeatureStrip() {
   return (
     <section className="bg-brand-paper">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-line border-y border-brand-line">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-brand-line border-y border-brand-line">
           {features.map((f) => (
             <div key={f.title} className="flex items-start gap-4 py-8 md:px-8 first:md:pl-0">
               <span className="feature-icon shrink-0">

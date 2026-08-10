@@ -45,7 +45,7 @@ export default function ContactPage() {
             Get in <span className="font-script text-brand-primary font-normal">touch</span>
           </h1>
           <p className="font-sans text-sm md:text-base text-brand-dark/70 mt-5 max-w-md mx-auto">
-            Questions about a custom order or a big batch of puff puff &amp; pancakes? Reach out, we&apos;re happy to help.
+            Questions about a custom cake or a big order? Reach out, we&apos;re happy to help.
           </p>
 
           <div className="mt-12 grid gap-3 text-left">

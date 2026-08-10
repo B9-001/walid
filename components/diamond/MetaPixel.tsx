@@ -1,7 +1,8 @@
 "use client";
 
 import Script from "next/script";
-import { FB_PIXEL_ID as PIXEL_ID } from "@/lib/meta";
+
+const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
 export default function MetaPixel() {
   if (!PIXEL_ID) return null;

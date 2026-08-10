@@ -4,7 +4,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import TrackOrder from "@/components/diamond/TrackOrder";
 
-export const metadata = { title: "Track Order | thepufflette.co" };
+export const metadata = { title: "Track Order | Diamond Taste" };
 
 export default function TrackPage() {
   return (

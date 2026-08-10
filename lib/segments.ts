@@ -16,7 +16,7 @@ export const PIPELINE_TAGS: TagInfo[] = [
     id: "lead", label: "Lead",
     why: "Turn people who signed up but never bought into first-time customers.",
     how: "Welcome them and gently nudge a first order.",
-    example: "“Welcome to thepufflette.co — here's a treat to start with.”",
+    example: "“Welcome to Diamond Taste — here's a treat to start with.”",
     tagged: "Signed in / captured, but has no paid order yet.",
   },
   {

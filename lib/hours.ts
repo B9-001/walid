@@ -1,4 +1,4 @@
-// Operating hours for thepufflette.co (Abuja — West Africa Time, UTC+1, no DST).
+// Operating hours for Diamond Taste (Abuja — West Africa Time, UTC+1, no DST).
 // The shop opens/closes on a weekly schedule. Orders placed while closed (or for a
 // later day) become pre-orders fulfilled on the chosen open day. All "now" maths is
 // done in the Africa/Lagos wall clock so it's correct regardless of the visitor's

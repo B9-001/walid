@@ -1,4 +1,4 @@
-// Curated Unsplash fallback imagery for thepufflette.co.
+// Curated Unsplash fallback imagery for Diamond Taste.
 // Used when admin-managed photos (hero slides, product/category images) are
 // not yet uploaded, so the storefront always looks complete.
 // All IDs verified to resolve at images.unsplash.com.
@@ -43,9 +43,9 @@ const CATEGORY_DEFAULTS = [
   U("1492446845049-9c50cc313f00", 1000),
 ];
 
-// Editorial "about" panel image — real puff puff / pancake product shots
-export const ABOUT_IMAGE = "/heroes/hero-1.jpg";
-export const STORY_IMAGE = "/heroes/hero-2.jpg";
+// Editorial "about" panel image
+export const ABOUT_IMAGE = U("1606890737304-57a1ca8a5b62", 1000);
+export const STORY_IMAGE = U("1612203985729-70726954388c", 1100);
 
 // Testimonial avatars
 export const AVATARS = [

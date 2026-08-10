@@ -92,8 +92,8 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
             </motion.div>
           ) : (
             <div className="placeholder-sweet w-full h-full flex flex-col items-center justify-center">
-              <span className="relative z-10 font-script text-4xl text-brand-primary/45 leading-none">thepufflette</span>
-              <span className="relative z-10 font-sans text-[9px] tracking-[0.32em] uppercase text-brand-primary/40 mt-1">.co</span>
+              <span className="relative z-10 font-script text-4xl text-brand-primary/45 leading-none">Diamond</span>
+              <span className="relative z-10 font-sans text-[9px] tracking-[0.32em] uppercase text-brand-primary/40 mt-1">Taste</span>
             </div>
           )}
 

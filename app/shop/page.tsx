@@ -4,7 +4,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import ShopBrowser from "@/components/diamond/ShopBrowser";
 
-export const metadata = { title: "Shop | thepufflette.co" };
+export const metadata = { title: "Shop | Diamond Taste" };
 
 export default function ShopPage() {
   return (

@@ -131,7 +131,7 @@ export default function BundlePicker({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative w-full sm:max-w-lg bg-brand-cream rounded-t-[28px] sm:rounded-[28px] max-h-[92vh] flex flex-col overflow-hidden shadow-[0_32px_80px_rgba(28,22,19,0.28)]"
+            className="relative w-full sm:max-w-lg bg-brand-cream rounded-t-[28px] sm:rounded-[28px] max-h-[92vh] flex flex-col overflow-hidden shadow-[0_32px_80px_rgba(43,23,34,0.28)]"
           >
             {/* Header */}
             <div className="px-6 pt-6 pb-4 border-b border-brand-line shrink-0 flex items-start justify-between gap-4">

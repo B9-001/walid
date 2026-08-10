@@ -1,9 +1,9 @@
 import AnnouncementBar from "@/components/diamond/AnnouncementBar";
 import Navbar from "@/components/diamond/Navbar";
 import Hero from "@/components/diamond/Hero";
-import SpecialOffersSection from "@/components/diamond/SpecialOffersSection";
 import FeatureStrip from "@/components/diamond/FeatureStrip";
 import FeaturedProducts from "@/components/diamond/FeaturedProducts";
+import BundleSection from "@/components/diamond/BundleSection";
 import CategoryShowcase from "@/components/diamond/CategoryShowcase";
 import Testimonial from "@/components/diamond/Testimonial";
 import About from "@/components/diamond/About";
@@ -18,7 +18,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <FeaturedProducts />
-        <SpecialOffersSection />
+        <BundleSection />
         <FeatureStrip />
         <CategoryShowcase />
         <Testimonial />

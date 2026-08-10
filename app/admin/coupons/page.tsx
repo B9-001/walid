@@ -217,7 +217,7 @@ export default function AdminCoupons() {
                     <CLabel l="Referrals required (paid orders)">
                       <input type="number" min="1" value={form.referral_goal || ""} onChange={(e) => setForm({ ...form, referral_goal: Number(e.target.value) })} className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary tabular-nums" />
                     </CLabel>
-                    <p className="text-[10px] text-brand-dark/50 leading-relaxed">This coupon is the template: a personal copy is auto-issued to a customer once {form.referral_goal || 3} referred friends have placed a paid order. Set the discount + category above to control what they win (e.g. 100% off · Gourmet Puff Puff = free puff puff). The template itself can&apos;t be redeemed directly.</p>
+                    <p className="text-[10px] text-brand-dark/50 leading-relaxed">This coupon is the template: a personal copy is auto-issued to a customer once {form.referral_goal || 3} referred friends have placed a paid order. Set the discount + category above to control what they win (e.g. 100% off · Milkcakes = a free milk cake). The template itself can&apos;t be redeemed directly.</p>
                   </div>
                 )}
                 <div className="flex gap-3 pt-2">

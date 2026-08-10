@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Cream & Cocoa palette */
-  --color-brand-primary: #C89B6A;       /* Warm caramel/tan — CTAs, accents */
-  --color-brand-primary-dark: #D98C6E;  /* Soft terracotta — hover/pressed */
-  --color-brand-plum: #6B4A32;          /* Deep cocoa — headings, secondary */
-  --color-brand-plum-dark: #4A3320;     /* Darker cocoa */
-  --color-brand-cream: #FBF6EE;         /* Cream / off-white background */
-  --color-brand-paper: #FBF6EE;         /* Cream / off-white canvas */
-  --color-brand-paper-dark: #F0E4CE;    /* Slightly deeper cream for panels */
-  --color-brand-blush: #F3E3CC;         /* Soft caramel tint */
-  --color-brand-dark: #1C1613;          /* Deep espresso — text / dark panels */
+  --color-brand-primary: #EC008C;       /* Hot pink / magenta — CTAs, accents */
+  --color-brand-primary-dark: #C1006F;  /* Hover/pressed */
+  --color-brand-plum: #8B3A62;          /* Plum — headings, secondary */
+  --color-brand-plum-dark: #6E2E4E;     /* Deep plum */
+  --color-brand-cream: #FFF6FB;         /* Blush background */
+  --color-brand-paper: #F7F2EC;         /* Warm editorial off-white canvas */
+  --color-brand-paper-dark: #EFE7DC;    /* Slightly deeper paper for panels */
+  --color-brand-blush: #FCE7F2;         /* Soft pink tint */
+  --color-brand-dark: #2B1722;          /* Near-black plum text / dark panel */
   --color-brand-light: #FFFFFF;         /* White */
-  --color-brand-grey: #8A7C6F;          /* Muted warm text */
-  --color-brand-line: #E8DCC5;          /* Hairline rule on cream */
+  --color-brand-grey: #9B8F95;          /* Muted text */
+  --color-brand-line: #E4DACE;          /* Hairline rule on paper */
 
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display), Georgia, "Times New Roman", serif;
@@ -30,8 +29,8 @@
   body {
     background-color: var(--background);
     background-image:
-      radial-gradient(1100px 560px at 100% -8%, rgba(200, 155, 106, 0.10), transparent 60%),
-      radial-gradient(820px 480px at -10% 6%, rgba(28, 22, 19, 0.04), transparent 55%);
+      radial-gradient(1100px 560px at 100% -8%, rgba(236, 0, 140, 0.07), transparent 60%),
+      radial-gradient(820px 480px at -10% 6%, rgba(139, 58, 98, 0.05), transparent 55%);
     background-attachment: fixed;
     color: var(--foreground);
     font-family: var(--font-sans);
@@ -57,7 +56,7 @@
 
   ::placeholder {
     opacity: 1;
-    color: rgba(28, 22, 19, 0.35);
+    color: rgba(43, 23, 34, 0.35);
   }
 }
 
@@ -99,13 +98,13 @@
   border: 1px solid var(--color-brand-line);
   border-radius: 1.5rem;
   overflow: hidden;
-  box-shadow: 0 1px 2px rgba(28, 22, 19, 0.04);
+  box-shadow: 0 1px 2px rgba(43, 23, 34, 0.04);
   transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease, border-color .45s ease;
 }
 .card-soft:hover {
   transform: translateY(-8px);
-  box-shadow: 0 30px 60px -28px rgba(28, 22, 19, 0.30);
-  border-color: rgba(200, 155, 106, 0.30);
+  box-shadow: 0 30px 60px -28px rgba(43, 23, 34, 0.30);
+  border-color: rgba(236, 0, 140, 0.30);
 }
 
 /* Branded placeholder for products/categories without a photo —
@@ -114,13 +113,13 @@
   position: relative;
   background:
     radial-gradient(130% 120% at 28% 18%, rgba(255, 255, 255, 0.65), transparent 55%),
-    linear-gradient(145deg, #F3E4D0 0%, #EAD4B4 48%, #DCC098 100%);
+    linear-gradient(145deg, #FCE7F2 0%, #F6D6E6 48%, #ECC6DB 100%);
 }
 .placeholder-sweet::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(200, 155, 106, 0.18) 1px, transparent 1.5px);
+  background-image: radial-gradient(rgba(236, 0, 140, 0.12) 1px, transparent 1.5px);
   background-size: 17px 17px;
   opacity: 0.45;
 }
@@ -154,7 +153,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  background: linear-gradient(135deg, #C89B6A 0%, #D98C6E 100%);
+  background: linear-gradient(135deg, #EC008C 0%, #C1006F 100%);
   color: var(--color-brand-light);
   padding: 0.95rem 1.7rem;
   border-radius: 9999px;
@@ -162,13 +161,13 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-size: 0.72rem;
-  box-shadow: 0 10px 24px -8px rgba(200, 155, 106, 0.45);
+  box-shadow: 0 10px 24px -8px rgba(236, 0, 140, 0.45);
   transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 .btn-brand:hover {
   filter: brightness(1.06);
   transform: translateY(-2px);
-  box-shadow: 0 18px 36px -8px rgba(200, 155, 106, 0.55);
+  box-shadow: 0 18px 36px -8px rgba(236, 0, 140, 0.55);
 }
 
 /* Ghost / outline button (plum on paper, or light on dark panels) */

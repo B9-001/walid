@@ -94,7 +94,7 @@ export default function LoginPrompt() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative w-full max-w-[400px] bg-brand-cream rounded-[28px] shadow-[0_32px_80px_rgba(28,22,19,0.22)] overflow-hidden"
+            className="relative w-full max-w-[400px] bg-brand-cream rounded-[28px] shadow-[0_32px_80px_rgba(43,23,34,0.22)] overflow-hidden"
           >
             <button onClick={dismiss} className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-brand-light/80 text-brand-dark/40 hover:text-brand-primary hover:bg-brand-blush transition-all">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -104,10 +104,10 @@ export default function LoginPrompt() {
             <div className="bg-brand-dark px-8 pt-8 pb-7">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-9 h-9 rounded-full overflow-hidden border border-white/10 shrink-0">
-                  <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
+                  <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
                 </div>
                 <span className="font-display text-lg text-white leading-none">
-                  thepufflette<span className="italic text-brand-primary">.co</span>
+                  Diamond <span className="italic text-brand-primary">Taste</span>
                 </span>
               </div>
               {step === "recover" ? (

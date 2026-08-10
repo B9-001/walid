@@ -4,11 +4,11 @@ import AdminShell from "./AdminShell";
 // Installable PWA config — scoped to /admin so admins can "Add to Home Screen"
 // on iOS and launch the panel as a standalone app.
 export const metadata: Metadata = {
-  title: "thepufflette.co — Admin",
+  title: "Diamond Taste — Admin",
   manifest: "/admin.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Pufflette Admin",
+    title: "DT Admin",
     statusBarStyle: "default",
   },
   icons: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FBF6EE",
+  themeColor: "#F7F2EC",
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

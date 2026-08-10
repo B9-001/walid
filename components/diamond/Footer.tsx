@@ -28,10 +28,10 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-12 border-b border-brand-light/10">
           <div className="max-w-md">
             <span className="font-display text-3xl md:text-4xl">
-              thepufflette<span className="italic text-brand-primary">.co</span>
+              Diamond <span className="italic text-brand-primary">Taste</span>
             </span>
             <p className="text-sm text-brand-light/65 leading-relaxed mt-4">
-              Gourmet puff puff and fluffy pancakes, freshly made to order
+              Handcrafted milkcakes, cake tubs, cheesecakes and pastries, freshly baked to order
               and delivered to your door.
             </p>
           </div>
@@ -54,8 +54,8 @@ export default function Footer() {
             <span className="text-[10px] tracking-[0.24em] uppercase text-brand-light/45 font-semibold">Shop</span>
             <div className="flex flex-col gap-3">
               <FooterLink href="/shop">All Treats</FooterLink>
-              <FooterLink href="/shop?category=gourmet-pancakes">Gourmet Pancakes</FooterLink>
-              <FooterLink href="/shop?category=gourmet-puff-puff">Gourmet Puff Puff</FooterLink>
+              <FooterLink href="/shop?category=milkcakes">Milkcakes</FooterLink>
+              <FooterLink href="/shop?category=cake-tubs">Cake Tubs</FooterLink>
               <FooterLink href="/cart">Your Cart</FooterLink>
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-12 mt-12 border-t border-brand-light/10 text-[10px] tracking-[0.2em] uppercase text-brand-light/45">
-          © {new Date().getFullYear()} thepufflette.co. Made fresh, made with love
+          © {new Date().getFullYear()} Diamond Taste. Baked fresh, made with love
         </div>
       </div>
     </footer>

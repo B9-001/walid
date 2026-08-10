@@ -203,9 +203,9 @@ export default function CartView() {
   const total = Math.max(0, subtotal - couponDiscount);
   const totalSaved = cartSavings(items); // Box of 5 product savings
 
-  // ₦500 Classic Pancake Stack upgrade — a SEPARATE offer for full-price baskets only.
+  // ₦500 Classic Milkcake upgrade — a SEPARATE offer for full-price baskets only.
   // Unlocked by ₦15,000+ of full-price items, and NEVER shown when a bundle is in
-  // the cart (a bundle is already discounted — no stacking the upgrade on top).
+  // the cart (a bundle is already discounted — no stacking the milkcake on top).
   const upgradeInCart = items.some((it) => it.upgrade);
   const fullPriceBase = fullPriceSubtotal(items);
   const upgradeEligible = !bundlePresent && fullPriceBase >= UPGRADE_MIN;
@@ -233,29 +233,11 @@ export default function CartView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundlePresent, fullPriceBase, upgradeInCart]);
 
-  // Any product with "Show as Special Offer" switched on in /admin/products
-  // gets a highlighted line here (strike-through price, savings, composition
-  // line) — fetch which cart lines are flagged, and their live old_price /
-  // offer_line, so admin edits show up here without a code change.
-  const cartProductIdsKey = items.map((it) => it.product_id).sort().join(",");
-  const [specialOfferMap, setSpecialOfferMap] = useState<Map<string, { old_price: number | null; offer_line: string | null }>>(new Map());
-  useEffect(() => {
-    if (!cartProductIdsKey) { setSpecialOfferMap(new Map()); return; }
-    supabase
-      .from("diamond_products")
-      .select("product_id, old_price, offer_line")
-      .eq("is_special_offer", true)
-      .in("product_id", cartProductIdsKey.split(","))
-      .then(({ data }) => {
-        setSpecialOfferMap(new Map((data || []).map((p) => [p.product_id, { old_price: p.old_price, offer_line: p.offer_line }])));
-      });
-  }, [cartProductIdsKey]);
-
   const addUpgrade = () => {
     if (!upgradeProduct) return;
     addItem({
       product_id: UPGRADE_PRODUCT_ID,
-      name: "Classic Pancake Stack",
+      name: "Classic Milkcake",
       image: upgradeProduct.image_url,
       price: UPGRADE_PRICE,
       upgrade: true,
@@ -281,7 +263,7 @@ export default function CartView() {
           href="/shop"
           className="inline-block mt-8 bg-brand-primary text-brand-light px-9 py-4 rounded-full font-sans text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-brand-primary-dark transition-all"
         >
-          Browse menu
+          Browse cakes
         </Link>
       </div>
     );
@@ -309,29 +291,14 @@ export default function CartView() {
         {/* Items */}
         <div className="lg:col-span-2 space-y-4 min-w-0">
           <AnimatePresence>
-            {items.map((it) => {
-              // Special Offer products (flagged in /admin/products) are normal
-              // product lines — they don't carry `bundle`/`worth` — so compute
-              // their strike-through/savings here, styled after the homepage
-              // promo card so they stand out in the cart.
-              const offerMeta = specialOfferMap.get(it.product_id);
-              const isSpecialOffer = !!offerMeta;
-              const offerCompareAtUnit = offerMeta?.old_price && offerMeta.old_price > it.price ? offerMeta.old_price : 0;
-              const offerCompareTotal = offerCompareAtUnit * it.quantity;
-              const offerSaving = isSpecialOffer ? Math.max(0, offerCompareTotal - it.price * it.quantity) : 0;
-              const totalSaving = offerSaving > 0 ? offerSaving : lineSaving(it);
-              const compareTotal = offerSaving > 0 ? offerCompareTotal : it.bundle ? it.bundle.worth : it.worth || 0;
-
-              return (
+            {items.map((it) => (
               <motion.div
                 key={it.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`flex gap-4 rounded-2xl p-4 ${
-                  isSpecialOffer ? "bg-brand-primary/5 border-2 border-brand-primary/30" : "bg-brand-light border border-brand-line"
-                }`}
+                className="flex gap-4 bg-brand-light border border-brand-line rounded-2xl p-4"
               >
                 <div className="w-24 h-24 rounded-xl overflow-hidden bg-brand-blush shrink-0">
                   {it.image ? (
@@ -348,18 +315,7 @@ export default function CartView() {
                     <h3 className="font-display text-lg text-brand-dark leading-tight">{it.name}</h3>
                     {it.bundle && <Tag>Bundle</Tag>}
                     {it.upgrade && <Tag>Add-on</Tag>}
-                    {isSpecialOffer && (
-                      <span className="inline-flex items-center gap-1 bg-brand-primary-dark text-white font-sans text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">
-                        <span className="text-brand-dark">★</span> Special Offer
-                      </span>
-                    )}
                   </div>
-
-                  {isSpecialOffer && offerMeta?.offer_line && (
-                    <p className="font-sans text-[11px] font-bold tracking-wide text-brand-primary-dark uppercase mt-1.5">
-                      {offerMeta.offer_line}
-                    </p>
-                  )}
 
                   {/* Bundle: list the picked flavours */}
                   {it.bundle && (
@@ -370,24 +326,18 @@ export default function CartView() {
                     </p>
                   )}
 
-                  {it.note && (
-                    <p className="font-sans text-[12px] text-brand-dark/60 mt-1 leading-relaxed italic">
-                      &ldquo;{it.note}&rdquo;
-                    </p>
-                  )}
-
                   <div className="flex items-baseline gap-2 mt-1.5">
                     <p className="font-sans text-lg font-semibold text-brand-plum">{formatNaira(it.price * it.quantity)}</p>
-                    {totalSaving > 0 && (
+                    {lineSaving(it) > 0 && (
                       <span className="font-sans text-[12px] text-brand-grey line-through">
-                        {formatNaira(compareTotal)}
+                        {formatNaira((it.bundle ? it.bundle.worth : it.worth || 0))}
                       </span>
                     )}
                   </div>
 
-                  {totalSaving > 0 && (
+                  {lineSaving(it) > 0 && (
                     <p className="font-sans text-[12px] font-semibold text-brand-primary mt-0.5">
-                      You save {formatNaira(totalSaving)}
+                      You save {formatNaira(lineSaving(it))}
                     </p>
                   )}
 
@@ -411,8 +361,7 @@ export default function CartView() {
                   </svg>
                 </button>
               </motion.div>
-              );
-            })}
+            ))}
           </AnimatePresence>
         </div>
 
@@ -453,14 +402,14 @@ export default function CartView() {
               </div>
             ) : null)}
 
-            {/* ₦500 Classic Pancake Stack upgrade — unlocked by a ₦15,000+ full-price basket */}
+            {/* ₦500 Classic Milkcake upgrade — unlocked by a ₦15,000+ full-price basket */}
             {upgradeEligible && !upgradeInCart && upgradeProduct && (
               <div className="bg-gradient-to-br from-brand-primary/10 to-brand-blush border border-brand-primary/30 rounded-2xl p-4 flex items-center gap-3">
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-brand-blush shrink-0">
-                  {upgradeProduct.image_url && <img src={upgradeProduct.image_url} alt="Classic Pancake Stack" className="w-full h-full object-cover" />}
+                  {upgradeProduct.image_url && <img src={upgradeProduct.image_url} alt="Classic Milkcake" className="w-full h-full object-cover" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-sans text-[13px] font-bold text-brand-dark leading-tight">Add a Classic Pancake Stack for ₦500</p>
+                  <p className="font-sans text-[13px] font-bold text-brand-dark leading-tight">Add a Classic Milkcake for ₦500</p>
                   <p className="font-sans text-[11px] text-brand-grey mt-0.5">Normally {formatNaira(upgradeProduct.base_price)} — save {formatNaira(upgradeProduct.base_price - UPGRADE_PRICE)}.</p>
                 </div>
                 <button onClick={addUpgrade} className="shrink-0 bg-brand-primary text-brand-light px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase hover:bg-brand-primary-dark transition-colors">Add</button>

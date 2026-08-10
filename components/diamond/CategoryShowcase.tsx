@@ -23,12 +23,12 @@ export default function CategoryShowcase() {
 
   // Rotating brand gradients so image-less tiles still feel rich and varied.
   const gradients = [
-    "linear-gradient(150deg, #C89B6A 0%, #6B4A32 100%)",
-    "linear-gradient(150deg, #6B4A32 0%, #1C1613 100%)",
-    "linear-gradient(150deg, #D98C6E 0%, #A85D45 100%)",
-    "linear-gradient(150deg, #A85D45 0%, #1C1613 100%)",
-    "linear-gradient(150deg, #C89B6A 0%, #D98C6E 100%)",
-    "linear-gradient(150deg, #6B4A32 0%, #C89B6A 100%)",
+    "linear-gradient(150deg, #EC008C 0%, #8B3A62 100%)",
+    "linear-gradient(150deg, #8B3A62 0%, #2B1722 100%)",
+    "linear-gradient(150deg, #C1006F 0%, #6E2E4E 100%)",
+    "linear-gradient(150deg, #6E2E4E 0%, #2B1722 100%)",
+    "linear-gradient(150deg, #EC008C 0%, #C1006F 100%)",
+    "linear-gradient(150deg, #8B3A62 0%, #EC008C 100%)",
   ];
 
   return (
@@ -53,7 +53,7 @@ export default function CategoryShowcase() {
             >
               <Link
                 href={`/shop?category=${cat.slug}`}
-                className="group relative block aspect-[5/4] rounded-[1.5rem] overflow-hidden bg-brand-dark shadow-[0_1px_2px_rgba(28,22,19,0.06)] transition-shadow duration-500 hover:shadow-[0_30px_60px_-28px_rgba(28,22,19,0.45)]"
+                className="group relative block aspect-[5/4] rounded-[1.5rem] overflow-hidden bg-brand-dark shadow-[0_1px_2px_rgba(43,23,34,0.06)] transition-shadow duration-500 hover:shadow-[0_30px_60px_-28px_rgba(43,23,34,0.45)]"
               >
                 {cat.image_url ? (
                   <img

@@ -31,9 +31,8 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 function sameLine(a: CartItem, b: AddInput) {
   // Bundles and the ₦500 upgrade are always their own line — never merge them
-  // (two boxes may be picked differently; the upgrade must stay at ₦500). A note
-  // also keeps a line separate — merging would silently hide or overwrite it.
-  if (a.bundle || b.bundle || a.upgrade || b.upgrade || a.note || b.note) return false;
+  // (two boxes may be picked differently; the upgrade must stay at ₦500).
+  if (a.bundle || b.bundle || a.upgrade || b.upgrade) return false;
   return a.product_id === b.product_id;
 }
 
@@ -97,7 +96,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         bundle: input.bundle,
         upgrade: input.upgrade,
         worth: input.worth,
-        note: input.note?.trim() || undefined,
       };
       return [...prev, newItem];
     });

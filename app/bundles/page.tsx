@@ -4,7 +4,7 @@ import Footer from "@/components/diamond/Footer";
 import BundleCards from "@/components/diamond/BundleCards";
 import BundleShopMore from "@/components/diamond/BundleShopMore";
 
-export const metadata = { title: "Build Your Box — Bundle Deals | thepufflette.co" };
+export const metadata = { title: "Build Your Box — Bundle Deals | Diamond Taste" };
 
 export default function BundlesPage() {
   return (
@@ -32,7 +32,7 @@ export default function BundlesPage() {
               </h1>
 
               <p className="font-sans text-sm md:text-base text-brand-light/60 mt-6 max-w-md mx-auto lg:mx-0">
-                Mix and match the pancakes and puff puff you love into a box —{" "}
+                Mix and match the milkcakes and cake tubs you love into a box —{" "}
                 <span className="text-brand-light font-semibold">save up to ₦4,500</span> and{" "}
                 <span className="text-brand-light font-semibold">delivery is on us</span>, no ₦20,000 minimum.
               </p>

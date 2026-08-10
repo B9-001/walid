@@ -3,7 +3,7 @@ import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import OfferShop from "@/components/diamond/OfferShop";
 
-export const metadata = { title: "Free Delivery on Orders Over ₦20,000 | thepufflette.co" };
+export const metadata = { title: "Free Delivery on Orders Over ₦20,000 | Diamond Taste" };
 
 export default function Offer1Page() {
   return (
@@ -61,12 +61,12 @@ export default function Offer1Page() {
             <div className="relative">
               <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-md mx-auto">
                 <div className="space-y-3 sm:space-y-4 pt-8">
-                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/8becc91e-6fc9-4d1e-8294-b40c8603e25b-c.jpg" alt="Golden puff puff" />
-                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/3e28b975-eb37-4db0-b035-9d5f023a8f39-c.jpg" alt="Stack of gourmet pancakes" />
+                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/8becc91e-6fc9-4d1e-8294-b40c8603e25b-c.jpg" alt="Vanilla berry cheesecake" />
+                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/3e28b975-eb37-4db0-b035-9d5f023a8f39-c.jpg" alt="Tiramisu milkcake" />
                 </div>
                 <div className="space-y-3 sm:space-y-4">
-                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/6066d4b9-0707-4ad6-8eda-833a508153bd-c.jpg" alt="Cinnamon puff puff" />
-                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/cd2e2f6c-4999-448e-bea9-1ccd88aa8f50-c.jpg" alt="Classic pancake stack" />
+                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/6066d4b9-0707-4ad6-8eda-833a508153bd-c.jpg" alt="Chocolate cheesecake" />
+                  <HeroImg src="https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/diamond-products/products/cd2e2f6c-4999-448e-bea9-1ccd88aa8f50-c.jpg" alt="Lotus milkcake" />
                 </div>
               </div>
 

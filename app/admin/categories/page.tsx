@@ -87,7 +87,7 @@ export default function AdminCategories() {
         <div>
           <h1 className="font-display text-4xl md:text-6xl text-brand-dark leading-none">Categories</h1>
           <p className="font-script text-2xl text-brand-primary mt-2">shop sections</p>
-          <p className="font-sans text-xs text-brand-dark/40 mt-3 max-w-md">The tiles customers tap to browse — e.g. Gourmet Puff Puff, Gourmet Pancakes. Products are assigned to a category by name.</p>
+          <p className="font-sans text-xs text-brand-dark/40 mt-3 max-w-md">The tiles customers tap to browse — e.g. Birthday Cakes, Cupcakes. Products are assigned to a category by name.</p>
         </div>
         <button onClick={openAdd} className="bg-brand-primary text-brand-light px-7 py-3.5 rounded-full font-sans text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-brand-primary-dark transition-all shrink-0">+ New Category</button>
       </div>

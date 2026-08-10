@@ -24,9 +24,7 @@ export type Product = {
   image_url: string | null;
   images: string[];
   base_price: number; // kobo
-  old_price: number | null; // strike-through "was" price when on sale
-  offer_line: string | null; // short caption shown with the sale, e.g. "15 Pancakes + 16 Puff Puff Pieces"
-  is_special_offer: boolean; // gets its own promo card on the homepage + a highlighted line in the cart
+  old_price: number | null; // kept for future sale display
   sizes: SizeTier[];  // kept for future use, not shown in UI yet
   featured: boolean;
   active: boolean;
@@ -68,14 +66,12 @@ export type CartItem = {
   // bundle: `price` is the fixed bundle price and `product_id` is a synthetic
   // per-instance id so two differently-picked boxes never merge.
   bundle?: BundleMeta;
-  // The ₦500 Classic Pancake Stack upgrade line. product_id is the real slug; it never
+  // The ₦500 Classic Milkcake upgrade line. product_id is the real slug; it never
   // merges with a full-price line of the same product.
   upgrade?: boolean;
   // Real value (kobo) of this line for savings display (upgrade lines). Bundles
   // carry their worth in `bundle.worth` instead.
   worth?: number;
-  // Customer's special instructions for this specific item (e.g. "no nuts please").
-  note?: string;
 };
 
 export type OrderItem = {
@@ -85,9 +81,8 @@ export type OrderItem = {
   price: number; // kobo, unit price
   quantity: number;
   bundle?: string; // bundle slug, set when this line came from a Build-Your-Box bundle
-  upgrade?: boolean; // the ₦500 Classic Pancake Stack upgrade line
+  upgrade?: boolean; // the ₦500 Classic Milkcake upgrade line
   preorder_release_at?: string | null;
-  note?: string; // customer's special instructions for this item
 };
 
 export type Order = {

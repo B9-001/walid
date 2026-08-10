@@ -9,19 +9,6 @@ launch your own shop — see [SETUP-GUIDE.md](./SETUP-GUIDE.md) for a full walkt
 > missing its database objects, and what was completed in this pass. For the original
 > quick-start, see [QUICKSTART.md](./QUICKSTART.md) / [SETUP-GUIDE.md](./SETUP-GUIDE.md).
 
-## Status: Supabase is live
-
-The project's own Supabase project ("walid", already referenced in `next.config.ts`) is fully
-provisioned: `schema.sql` and `schema-crm-extensions.sql` are both applied, the `diamond-products`
-and `diamond-hero` storage buckets exist with write-only policies, and the CRM sync trigger has
-been verified end-to-end against real data (paid order → customer row created/synced →
-lifecycle stage computed correctly). Three functions that shouldn't be publicly callable
-(`diamond_analytics_summary`, `diamond_sync_customer_from_order`, `diamond_check_referral_reward`)
-have had their default anon/authenticated `EXECUTE` grant revoked. The database has no products,
-categories, or orders yet — the store is an empty shell ready for content. See §11 for exactly
-what's left to make it a live, working store (Paystack keys, an admin account, and your first
-products).
-
 ---
 
 ## 1. Framework & stack
@@ -257,34 +244,3 @@ npm run dev                     # http://localhost:3000
 
 Full walkthrough (Supabase project, storage buckets, Paystack, admin account, deploy): see
 [SETUP-GUIDE.md](./SETUP-GUIDE.md).
-
-## 11. Go live checklist
-
-The Supabase side (§ Status above) is done. What's left, in order:
-
-1. **Paystack keys** — get your test (then live) keys from
-   [dashboard.paystack.com](https://dashboard.paystack.com) → Settings → API Keys & Webhooks, and
-   set `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` wherever you deploy.
-2. **Deploy** — push this repo to Vercel (or any Next.js host) and set these environment
-   variables in the project settings:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=https://mlixtbyhsltflysatsib.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=<the anon/publishable key from Supabase → Settings → API>
-   SUPABASE_SERVICE_ROLE_KEY=<the service_role key from the same page — keep secret>
-   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=<your Paystack public key>
-   NEXT_PUBLIC_SITE_URL=<your real deployed domain, once you have one>
-   CONTROL_PASSWORD=<optional — only if you want the /control analytics dashboard>
-   ```
-   `next.config.ts` already points its image loader at this exact Supabase project, so no code
-   change is needed there.
-3. **Create your admin account** — sign up at `/auth/signup` (or via `/admin/login`) once deployed
-   (or locally against the live DB), then in the Supabase SQL Editor:
-   ```sql
-   insert into diamond_admins (id, email)
-   values ('paste-your-auth-user-uuid', 'you@email.com');
-   ```
-   Find the UUID in Supabase → Authentication → Users.
-4. **Add your content** — categories, products, delivery areas, hero banners, and site settings,
-   all from `/admin`. The store has zero products until you do this.
-5. **Optional extras** — Resend for order emails, Meta Pixel/CAPI, the AI email/Instagram-bot
-   subsystem (§5) — none of these block going live; add them later if you want them.
