@@ -1,5 +1,5 @@
 -- ============================================================================
---  Diamond Taste — CRM / referral / analytics schema extensions
+--  thepufflette.co — CRM / referral / analytics schema extensions
 --  Run this in the Supabase SQL Editor AFTER schema.sql.
 --
 --  schema.sql only ships the "core" storefront tables. Several features that

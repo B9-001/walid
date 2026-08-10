@@ -1,9 +1,10 @@
-# Diamond Taste — E-commerce Storefront + Admin
+# thepufflette.co — E-commerce Storefront + Admin
 
-A **Next.js 16 (App Router)** storefront and admin dashboard for a Nigerian cake/bakery business:
-browse products, add to cart, pay with **Paystack**, track orders, and manage everything from a
-built-in `/admin` dashboard. Backed by **Supabase** (Postgres + Auth + Storage). Rebrand it and
-launch your own shop — see [SETUP-GUIDE.md](./SETUP-GUIDE.md) for a full walkthrough.
+A **Next.js 16 (App Router)** storefront and admin dashboard for The Pufflette Co, a Nigerian
+gourmet puff puff & pancake shop in Abuja: browse products, add to cart, pay with **Paystack**,
+track orders, and manage everything from a built-in `/admin` dashboard. Backed by **Supabase**
+(Postgres + Auth + Storage). See [SETUP-GUIDE.md](./SETUP-GUIDE.md) for a full walkthrough.
+(Database tables keep the internal `diamond_` prefix from the original template — see AGENTS.md.)
 
 > This document is a from-the-code audit of what's actually implemented, what's wired up but
 > missing its database objects, and what was completed in this pass. For the original

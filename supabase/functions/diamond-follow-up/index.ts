@@ -1,4 +1,4 @@
-// Diamond Taste — Follow-up scheduler.
+// thepufflette.co — Follow-up scheduler.
 //
 // Called every 15 min by pg_cron. Finds bot sessions idle for 45+ minutes that
 // haven't been nudged for this idle period (last_followup_at is null), sends a
@@ -23,7 +23,7 @@ const IDLE_MINUTES = 45;
 const FOLLOW_UP_STATES = ["awaiting_payment", "review", "shopping", "await_track_id"];
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "GET") return new Response("Diamond Taste follow-up scheduler is ACTIVE.", { status: 200 });
+  if (req.method === "GET") return new Response("thepufflette.co follow-up scheduler is ACTIVE.", { status: 200 });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   const cutoff = new Date(Date.now() - IDLE_MINUTES * 60 * 1000).toISOString();

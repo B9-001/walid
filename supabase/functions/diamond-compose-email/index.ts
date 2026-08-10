@@ -1,4 +1,4 @@
-// Diamond Taste — AI single-email composer / editor.
+// thepufflette.co — AI single-email composer / editor.
 //
 // Admin-only. Two modes, both returning ONE email object (never writes to the DB —
 // the admin reviews it in the editor and saves):
@@ -29,7 +29,7 @@ const cors = {
 const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
 const AUDIENCE_BRIEF: Record<string, string> = {
-  lead: "Signed up but has never ordered. Goal: warmly introduce Diamond Taste and nudge a first order.",
+  lead: "Signed up but has never ordered. Goal: warmly introduce thepufflette.co and nudge a first order.",
   new: "Just placed their FIRST order. Goal: thank them, set expectations, encourage a second order + a review.",
   repeat: "Has ordered 2+ times. Goal: reward loyalty, surface favourites, ask them to refer a friend.",
   vip: "A top customer (5+ orders or big spender). Goal: make them feel special with perks and gratitude.",
@@ -42,8 +42,8 @@ const AUDIENCE_BRIEF: Record<string, string> = {
 };
 
 const SYSTEM =
-  "You are an email copywriter for Diamond Taste, a warm, premium home-bakery in Abuja, Nigeria. " +
-  "They sell milkcakes, cake tubs and cheesecakes, all ready-made and freshly baked, delivered across Abuja. " +
+  "You are an email copywriter for thepufflette.co (The Pufflette Co), a warm, gourmet puff puff & pancake shop in Abuja, Nigeria. " +
+  "They sell hand-rolled puff puff and freshly poured pancakes, made fresh to order and delivered across Abuja. " +
   "Prices are in Naira (₦); free delivery over ₦20,000. Voice: friendly, indulgent, a little playful, never pushy or spammy. " +
   "You write short, mobile-friendly emails. You may personalise with the literal tokens {first_name} and {product} " +
   "(the customer's last viewed/added item) where natural, and place an image with the literal token {image} on its own line. " +
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
   if (mode === "edit") {
     const c = current || {};
     prompt =
-      `Revise this Diamond Taste email per the instruction. Keep what works; only change what's asked. ` +
+      `Revise this thepufflette.co email per the instruction. Keep what works; only change what's asked. ` +
       `Preserve any {first_name}, {product} or {image} tokens unless the instruction says to change them.\n\n` +
       `INSTRUCTION: ${String(instruction).trim()}\n\n` +
       `CURRENT EMAIL:\n` +
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
   } else {
     const brief = audience && AUDIENCE_BRIEF[audience] ? `\nAudience: ${AUDIENCE_BRIEF[audience]}` : "";
     prompt =
-      `Write ONE Diamond Taste email from this description.${brief}\n\n` +
+      `Write ONE thepufflette.co email from this description.${brief}\n\n` +
       `DESCRIPTION: ${String(instruction).trim()}\n\n` +
       SHAPE;
   }
@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://yourdomain.com",
-        "X-Title": "Diamond Taste",
+        "X-Title": "thepufflette.co",
       },
       body: JSON.stringify({
         model: MODEL,

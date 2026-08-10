@@ -1,4 +1,4 @@
-// Diamond Taste — one-click email unsubscribe.
+// thepufflette.co — one-click email unsubscribe.
 //
 // Public. Links in marketing/sequence emails point here with a signed token
 // (?e=<b64url(email)>.<hmac>). GET shows a confirm page; ?confirm=1 adds the email
@@ -32,7 +32,7 @@ function page(title: string, body: string): Response {
 <title>${title}</title></head>
 <body style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;background:#FFF6FB;display:flex;min-height:100vh;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:20px;padding:40px;max-width:440px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.06);">
-    <div style="color:#EC008C;font-size:26px;font-family:Georgia,serif;font-style:italic;margin-bottom:18px;">Diamond Taste</div>
+    <div style="color:#EC008C;font-size:26px;font-family:Georgia,serif;font-style:italic;margin-bottom:18px;">thepufflette.co</div>
     ${body}
   </div>
 </body></html>`;
@@ -46,11 +46,11 @@ Deno.serve(async (req) => {
 
   if (url.searchParams.get("confirm") === "1") {
     await admin.from("diamond_email_unsubscribes").upsert({ email: email.toLowerCase() }, { onConflict: "email" });
-    return page("Unsubscribed", `<p style="font-size:16px;color:#2B1722;">You've been unsubscribed.</p><p style="font-size:13px;color:#6b5b63;margin-top:8px;">You won't get marketing emails from Diamond Taste anymore. Order confirmations will still be sent.</p>`);
+    return page("Unsubscribed", `<p style="font-size:16px;color:#2B1722;">You've been unsubscribed.</p><p style="font-size:13px;color:#6b5b63;margin-top:8px;">You won't get marketing emails from thepufflette.co anymore. Order confirmations will still be sent.</p>`);
   }
 
   const confirmUrl = `${url.origin}${url.pathname}?e=${encodeURIComponent(url.searchParams.get("e") || "")}&confirm=1`;
   return page("Unsubscribe", `
-    <p style="font-size:16px;color:#2B1722;">Unsubscribe <strong>${email}</strong> from Diamond Taste marketing emails?</p>
+    <p style="font-size:16px;color:#2B1722;">Unsubscribe <strong>${email}</strong> from thepufflette.co marketing emails?</p>
     <a href="${confirmUrl}" style="display:inline-block;margin-top:20px;background:#EC008C;color:#fff;text-decoration:none;padding:13px 30px;border-radius:999px;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">Yes, unsubscribe</a>`);
 });

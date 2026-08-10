@@ -1,8 +1,8 @@
-// Diamond Taste — admin broadcast / marketing email.
+// thepufflette.co — admin broadcast / marketing email.
 //
-// Called from the admin Marketing page. Verifies the caller is a Diamond Taste
+// Called from the admin Marketing page. Verifies the caller is a thepufflette.co
 // admin (their Supabase access token + diamond_admins allowlist), renders a
-// branded Diamond Taste email (heading, body paragraphs, optional CTA button) and
+// branded thepufflette.co email (heading, body paragraphs, optional CTA button) and
 // sends it — either as a test to one address or to every customer with an email.
 // Sends are personalised per recipient and one-per-message (Resend batch), so
 // customers never see each other's addresses.
@@ -15,7 +15,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "Diamond Taste <onboarding@resend.dev>";
+const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
 
 const PINK = "#EC008C", PLUM = "#8B3A62", DARK = "#2B1722";
 const cors = {
@@ -65,7 +65,7 @@ function emailHtml(o: { heading: string; body: string; buttonLabel?: string; but
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:20px;overflow:hidden;max-width:600px;">
         <tr><td style="background:${PINK};padding:34px;text-align:center;">
-          <div style="color:#fff;font-size:30px;font-family:Georgia,serif;font-style:italic;">Diamond Taste</div>
+          <div style="color:#fff;font-size:30px;font-family:Georgia,serif;font-style:italic;">thepufflette.co</div>
         </td></tr>
         ${image ? `<tr><td>${image}</td></tr>` : ""}
         <tr><td style="padding:38px 36px;">
@@ -75,8 +75,8 @@ function emailHtml(o: { heading: string; body: string; buttonLabel?: string; but
           ${button}
         </td></tr>
         <tr><td style="background:${DARK};padding:24px;text-align:center;">
-          <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">Diamond Taste</div>
-          <div style="color:#9b8f95;font-size:11px;margin-top:6px;">You're a Diamond Taste customer.${o.unsub ? ` <a href="${esc(o.unsub)}" style="color:#9b8f95;text-decoration:underline;">Unsubscribe</a>` : ""}</div>
+          <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">thepufflette.co</div>
+          <div style="color:#9b8f95;font-size:11px;margin-top:6px;">You're a thepufflette.co customer.${o.unsub ? ` <a href="${esc(o.unsub)}" style="color:#9b8f95;text-decoration:underline;">Unsubscribe</a>` : ""}</div>
         </td></tr>
       </table>
     </td></tr>
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ ok: false, error: "POST only" }, 405);
 
-  // Auth: must be a signed-in Diamond Taste admin.
+  // Auth: must be a signed-in thepufflette.co admin.
   const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
   if (!token) return json({ ok: false, error: "Unauthorized" }, 401);
   const { data: ures } = await admin.auth.getUser(token);

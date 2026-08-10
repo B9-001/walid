@@ -1,4 +1,4 @@
-# Diamond Taste E-Commerce Storefront - Project TODO
+# thepufflette.co E-Commerce Storefront - Project TODO
 
 > **Stale.** This checklist predates most of the current implementation — nearly everything below
 > marked unchecked (home page sections, cart, checkout, auth, admin sections) is actually built.

@@ -1,4 +1,4 @@
-# Diamond Taste - Quick Start Guide
+# thepufflette.co - Quick Start Guide
 
 ## 🚀 Get Started in 5 Minutes
 

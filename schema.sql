@@ -1,5 +1,6 @@
 -- ============================================================================
---  Diamond Taste template — core database schema
+--  thepufflette.co — core database schema (diamond_ table prefix is an internal
+--  naming convention, unrelated to the storefront's public branding)
 --  Run this in your Supabase project's SQL editor (Dashboard → SQL Editor).
 --  It creates the tables the storefront + admin need, with permissive RLS so
 --  the public anon key can read the store and save orders.
