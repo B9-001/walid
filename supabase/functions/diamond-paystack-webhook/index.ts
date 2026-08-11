@@ -12,8 +12,10 @@
 // signature (not a Supabase JWT), so it must be deployed with verify_jwt = false.
 //
 // Secrets: DT_PAYSTACK_SECRET (live secret key for signature checks; optional
-//   DT_PAYSTACK_LIVE as a second accepted key) and auto-injected SUPABASE_URL +
-//   SUPABASE_SERVICE_ROLE_KEY.
+//   DT_PAYSTACK_LIVE as a second accepted key), FB_CAPI_TOKEN (same Meta
+//   Conversions API token as the Next.js app's FB_CAPI_TOKEN — set it here
+//   too via `supabase secrets set`, it's a separate secrets store from
+//   Vercel), and auto-injected SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -22,6 +24,11 @@ const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const PAYSTACK_SECRET = Deno.env.get("DT_PAYSTACK_SECRET") || "";
 const PAYSTACK_SECRET_2 = Deno.env.get("DT_PAYSTACK_LIVE") || "";
 const SEND_EMAIL_URL = `${SUPABASE_URL}/functions/v1/diamond-send-order-email`;
+
+// Same public pixel ID as lib/meta.ts (hardcoded there for the same reason:
+// it's public, ships in the client snippet, so a stale env var can't break it).
+const FB_PIXEL_ID = "1422886952986930";
+const FB_CAPI_TOKEN = Deno.env.get("FB_CAPI_TOKEN") || "";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
@@ -33,6 +40,45 @@ function generateOrderNumber(): string {
   let code = "";
   for (let i = 0; i < 6; i++) code += ORDER_ALPHABET[arr[i] % ORDER_ALPHABET.length];
   return `DT-${code}`;
+}
+
+async function sha256Hex(v: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v.trim().toLowerCase()));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Server-side Meta Purchase event for orders THIS webhook recovers. The
+// client-side pixel/CAPI in components/diamond/OrderSuccess.tsx only fires
+// once the customer reaches the success page — but that's exactly the case
+// that never happens when we're here, so without this, every backstop-
+// recovered order was a paid conversion Meta never heard about. event_id
+// matches OrderSuccess.tsx's `purchase_${order_number}` scheme so a genuine
+// double-fire (client succeeded after all) still dedupes on Meta's side.
+async function sendMetaPurchase(order: { order_number: string; total_price: number; customer_email?: string; customer_phone?: string }) {
+  if (!FB_CAPI_TOKEN) return;
+  const userData: Record<string, string[]> = {};
+  if (order.customer_email) userData.em = [await sha256Hex(order.customer_email)];
+  if (order.customer_phone) userData.ph = [await sha256Hex(order.customer_phone.replace(/\D/g, ""))];
+
+  try {
+    const res = await fetch(`https://graph.facebook.com/v21.0/${FB_PIXEL_ID}/events?access_token=${FB_CAPI_TOKEN}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: [{
+          event_name: "Purchase",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: `purchase_${order.order_number}`,
+          action_source: "website",
+          user_data: userData,
+          custom_data: { value: (order.total_price || 0) / 100, currency: "NGN" }, // kobo -> NGN
+        }],
+      }),
+    });
+    if (!res.ok) console.error("[PS-WEBHOOK] Meta CAPI rejected the event:", await res.text());
+  } catch (e) {
+    console.error("[PS-WEBHOOK] Meta CAPI failed (non-fatal):", e);
+  }
 }
 
 // HMAC SHA-512 of the raw body; true if it matches either configured key.
@@ -144,6 +190,11 @@ async function handleChargeSuccess(data: any) {
   }
   if (!order) { console.error("[PS-WEBHOOK] could not generate a unique order number"); return; }
   console.log(`[PS-WEBHOOK] recovered order ${order.order_number} for ${reference}`);
+
+  // The customer never reached the client-side success page (that's why we're
+  // recovering this order at all), so fire the Purchase event server-side —
+  // otherwise this paid conversion would never reach Meta.
+  await sendMetaPurchase({ order_number: order.order_number, total_price: amount, customer_email: customerEmail, customer_phone: customerPhone });
 
   // Stock is decremented by a DB trigger on insert (shared with website orders).
   // Fire the same admin + customer email as a normal order.
