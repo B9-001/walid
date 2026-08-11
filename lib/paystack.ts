@@ -6,14 +6,14 @@
 // hosting env. To switch between test/live, edit this one line.
 //   TEST key (pk_test_) → Paystack test cards only, no real charges.
 //   LIVE key (pk_live_) → real money.
-const PAYSTACK_PUBLIC_KEY = "pk_test_e6adeb158fea543fca96c4eb38a8b4e2c2defc65";
+const PAYSTACK_PUBLIC_KEY = "pk_live_dc0821ea68d0f003d3c3352220548dc03013a75d";
 
-// NO subaccount: payments settle directly to the account that owns the key
-// above (i.e. YOUR account). A subaccount code here would route the money to
-// that subaccount's owner instead — which was sending payments to the wrong
-// account. Leave this empty unless you deliberately want a Paystack split to
-// another account, and only ever with a subaccount you own.
-const PAYSTACK_SUBACCOUNT_CODE = "";
+// Every payment splits to this subaccount (bearer: "subaccount" below, so the
+// subaccount — not the main account — absorbs the Paystack transaction fee).
+// Only ever set this to a subaccount you own — a wrong code here sends real
+// money to someone else's account (see git history for why this is called
+// out explicitly).
+const PAYSTACK_SUBACCOUNT_CODE = "ACCT_ud6yo2g3g2tczpr";
 
 declare global {
   interface Window {
