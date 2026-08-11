@@ -45,6 +45,13 @@ export async function POST(req: Request) {
   if (fbp) userData.fbp = fbp;
   if (fbc) userData.fbc = fbc;
 
+  // FB_TEST_EVENT_CODE is unset in normal operation — only set it temporarily
+  // (Vercel env var) while watching Events Manager → Test Events, then unset
+  // it again. Leaving it set permanently tags every real conversion as a test
+  // event, which silently excludes them from ad optimization — that exact bug
+  // (a hardcoded test_event_code) is why this is opt-in via env var, not code.
+  const testEventCode = process.env.FB_TEST_EVENT_CODE || undefined;
+
   const body = {
     data: [
       {
@@ -57,6 +64,7 @@ export async function POST(req: Request) {
         custom_data: { ...restCustom, currency },
       },
     ],
+    ...(testEventCode ? { test_event_code: testEventCode } : {}),
   };
 
   try {

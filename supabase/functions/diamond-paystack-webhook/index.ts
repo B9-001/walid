@@ -15,7 +15,9 @@
 //   DT_PAYSTACK_LIVE as a second accepted key), FB_CAPI_TOKEN (same Meta
 //   Conversions API token as the Next.js app's FB_CAPI_TOKEN — set it here
 //   too via `supabase secrets set`, it's a separate secrets store from
-//   Vercel), and auto-injected SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
+//   Vercel), optional FB_TEST_EVENT_CODE (see the constant below — only set
+//   while testing in Meta Events Manager, unset afterward), and auto-injected
+//   SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -29,6 +31,11 @@ const SEND_EMAIL_URL = `${SUPABASE_URL}/functions/v1/diamond-send-order-email`;
 // it's public, ships in the client snippet, so a stale env var can't break it).
 const FB_PIXEL_ID = "1422886952986930";
 const FB_CAPI_TOKEN = Deno.env.get("FB_CAPI_TOKEN") || "";
+// Unset in normal operation — only set (via `supabase secrets set`) while
+// watching Events Manager -> Test Events, then unset it again. Leaving it
+// set permanently tags every real recovered-order Purchase as a test event,
+// silently excluding it from ad optimization.
+const FB_TEST_EVENT_CODE = Deno.env.get("FB_TEST_EVENT_CODE") || "";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
@@ -73,6 +80,7 @@ async function sendMetaPurchase(order: { order_number: string; total_price: numb
           user_data: userData,
           custom_data: { value: (order.total_price || 0) / 100, currency: "NGN" }, // kobo -> NGN
         }],
+        ...(FB_TEST_EVENT_CODE ? { test_event_code: FB_TEST_EVENT_CODE } : {}),
       }),
     });
     if (!res.ok) console.error("[PS-WEBHOOK] Meta CAPI rejected the event:", await res.text());
