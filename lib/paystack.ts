@@ -6,7 +6,7 @@
 // hosting env. To switch between test/live, edit this one line.
 //   TEST key (pk_test_) → Paystack test cards only, no real charges.
 //   LIVE key (pk_live_) → real money.
-const PAYSTACK_PUBLIC_KEY = "pk_live_dc0821ea68d0f003d3c3352220548dc03013a75d";
+const PAYSTACK_PUBLIC_KEY = "pk_test_e6adeb158fea543fca96c4eb38a8b4e2c2defc65";
 
 // Every payment splits to this subaccount (bearer: "subaccount" below, so the
 // subaccount — not the main account — absorbs the Paystack transaction fee).
