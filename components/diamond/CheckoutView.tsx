@@ -250,7 +250,12 @@ export default function CheckoutView() {
     };
 
     // Insert with a random order number, retrying if it happens to collide
-    // (order_number is a unique column → error code 23505).
+    // (order_number is a unique column → error code 23505). payment_reference
+    // is ALSO unique, and shares the same 23505 code — a collision there means
+    // diamond-paystack-webhook already recovered this exact payment (it can
+    // beat this client-side save to the insert). Regenerating order_number
+    // can never resolve that case, since the reference stays the same on every
+    // retry, so adopt the webhook's row instead of retrying into it forever.
     let orderNumber = "";
     let saved = false;
     for (let attempt = 0; attempt < 6; attempt++) {
@@ -260,6 +265,15 @@ export default function CheckoutView() {
         .insert([{ order_number: orderNumber, ...basePayload }]);
       if (!insertError) { saved = true; break; }
       if (insertError.code !== "23505") throw insertError;
+      if (insertError.message.includes("payment_reference")) {
+        const { data: existing } = await supabase
+          .from("diamond_orders")
+          .select("order_number")
+          .eq("payment_reference", paymentRef)
+          .maybeSingle();
+        if (existing) { orderNumber = existing.order_number; saved = true; }
+        break;
+      }
     }
     if (!saved) throw new Error(`Could not save your order. Please contact us with reference: ${paymentRef}`);
 
