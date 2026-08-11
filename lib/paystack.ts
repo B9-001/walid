@@ -13,7 +13,7 @@ const PAYSTACK_PUBLIC_KEY = "pk_live_dc0821ea68d0f003d3c3352220548dc03013a75d";
 // Only ever set this to a subaccount you own — a wrong code here sends real
 // money to someone else's account (see git history for why this is called
 // out explicitly).
-const PAYSTACK_SUBACCOUNT_CODE = "ACCT_ud6yo2g3g2tczpr";
+const PAYSTACK_SUBACCOUNT_CODE = "ACCT_wsylcvrcirun563";
 
 declare global {
   interface Window {
