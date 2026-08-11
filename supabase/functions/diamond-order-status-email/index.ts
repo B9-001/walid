@@ -7,7 +7,9 @@
 // a branded "your order is now …" update.
 //
 // Secrets: DT_RESEND_API_KEY (falls back to RESEND_API_KEY), DT_FROM_EMAIL,
-//   and auto-injected SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
+//   optional SITE_URL (defaults to https://www.thepuffletteco.cc — the
+//   "View your order" button target), and auto-injected SUPABASE_URL +
+//   SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -15,6 +17,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
+const SITE_URL = Deno.env.get("SITE_URL") || "https://www.thepuffletteco.cc";
 
 const PINK = "#EC008C", PLUM = "#8B3A62", DARK = "#2B1722";
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -71,6 +74,9 @@ function statusEmail(order: any, copy: { title: string; line: string }): string 
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;font-size:14px;">
             <tr><td style="padding-top:10px;font-weight:700;border-top:1px solid #f0e0ea;color:${DARK};">Total</td><td align="right" style="padding-top:10px;font-weight:700;border-top:1px solid #f0e0ea;color:${PINK};font-size:18px;">${naira(order.total_price || 0)}</td></tr>
           </table>
+          <table cellpadding="0" cellspacing="0" style="margin:28px auto 0;"><tr><td style="border-radius:999px;background:${PINK};">
+            <a href="${SITE_URL}/order-success?order=${encodeURIComponent(order.order_number)}" style="display:inline-block;padding:14px 34px;color:#ffffff;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;text-decoration:none;border-radius:999px;">View your order</a>
+          </td></tr></table>
         </td></tr>
         <tr><td style="background:${DARK};padding:24px;text-align:center;">
           <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">thepufflette.co</div>

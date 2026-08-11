@@ -11,10 +11,12 @@
 // back to the SHOP_ADMIN_EMAIL secret.
 //
 // Secrets: DT_RESEND_API_KEY (falls back to RESEND_API_KEY), DT_FROM_EMAIL,
-//   optional SHOP_ADMIN_EMAIL, and auto-injected SUPABASE_URL +
-//   SUPABASE_SERVICE_ROLE_KEY. If no Resend key is set the function returns a
-//   200 with { ok:false, reason:"email-not-configured" } so checkout never
-//   breaks — it just means no email went out yet.
+//   optional SHOP_ADMIN_EMAIL, optional SITE_URL (defaults to
+//   https://www.thepuffletteco.cc — the "View your order" button target),
+//   and auto-injected SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY. If no Resend
+//   key is set the function returns a 200 with
+//   { ok:false, reason:"email-not-configured" } so checkout never breaks —
+//   it just means no email went out yet.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -23,6 +25,11 @@ const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY") || "";
 const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
 const SHOP_ADMIN_EMAIL = Deno.env.get("SHOP_ADMIN_EMAIL") || "";
+// For bank transfer/USSD payments Paystack often confirms AFTER the customer
+// has left the browser tab (they're off completing the transfer elsewhere),
+// so the client-side redirect to /order-success never fires — this email is
+// the only thing that reaches them, so it needs its own way back to the site.
+const SITE_URL = Deno.env.get("SITE_URL") || "https://www.thepuffletteco.cc";
 
 // Brand palette (Cream & Cocoa)
 const CARAMEL = "#C89B6A", COCOA = "#6B4A32", DARK = "#1C1613", CREAM = "#FBF6EE";
@@ -119,6 +126,9 @@ function customerEmail(o: any): string {
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;font-size:14px;">
             <tr><td style="padding-top:10px;font-weight:700;border-top:1px solid #eaddc9;color:${DARK};">Total</td><td align="right" style="padding-top:10px;font-weight:700;border-top:1px solid #eaddc9;color:${COCOA};font-size:18px;">${naira(o.total_price)}</td></tr>
           </table>
+          <table cellpadding="0" cellspacing="0" style="margin:28px auto 0;"><tr><td style="border-radius:999px;background:${CARAMEL};">
+            <a href="${SITE_URL}/order-success?order=${encodeURIComponent(o.order_number)}" style="display:inline-block;padding:14px 34px;color:#ffffff;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;text-decoration:none;border-radius:999px;">View your order</a>
+          </td></tr></table>
         </td></tr>
         <tr><td style="background:${DARK};padding:24px;text-align:center;">
           <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">thepufflette.co</div>
