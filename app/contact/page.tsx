@@ -5,6 +5,7 @@ import AnnouncementBar from "@/components/diamond/AnnouncementBar";
 import Navbar from "@/components/diamond/Navbar";
 import Footer from "@/components/diamond/Footer";
 import { supabase } from "@/lib/supabase";
+import { fbTrack } from "@/lib/fbpixel";
 import type { SiteSettings } from "@/lib/types";
 
 export default function ContactPage() {
@@ -23,16 +24,17 @@ export default function ContactPage() {
 
   const igHandle = s.instagram_handle?.replace(/^@/, "");
   const rows = [
-    s.contact_phone && { label: "Phone", value: s.contact_phone, href: `tel:${s.contact_phone}` },
-    s.contact_email && { label: "Email", value: s.contact_email, href: `mailto:${s.contact_email}` },
+    s.contact_phone && { label: "Phone", value: s.contact_phone, href: `tel:${s.contact_phone}`, lead: true },
+    s.contact_email && { label: "Email", value: s.contact_email, href: `mailto:${s.contact_email}`, lead: true },
     s.whatsapp_number && {
       label: "WhatsApp",
       value: s.whatsapp_number,
       href: `https://wa.me/${s.whatsapp_number.replace(/[^0-9]/g, "")}`,
+      lead: true,
     },
-    igHandle && { label: "Instagram", value: `@${igHandle}`, href: `https://instagram.com/${igHandle}` },
-    s.pickup_address && { label: "Pickup", value: s.pickup_address, href: null },
-  ].filter(Boolean) as { label: string; value: string; href: string | null }[];
+    igHandle && { label: "Instagram", value: `@${igHandle}`, href: `https://instagram.com/${igHandle}`, lead: false },
+    s.pickup_address && { label: "Pickup", value: s.pickup_address, href: null, lead: false },
+  ].filter(Boolean) as { label: string; value: string; href: string | null; lead: boolean }[];
 
   return (
     <>
@@ -59,7 +61,15 @@ export default function ContactPage() {
                 >
                   <span className="font-sans text-[10px] label-track text-brand-primary shrink-0">{r.label}</span>
                   {r.href ? (
-                    <a href={r.href} target="_blank" rel="noreferrer" className="font-sans text-sm md:text-base text-brand-dark hover:text-brand-primary transition-colors text-right min-w-0 break-words">
+                    <a
+                      href={r.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => {
+                        if (r.lead) fbTrack("Lead", { content_name: r.label });
+                      }}
+                      className="font-sans text-sm md:text-base text-brand-dark hover:text-brand-primary transition-colors text-right min-w-0 break-words"
+                    >
                       {r.value}
                     </a>
                   ) : (
