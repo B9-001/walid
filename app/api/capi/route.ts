@@ -8,6 +8,7 @@ export async function POST(req: Request) {
   const pixelId = FB_PIXEL_ID;
   const token = process.env.FB_CAPI_TOKEN;
   if (!pixelId || !token) {
+    console.error("[CAPI] FB_CAPI_TOKEN is not set — dropping this event silently until it is configured.");
     return Response.json({ ok: false, reason: "missing-config" }, { status: 200 });
   }
 
@@ -16,8 +17,7 @@ export async function POST(req: Request) {
     eventId?: string;
     email?: string;
     phone?: string;
-    value?: number;
-    currency?: string;
+    custom?: Record<string, unknown>;
     sourceUrl?: string;
     fbp?: string;
     fbc?: string;
@@ -28,8 +28,9 @@ export async function POST(req: Request) {
     return Response.json({ ok: false, reason: "bad-json" }, { status: 200 });
   }
 
-  const { eventName, eventId, email, phone, value, currency = "NGN", sourceUrl, fbp, fbc } = payload;
+  const { eventName, eventId, email, phone, custom = {}, sourceUrl, fbp, fbc } = payload;
   if (!eventName) return Response.json({ ok: false, reason: "no-event" }, { status: 200 });
+  const { currency = "NGN", ...restCustom } = custom as Record<string, unknown> & { currency?: string };
 
   const userData: Record<string, string[] | string> = {
     client_user_agent: req.headers.get("user-agent") || "",
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
         action_source: "website",
         ...(sourceUrl ? { event_source_url: sourceUrl } : {}),
         user_data: userData,
-        custom_data: { ...(value != null ? { value } : {}), currency },
+        custom_data: { ...restCustom, currency },
       },
     ],
   };
@@ -64,8 +65,10 @@ export async function POST(req: Request) {
       { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
     );
     const json = await res.json();
+    if (!res.ok) console.error(`[CAPI] Meta rejected ${eventName}:`, JSON.stringify(json));
     return Response.json({ ok: res.ok, fb: json }, { status: 200 });
   } catch (e) {
+    console.error(`[CAPI] request to Meta failed for ${eventName}:`, e);
     return Response.json({ ok: false, reason: String(e) }, { status: 200 });
   }
 }
