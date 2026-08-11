@@ -258,6 +258,7 @@ export default function CheckoutView() {
     // retry, so adopt the webhook's row instead of retrying into it forever.
     let orderNumber = "";
     let saved = false;
+    let adoptedExisting = false;
     for (let attempt = 0; attempt < 6; attempt++) {
       orderNumber = generateOrderNumber();
       const { error: insertError } = await supabase
@@ -271,7 +272,7 @@ export default function CheckoutView() {
           .select("order_number")
           .eq("payment_reference", paymentRef)
           .maybeSingle();
-        if (existing) { orderNumber = existing.order_number; saved = true; }
+        if (existing) { orderNumber = existing.order_number; saved = true; adoptedExisting = true; }
         break;
       }
     }
@@ -315,32 +316,37 @@ export default function CheckoutView() {
       try { await incrementCouponUsage(c.couponId); } catch { /* non-fatal */ }
     }
 
-    // Best-effort confirmation email (edge function may not be deployed yet)
-    try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      fetch(`${url}/functions/v1/diamond-send-order-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          order_number: orderNumber,
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          method,
-          required_date: fulfilDate || shop.earliestDate || null,
-          required_time: chosenTimeValue || null,
-          items: orderItems,
-          subtotal,
-          discount,
-          delivery_fee: deliveryFee,
-          total,
-        }),
-      }).catch(() => {});
-    } catch {
-      /* ignore */
+    // Best-effort confirmation email (edge function may not be deployed yet).
+    // Skipped when this order was adopted from an existing row — that means
+    // diamond-paystack-webhook already inserted it and sent its own email,
+    // so sending here again would duplicate the customer's confirmation.
+    if (!adoptedExisting) {
+      try {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        fetch(`${url}/functions/v1/diamond-send-order-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            order_number: orderNumber,
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            method,
+            required_date: fulfilDate || shop.earliestDate || null,
+            required_time: chosenTimeValue || null,
+            items: orderItems,
+            subtotal,
+            discount,
+            delivery_fee: deliveryFee,
+            total,
+          }),
+        }).catch(() => {});
+      } catch {
+        /* ignore */
+      }
     }
 
     setConfirmedOrder(orderNumber); // enables the manual fallback link on the overlay
