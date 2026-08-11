@@ -38,7 +38,9 @@ export function fbTrack(
     window.fbq("track", event, custom, { eventID: eventId });
   }
 
-  // 2) Server-side CAPI (deduped via eventId)
+  // 2) Server-side CAPI (deduped via eventId). Forwards the same custom_data
+  // (content_ids, content_name, num_items, etc.) as the browser pixel call
+  // above so Meta sees matching payloads on both channels for this eventId.
   try {
     fetch("/api/capi", {
       method: "POST",
@@ -49,8 +51,7 @@ export function fbTrack(
         eventId,
         email: opts.email || undefined,
         phone: opts.phone || undefined,
-        value: custom.value,
-        currency: custom.currency || "NGN",
+        custom,
         sourceUrl: typeof window !== "undefined" ? window.location.href : "",
         fbp: cookie("_fbp") || undefined,
         fbc: cookie("_fbc") || undefined,
