@@ -44,7 +44,7 @@ export const PIPELINE_TAGS: TagInfo[] = [
     id: "at_risk", label: "At-risk",
     why: "Re-engage customers before they drift away.",
     how: "A gentle ‘we miss you' nudge.",
-    example: "“We saved your spot — fancy a cake this week?”",
+    example: "“We saved your spot — fancy some puff puff this week?”",
     tagged: "Has ordered before, but not in the last 30 days.",
   },
   {

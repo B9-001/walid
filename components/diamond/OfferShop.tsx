@@ -58,7 +58,7 @@ export default function OfferShop() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search cakes…"
+          placeholder="Search the menu…"
           className="w-full bg-brand-light border border-brand-line rounded-full px-6 py-3 text-sm text-brand-dark focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
@@ -73,7 +73,7 @@ export default function OfferShop() {
       {loading ? (
         <ProductGridSkeleton count={8} />
       ) : visible.length === 0 ? (
-        <p className="text-center py-24 text-brand-grey font-sans text-sm uppercase tracking-widest">No cakes found here yet.</p>
+        <p className="text-center py-24 text-brand-grey font-sans text-sm uppercase tracking-widest">Nothing found here yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {visible.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}

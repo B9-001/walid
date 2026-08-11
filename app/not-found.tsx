@@ -17,14 +17,14 @@ export default function NotFound() {
             Page not <span className="font-script text-brand-primary font-normal">found</span>
           </h1>
           <p className="font-sans text-sm md:text-base text-brand-dark/70 mt-5 max-w-md mx-auto">
-            We couldn&apos;t find that page, but there are plenty of cakes to discover.
+            We couldn&apos;t find that page, but there are plenty of treats to discover.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link href="/" className="btn-brand">
               Back to home
             </Link>
             <Link href="/shop" className="btn-ghost">
-              Browse cakes
+              Browse the menu
             </Link>
           </div>
         </div>

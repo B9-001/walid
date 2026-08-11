@@ -196,7 +196,7 @@ export default function CheckoutView() {
       <div className="max-w-[700px] mx-auto px-6 py-28 text-center">
         <h1 className="font-display text-4xl text-brand-dark">Nothing to check out</h1>
         <Link href="/shop" className="inline-block mt-6 bg-brand-primary text-brand-light px-8 py-3.5 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase">
-          Browse cakes
+          Browse menu
         </Link>
       </div>
     );
@@ -694,7 +694,7 @@ export default function CheckoutView() {
                 value={form.notes}
                 onChange={(e) => set("notes", e.target.value)}
                 rows={3}
-                placeholder="e.g. Chocolate sponge, blue &amp; gold theme, 'Happy 30th Temi' on the cake, nut allergy, deliver between 2 to 4pm…"
+                placeholder="e.g. Extra crispy puff puff, nut allergy, deliver between 2 to 4pm…"
                 className="w-full bg-brand-light border border-brand-line rounded-xl px-4 py-3 text-sm text-brand-dark focus:outline-none focus:border-brand-primary transition-colors resize-none"
               />
             </div>
