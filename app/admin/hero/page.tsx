@@ -115,7 +115,7 @@ export default function AdminHero() {
                 </div>
               </div>
               <div className="flex-1 p-5 space-y-3">
-                <div><label className="block text-[10px] label-track text-brand-dark/50 mb-1.5">Heading</label><input defaultValue={s.heading || ""} onBlur={(e) => saveText(s.id, { heading: e.target.value })} placeholder="Cakes worth…" className="w-full bg-brand-cream border border-brand-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-primary" /></div>
+                <div><label className="block text-[10px] label-track text-brand-dark/50 mb-1.5">Heading</label><input defaultValue={s.heading || ""} onBlur={(e) => saveText(s.id, { heading: e.target.value })} placeholder="Puff puff worth…" className="w-full bg-brand-cream border border-brand-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-primary" /></div>
                 <div><label className="block text-[10px] label-track text-brand-dark/50 mb-1.5">Subheading</label><input defaultValue={s.subheading || ""} onBlur={(e) => saveText(s.id, { subheading: e.target.value })} placeholder="Short tagline…" className="w-full bg-brand-cream border border-brand-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-primary" /></div>
                 <div className="flex gap-2 pt-1">
                   <button onClick={() => startReplace(s.id)} disabled={uploading} className="flex-1 py-2.5 border border-brand-line rounded-full text-[9px] font-bold tracking-widest uppercase text-brand-dark hover:bg-brand-dark hover:text-brand-light transition-colors">Replace Image</button>
