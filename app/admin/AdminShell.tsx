@@ -72,7 +72,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   const Wordmark = () => (
     <span className="font-display text-xl text-brand-dark leading-none">
-      Diamond <span className="italic text-brand-primary">Taste</span>
+      thepufflette<span className="italic text-brand-primary">.co</span>
     </span>
   );
 
@@ -82,7 +82,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <aside className="w-64 bg-brand-light border-r border-brand-line hidden md:flex flex-col p-7 h-screen sticky top-0 shrink-0">
         <Link href="/admin" className="flex items-center gap-3 mb-11">
           <div className="rounded-full overflow-hidden h-10 w-10 bg-brand-light border border-brand-line shrink-0">
-            <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
             <Wordmark />
@@ -128,7 +128,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         <header className="md:hidden flex items-center justify-between p-5 bg-brand-light border-b border-brand-line sticky top-0 z-50">
           <Link href="/admin" className="flex items-center gap-2.5">
             <div className="rounded-full overflow-hidden h-8 w-8 bg-brand-light border border-brand-line">
-              <img src="/logo.jpg" alt="Diamond Taste" className="w-full h-full object-cover" />
+              <img src="/logo.jpg" alt="thepufflette.co" className="w-full h-full object-cover" />
             </div>
             <Wordmark />
           </Link>

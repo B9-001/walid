@@ -1,12 +1,12 @@
 // Central Paystack webhook for the SHARED Paystack account.
-// Paystack only allows ONE webhook URL per account, and Diamond Taste + Bedz n
+// Paystack only allows ONE webhook URL per account, and thepufflette.co + Bedz n
 // Buttunz share one account (separated by subaccount). This dispatcher receives
 // every charge.success, decides which store it belongs to (by subaccount code or
 // reference prefix), and FORWARDS the untouched raw body + x-paystack-signature
 // to that store's own webhook function, which re-verifies the HMAC and processes
 // it exactly as before. It does NOT process orders itself, so each store's logic
-// stays independent. Anything not clearly Bedz defaults to Diamond (preserving
-// Diamond's catch-all, incl. Instagram-bot orders). Add new stores by extending
+// stays independent. Anything not clearly Bedz defaults to thepufflette.co (preserving
+// its catch-all, incl. Instagram-bot orders). Add new stores by extending
 // ROUTES. verify_jwt = false (Paystack can't send a Supabase JWT; the downstream
 // webhooks are the security gate via signature verification).
 
@@ -36,14 +36,9 @@ const ROUTES: { store: string; fn?: string; url?: string; match: (sub: string, r
     url: "https://kmfxpeeddtxozbznetzj.supabase.co/functions/v1/sultyz-paystack-webhook",
     match: (sub, ref) => sub === "ACCT_jxfe5v6m1wvh0va" || ref.toUpperCase().startsWith("SZPAY"),
   },
-  {
-    store: "walid",
-    fn: "diamond-paystack-webhook",
-    match: (sub, ref) => sub === "ACCT_ud6yo2g3g2tczpr" || ref.toUpperCase().startsWith("DTPAY"),
-  },
   // Future stores on this account go here, before the default.
 ];
-const DEFAULT_FN = "diamond-paystack-webhook"; // catch-all: Diamond website + IG orders
+const DEFAULT_FN = "diamond-paystack-webhook"; // catch-all: thepufflette.co website + IG orders
 
 Deno.serve(async (req: Request) => {
   if (req.method === "GET") return new Response("Central Paystack webhook is ACTIVE.", { status: 200 });

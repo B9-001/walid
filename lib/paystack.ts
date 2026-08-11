@@ -1,5 +1,19 @@
 // Paystack inline helper. The inline.js script is loaded once via <Script> in
 // the checkout page. Amounts are passed in KOBO (Paystack's smallest unit for NGN).
+//
+// The public key is hardcoded here (it's non-secret) so the checkout uses
+// exactly this regardless of any stale NEXT_PUBLIC_PAYSTACK_* values in the
+// hosting env. To switch between test/live, edit this one line.
+//   TEST key (pk_test_) → Paystack test cards only, no real charges.
+//   LIVE key (pk_live_) → real money.
+const PAYSTACK_PUBLIC_KEY = "pk_test_e6adeb158fea543fca96c4eb38a8b4e2c2defc65";
+
+// NO subaccount: payments settle directly to the account that owns the key
+// above (i.e. YOUR account). A subaccount code here would route the money to
+// that subaccount's owner instead — which was sending payments to the wrong
+// account. Leave this empty unless you deliberately want a Paystack split to
+// another account, and only ever with a subaccount you own.
+const PAYSTACK_SUBACCOUNT_CODE = "";
 
 declare global {
   interface Window {
@@ -43,11 +57,11 @@ export function payWithPaystack({
   onSuccess,
   onClose,
 }: PayArgs): { ok: boolean; error?: string } {
-  const key = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+  const key = PAYSTACK_PUBLIC_KEY;
   if (!key) return { ok: false, error: "Payment is not configured (missing Paystack key)." };
   if (!isPaystackReady()) return { ok: false, error: "Payment library still loading — try again in a moment." };
 
-  const subaccount = process.env.NEXT_PUBLIC_PAYSTACK_SUBACCOUNT_CODE;
+  const subaccount = PAYSTACK_SUBACCOUNT_CODE;
 
   const handler = window.PaystackPop!.setup({
     key,

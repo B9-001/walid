@@ -1,7 +1,7 @@
-// Diamond Taste — AI sequence drafter.
+// thepufflette.co — AI sequence drafter.
 //
 // Admin-only. Given an audience (a pipeline stage or behaviour tag), asks Claude to
-// draft a short email sequence in the Diamond Taste voice and saves the steps to
+// draft a short email sequence in the thepufflette.co voice and saves the steps to
 // diamond_sequence_steps as INACTIVE drafts (active=false) for the owner to review
 // and switch on. Never sends anything.
 //
@@ -23,7 +23,7 @@ const cors = {
 const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
 const AUDIENCE_BRIEF: Record<string, string> = {
-  lead: "Signed up but has never ordered. Goal: warmly introduce Diamond Taste and nudge them to place a first order.",
+  lead: "Signed up but has never ordered. Goal: warmly introduce thepufflette.co and nudge them to place a first order.",
   new: "Just placed their FIRST order. Goal: thank them, set expectations, and encourage a second order + a review.",
   repeat: "Has ordered 2+ times. Goal: reward loyalty, surface favourites, and ask them to refer a friend.",
   vip: "A top customer (5+ orders or big spender). Goal: make them feel special with early access / perks and gratitude.",
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
   const n = Math.min(Math.max(Number(count) || 3, 1), 6);
 
   const system =
-    "You are an email copywriter for Diamond Taste, a warm, premium home-bakery in Abuja, Nigeria. " +
+    "You are an email copywriter for thepufflette.co (The Pufflette Co), a warm, gourmet puff puff & pancake shop in Abuja, Nigeria. " +
     "They sell milkcakes, cake tubs and cheesecakes, all ready-made and freshly baked, delivered across Abuja. " +
     "Prices are in Naira (₦); free delivery over ₦20,000. Voice: friendly, indulgent, a little playful, never pushy or salesy-spammy. " +
     "You write short, mobile-friendly emails. You may personalise with the literal tokens {first_name} and {product} " +
@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://yourdomain.com",
-        "X-Title": "Diamond Taste",
+        "X-Title": "thepufflette.co",
       },
       body: JSON.stringify({
         model: MODEL,
@@ -99,8 +99,8 @@ Deno.serve(async (req) => {
     audience,
     step_order: i + 1,
     delay_hours: Math.max(0, Math.round(Number(s.delay_hours) || 0)),
-    subject: String(s.subject || "").slice(0, 200) || "Diamond Taste",
-    heading: String(s.heading || "").slice(0, 200) || "Hello from Diamond Taste",
+    subject: String(s.subject || "").slice(0, 200) || "thepufflette.co",
+    heading: String(s.heading || "").slice(0, 200) || "Hello from thepufflette.co",
     body: String(s.body || ""),
     button_label: s.button_label ? String(s.button_label).slice(0, 40) : null,
     button_url: s.button_label ? (["/shop", "/cart", "/"].includes(s.button_url) ? s.button_url : "/shop") : null,

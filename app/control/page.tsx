@@ -58,16 +58,16 @@ export default function ControlCenter() {
 
   if (!authed) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#1a1014", fontFamily: "system-ui" }}>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#1C1613", fontFamily: "system-ui" }}>
         <div style={{ background: "#fff", padding: 32, borderRadius: 16, width: 340 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, color: "#6E1A2E" }}>Diamond Taste — Control Centre</h1>
-          <p style={{ fontSize: 13, color: "#777", marginBottom: 16 }}>Enter the access password.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, color: "#1C1613" }}>thepufflette.co — Control Centre</h1>
+          <p style={{ fontSize: 13, color: "#8A7C6F", marginBottom: 16 }}>Enter the access password.</p>
           <input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder="Password"
             onKeyDown={(e) => e.key === "Enter" && load(key, days)}
-            style={{ width: "100%", padding: "12px 14px", borderRadius: 10, border: "1px solid #ddd", marginBottom: 12 }} />
+            style={{ width: "100%", padding: "12px 14px", borderRadius: 10, border: "1px solid #E8DCC5", marginBottom: 12 }} />
           {err && <p style={{ color: "#c0392b", fontSize: 13, marginBottom: 10 }}>{err}</p>}
           <button onClick={() => load(key, days)} disabled={loading}
-            style={{ width: "100%", padding: 12, borderRadius: 10, border: 0, background: "#E0218A", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+            style={{ width: "100%", padding: 12, borderRadius: 10, border: 0, background: "#C89B6A", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
             {loading ? "Checking…" : "Enter"}
           </button>
         </div>
@@ -87,12 +87,12 @@ export default function ControlCenter() {
   ] : [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#faf6f2", fontFamily: "system-ui", padding: "28px 24px", color: "#2a2230" }}>
+    <div style={{ minHeight: "100vh", background: "#FBF6EE", fontFamily: "system-ui", padding: "28px 24px", color: "#1C1613" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#6E1A2E" }}>Control Centre</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#1C1613" }}>Control Centre</h1>
           <select value={days} onChange={(e) => setDays(Number(e.target.value))}
-            style={{ padding: "8px 14px", borderRadius: 30, border: "1px solid #ddd", background: "#fff" }}>
+            style={{ padding: "8px 14px", borderRadius: 30, border: "1px solid #E8DCC5", background: "#fff" }}>
             <option value={1}>Today</option>
             <option value={7}>Last 7 days</option>
             <option value={30}>Last 30 days</option>
@@ -104,9 +104,9 @@ export default function ControlCenter() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px,1fr))", gap: 14, marginBottom: 26 }}>
           {cards.map((c) => (
-            <div key={c.label} style={{ background: "#fff", borderRadius: 14, padding: "18px 20px", boxShadow: "0 4px 14px rgba(0,0,0,0.05)" }}>
-              <div style={{ fontSize: 12, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>{c.label}</div>
-              <div style={{ fontSize: 26, fontWeight: 800, color: "#6E1A2E", marginTop: 4 }}>{c.value}</div>
+            <div key={c.label} style={{ background: "#fff", borderRadius: 14, padding: "18px 20px", boxShadow: "0 4px 14px rgba(28,22,19,0.05)" }}>
+              <div style={{ fontSize: 12, color: "#8A7C6F", textTransform: "uppercase", letterSpacing: 1 }}>{c.label}</div>
+              <div style={{ fontSize: 26, fontWeight: 800, color: "#1C1613", marginTop: 4 }}>{c.value}</div>
             </div>
           ))}
         </div>
@@ -132,26 +132,26 @@ export default function ControlCenter() {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: "#fff", borderRadius: 14, padding: 20, boxShadow: "0 4px 14px rgba(0,0,0,0.05)" }}>
-      <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: "#6E1A2E" }}>{title}</h2>
+    <div style={{ background: "#fff", borderRadius: 14, padding: 20, boxShadow: "0 4px 14px rgba(28,22,19,0.05)" }}>
+      <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: "#1C1613" }}>{title}</h2>
       {children}
     </div>
   );
 }
 
 function Table({ rows, head }: { rows: (string | number)[][]; head: [string, string] }) {
-  if (!rows.length) return <p style={{ color: "#aaa", fontSize: 13 }}>No data yet.</p>;
+  if (!rows.length) return <p style={{ color: "#8A7C6F", fontSize: 13 }}>No data yet.</p>;
   return (
     <table style={{ width: "100%", fontSize: 13, borderCollapse: "collapse" }}>
       <thead>
-        <tr style={{ color: "#999", textAlign: "left" }}>
+        <tr style={{ color: "#8A7C6F", textAlign: "left" }}>
           <th style={{ paddingBottom: 8 }}>{head[0]}</th>
           <th style={{ paddingBottom: 8, textAlign: "right" }}>{head[1]}</th>
         </tr>
       </thead>
       <tbody>
         {rows.map((r, i) => (
-          <tr key={i} style={{ borderTop: "1px solid #f0e8e2" }}>
+          <tr key={i} style={{ borderTop: "1px solid #E8DCC5" }}>
             <td style={{ padding: "8px 0", maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r[0]}</td>
             <td style={{ padding: "8px 0", textAlign: "right", fontWeight: 600 }}>{r[1]}</td>
           </tr>

@@ -7,27 +7,27 @@ import Stamp from "./Stamp";
 const quotes = [
   {
     quote:
-      "Honestly the milkcake was so good. My whole family finished it the same day. Already telling my friends to order from you.",
-    name: "Fatima S",
-    role: "Milkcake, Abuja",
+      "Honestly the puff puff was so good. My whole family finished it the same day. Already telling my friends to order from you.",
+    name: "Chiamaka O",
+    role: "Gourmet Puff Puff, Abuja",
   },
   {
     quote:
       "I ordered for my wife's birthday and she loved it. Delivery came on time and everything was fresh. Will definitely order again.",
-    name: "Salim K",
+    name: "Tunde B",
     role: "Birthday order, Abuja",
   },
   {
     quote:
-      "The cheesecake is the best I have had in Abuja. You can tell it is made properly. I keep coming back for more.",
-    name: "Abdurrahman A",
-    role: "Cheesecake, Abuja",
+      "The pancakes are the best I have had in Abuja. You can tell they're made properly. I keep coming back for more.",
+    name: "Ibrahim Y",
+    role: "Gourmet Pancakes, Abuja",
   },
   {
     quote:
       "Everything tasted fresh and the packaging was really nice. Got it delivered the same day. Thank you so much.",
-    name: "Salma K",
-    role: "Dessert cups, Abuja",
+    name: "Blessing E",
+    role: "Repeat customer, Abuja",
   },
 ];
 
@@ -47,7 +47,7 @@ export default function Testimonial() {
         <div className="relative rounded-[2rem] bg-brand-light border border-brand-line px-7 py-14 md:px-16 md:py-20 text-center overflow-hidden">
           {/* rotating stamp accent */}
           <div className="absolute top-6 right-6 hidden md:block">
-            <Stamp tone="plum" size={96} text="CUSTOMER LOVE · DIAMOND TASTE · " />
+            <Stamp tone="plum" size={96} text="CUSTOMER LOVE · THEPUFFLETTE.CO · " />
           </div>
 
           <span className="font-display italic text-7xl md:text-8xl text-brand-primary/25 leading-none block h-12 md:h-14 select-none">

@@ -1,7 +1,7 @@
-# Diamond Taste — Instagram chatbot
+# thepufflette.co — Instagram chatbot
 
-Supabase Edge Function (Deno) that runs the Diamond Taste Instagram ordering bot —
-the equivalent of the Shop Devouge bot, adapted for Diamond Taste's data model
+Supabase Edge Function (Deno) that runs the thepufflette.co Instagram ordering bot —
+the equivalent of the Shop Devouge bot, adapted for thepufflette.co's data model
 (diamond_* tables, money in kobo, Abuja delivery areas, free delivery over ₦20k +
 far-area service fee, DT-XXXXXX order IDs).
 
@@ -12,7 +12,7 @@ Plus: track order by ID, "my orders" (linked by Instagram sender), and human han
 
 Every choice is shown as a **button carousel** (cards with big tappable buttons, max
 3 per card) rather than quick-reply chips — so options stay visible and customers
-don't get lost. Copy uses plain, direct words ("cakes", "cart", "pay") throughout.
+don't get lost. Copy uses plain, direct words ("order", "cart", "pay") throughout.
 
 ## Secrets
 Start with the **test** Instagram credentials and **test** Paystack key:
@@ -24,8 +24,8 @@ bots — EA_/EK_/MS_ etc.). The `DT_PAYSTACK_*` ones are already set.
 supabase secrets set \
   TEST_TOKEN="<instagram page access token>" \
   TEST_ID="<instagram business account id>" \
-  DT_PAYSTACK_SECRET="your-paystack-secret-key" \
-  DT_PAYSTACK_SUBACCOUNT="ACCT_ud6yo2g3g2tczpr"   # optional split \
+  DT_PAYSTACK_SECRET="sk_test_..." \
+  DT_PAYSTACK_SUBACCOUNT="ACCT_rkdr66y94q0xz5c"   # optional split \
   RESEND_API_KEY="<optional, for handoff emails>" \
   SHOP_SUPPORT_EMAIL="admin@example.com" \
   SHOP_FROM_EMAIL="onboarding@resend.dev"
@@ -64,7 +64,7 @@ per quiet period.
 The bot only **creates the Paystack page** and records a row in `diamond_bot_payments`.
 The `diamond-paystack-webhook` function turns a *paid* bot order into a real
 `diamond_orders` row (DT-XXXXXX number, `ig_sender_id`, items, kobo totals), then:
-decrements `stock_level`, emails the customer + Diamond Taste via
+decrements `stock_level`, emails the customer + thepufflette.co via
 `diamond-send-order-email`, DMs the customer their order number, and clears/saves
 their bot session.
 

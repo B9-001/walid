@@ -1,9 +1,14 @@
 // Shared display helpers — money is stored in KOBO (₦ × 100).
 
 export function errorMessage(err: unknown, fallback = "Something went wrong."): string {
-  if (err instanceof Error) return err.message;
-  if (typeof err === "string") return err;
-  return fallback;
+  const raw = err instanceof Error ? err.message : typeof err === "string" ? err : "";
+  // Postgres unique-constraint violations surface as a raw, technical message
+  // (e.g. "duplicate key value violates unique constraint ..._product_id_key") —
+  // translate the common one into something a non-technical admin can act on.
+  if (/duplicate key value violates unique constraint/i.test(raw)) {
+    return "That name is already used by another item — please choose a different name and try again.";
+  }
+  return raw || fallback;
 }
 
 export function formatNaira(kobo: number, opts?: { showZero?: boolean }): string {

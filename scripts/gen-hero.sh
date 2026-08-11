@@ -1,5 +1,5 @@
 #!/bin/bash
-# Diamond Taste — hero image generator via kie.ai gpt-image-2-image-to-image
+# thepufflette.co — hero image generator via kie.ai gpt-image-2-image-to-image
 # Usage: KIE_API_KEY=xxxx bash scripts/gen-hero.sh
 # (the key lives in the repo-root .env as KIE_API_KEY — never hardcode it here)
 
@@ -80,7 +80,7 @@ P4="Photorealistic bright lifestyle hero shot, 16:9. A Lotus Biscoff cheesecake 
 # ── submit all tasks ──────────────────────────────────────────────────────────
 
 echo ""
-echo "🎂  Diamond Taste — Hero Image Generation"
+echo "🥞  thepufflette.co — Hero Image Generation"
 echo "==========================================="
 echo ""
 

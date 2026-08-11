@@ -1,4 +1,4 @@
-// Diamond Taste — Order status update email.
+// thepufflette.co — Order status update email.
 //
 // Fired by a DB trigger on diamond_orders whenever `status` changes (so it covers
 // website AND chatbot orders, however the status is updated). Receives just the
@@ -14,7 +14,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "Diamond Taste <onboarding@resend.dev>";
+const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
 
 const PINK = "#EC008C", PLUM = "#8B3A62", DARK = "#2B1722";
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -29,14 +29,14 @@ const corsHeaders = {
 function statusCopy(status: string, method: string): { title: string; line: string } | null {
   const isPickup = method === "pickup";
   switch (status) {
-    case "confirmed": return { title: "Your order is confirmed 🎉", line: "We've confirmed your order and will start baking soon." };
-    case "baking":    return { title: "We're baking your order 👩‍🍳", line: "Your order is being freshly prepared right now." };
+    case "confirmed": return { title: "Your order is confirmed 🎉", line: "We've confirmed your order and will start making it fresh soon." };
+    case "baking":    return { title: "We're making your order fresh 👩‍🍳", line: "Your order is being freshly prepared right now." };
     case "ready":     return isPickup
       ? { title: "Your order is ready for pickup 📦", line: "Your order is ready! Come collect it at your convenience." }
       : { title: "Your order is out for delivery 🚚", line: "Your order is on its way — our team will be in touch about your delivery." };
     case "completed": return isPickup
-      ? { title: "Order picked up — enjoy! 🎂", line: "Thank you for collecting your order. We hope you love it!" }
-      : { title: "Order delivered — enjoy! 🎂", line: "Your order has been delivered. We hope you love it!" };
+      ? { title: "Order picked up — enjoy! 🥞", line: "Thank you for collecting your order. We hope you love it!" }
+      : { title: "Order delivered — enjoy! 🥞", line: "Your order has been delivered. We hope you love it!" };
     case "cancelled": return { title: "Your order has been cancelled", line: "Your order has been cancelled. If this is a mistake or you have questions, just reply to this email." };
     default: return null; // pending / unknown → no email
   }
@@ -57,7 +57,7 @@ function statusEmail(order: any, copy: { title: string; line: string }): string 
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:20px;overflow:hidden;max-width:600px;">
         <tr><td style="background:${PINK};padding:36px;text-align:center;">
-          <div style="color:#fff;font-size:30px;font-family:Georgia,serif;font-style:italic;">Diamond Taste</div>
+          <div style="color:#fff;font-size:30px;font-family:Georgia,serif;font-style:italic;">thepufflette.co</div>
           <div style="color:#ffd6ee;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-top:6px;">Order Update</div>
         </td></tr>
         <tr><td style="padding:36px;">
@@ -73,8 +73,8 @@ function statusEmail(order: any, copy: { title: string; line: string }): string 
           </table>
         </td></tr>
         <tr><td style="background:${DARK};padding:24px;text-align:center;">
-          <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">Diamond Taste</div>
-          <div style="color:#9b8f95;font-size:11px;margin-top:4px;">Baked fresh, made with love</div>
+          <div style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:18px;">thepufflette.co</div>
+          <div style="color:#9b8f95;font-size:11px;margin-top:4px;">Golden, fluffy, made with love</div>
         </td></tr>
       </table>
     </td></tr>

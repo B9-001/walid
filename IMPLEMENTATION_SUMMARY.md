@@ -1,4 +1,4 @@
-# Diamond Taste Implementation Summary
+# thepufflette.co Implementation Summary
 
 ## Project Completion Status
 

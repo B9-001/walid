@@ -1,4 +1,4 @@
-// Diamond Taste — Resend webhook ingester.
+// thepufflette.co — Resend webhook ingester.
 // Receives email.delivered / opened / clicked / bounced / complained events from Resend
 // and stores them in diamond_email_events (joined to diamond_email_sends by resend_id).
 // Verifies the Svix signature when DT_RESEND_WEBHOOK_SECRET is set. verify_jwt is OFF.
@@ -39,7 +39,7 @@ async function verify(payload: string, headers: Headers): Promise<boolean> {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "GET") return new Response("Diamond Taste Resend webhook is ACTIVE.", { status: 200 });
+  if (req.method === "GET") return new Response("thepufflette.co Resend webhook is ACTIVE.", { status: 200 });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   const raw = await req.text();

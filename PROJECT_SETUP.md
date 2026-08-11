@@ -1,4 +1,4 @@
-# Diamond Taste E-Commerce Storefront - Project Setup & Deployment Guide
+# thepufflette.co E-Commerce Storefront - Project Setup & Deployment Guide
 
 ## Project Overview
 

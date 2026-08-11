@@ -1,4 +1,4 @@
-// "Diamond Taste" — Instagram ordering chatbot (Supabase Edge Function, Deno).
+// "thepufflette.co" — Instagram ordering chatbot (Supabase Edge Function, Deno).
 //
 // Deploy:  supabase functions deploy diamond-ig-bot --no-verify-jwt
 // Webhook: set the Meta Instagram webhook callback URL to this function's URL,
@@ -28,18 +28,18 @@ const SHOP_SUPPORT_EMAIL = Deno.env.get("SHOP_SUPPORT_EMAIL") || "admin@example.
 const SHOP_FROM_EMAIL = Deno.env.get("SHOP_FROM_EMAIL") || "onboarding@resend.dev";
 
 const WEBSITE = "https://yourdomain.com";
-// Birthday cakes are handled on WhatsApp, not in-chat. wa.me opens a chat to this number.
+// Custom/bulk orders are handled on WhatsApp, not in-chat. wa.me opens a chat to this number.
 const WHATSAPP_NUMBER = "2348033229772";
-const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Diamond Taste! I'd like to order a birthday cake 🎂")}`;
+const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi thepufflette.co! I'd like to place a custom/bulk order 🥞")}`;
 const FREE_DELIVERY_MIN = 2_000_000; // ₦20,000 in kobo — free delivery for everyone
 const SERVICE_FEE_MIN_DELIVERY = 500_000; // ₦5,000 — above this a service fee applies
 const SERVICE_FEE_BASE = 450_000;         // ₦4,500
-const PICKUP_FALLBACK = "Diamond Taste, Abuja";
+const PICKUP_FALLBACK = "thepufflette.co, Abuja";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 const GREETINGS = ["hi", "hii", "hello", "helo", "hey", "heyy", "start", "menu", "shop", "yo", "sup", "diamond", "diamondtaste"];
 
-// Money is stored in KOBO (₦ × 100) across the Diamond Taste DB.
+// Money is stored in KOBO (₦ × 100) across the thepufflette.co DB.
 const naira = (kobo: number) => `₦${Math.round((kobo || 0) / 100).toLocaleString("en-NG")}`;
 
 // ───────────────────────────── data access ─────────────────────────────
@@ -243,22 +243,22 @@ async function handleAnyMessage(sender: string) {
 async function sendWelcome(s: Session) {
   const sender = s.sender_id;
   await sendCard(sender, {
-    title: "Welcome to Diamond Taste 🍰",
-    subtitle: "We make milkcakes, cake tubs and cheesecakes, and deliver across Abuja.\n\nTap a button below.",
-    buttons: [btn("🛍️ Order Cakes", "SHOP"), btn("🎂 Birthday Cake Order", "BIRTHDAY"), btn("📦 Track My Order", "TRACK")],
+    title: "Welcome to thepufflette.co 🥞",
+    subtitle: "We make hand-rolled puff puff and freshly poured pancakes, and deliver across Abuja.\n\nTap a button below.",
+    buttons: [btn("🛍️ Order Now", "SHOP"), btn("🎉 Custom / Bulk Order", "BIRTHDAY"), btn("📦 Track My Order", "TRACK")],
   });
   await sendOptions(sender, "More options:", [{ title: "💬 Talk to Staff", payload: "SUPPORT" }]);
 }
 
-// Birthday cakes are taken on WhatsApp only — send them straight there with a button.
+// Custom/bulk orders are taken on WhatsApp only — send them straight there with a button.
 async function sendBirthdayWhatsApp(sender: string) {
   await sendButtonsWithUrl(sender, {
-    title: "Birthday cakes 🎂",
-    subtitle: "We make birthday cakes to order on WhatsApp, not here. Tap the button to chat with us and we'll sort out your cake.",
+    title: "Custom / bulk orders 🎉",
+    subtitle: "We take custom and bulk orders on WhatsApp, not here. Tap the button to chat with us and we'll sort out your order.",
     url: WHATSAPP_LINK,
     urlTitle: "💬 Message Us on WhatsApp",
   });
-  return sendOptions(sender, "Or:", [{ title: "🛍️ Order Other Cakes", payload: "SHOP" }, { title: "🏠 Home", payload: "MENU" }]);
+  return sendOptions(sender, "Or:", [{ title: "🛍️ Order Now", payload: "SHOP" }, { title: "🏠 Home", payload: "MENU" }]);
 }
 
 function sendShopChoice(sender: string) {
@@ -279,7 +279,7 @@ async function sendCategories(sender: string) {
     buttons: [btn("👀 See These", `CAT::${c.name}`)],
   }));
   await sendCarousel(sender, elements);
-  return sendOptions(sender, "Tap a group above to see the cakes.", [{ title: "💬 Talk to Staff", payload: "SUPPORT" }, { title: "🏠 Home", payload: "MENU" }]);
+  return sendOptions(sender, "Tap a group above to see the menu.", [{ title: "💬 Talk to Staff", payload: "SUPPORT" }, { title: "🏠 Home", payload: "MENU" }]);
 }
 
 async function sendProducts(sender: string, cat: string) {
@@ -316,18 +316,18 @@ async function addToCart(s: Session, id: string, qty: number) {
   await sendCard(s.sender_id, {
     title: "Added to your cart ✅",
     subtitle: `${finalQty} × ${p.name}\nCart total: ${naira(cartTotal(s))}`,
-    buttons: [btn("✅ Pay / Checkout", "CHECKOUT"), btn("➕ Add Another Cake", "SHOP"), btn("🛒 View My Cart", "CART")],
+    buttons: [btn("✅ Pay / Checkout", "CHECKOUT"), btn("➕ Add More", "SHOP"), btn("🛒 View My Cart", "CART")],
   });
   return sendOptions(s.sender_id, "Or:", [{ title: "💬 Talk to Staff", payload: "SUPPORT" }, { title: "🏠 Home", payload: "MENU" }]);
 }
 
 async function sendCart(s: Session) {
   const sender = s.sender_id;
-  if (s.cart.length === 0) return sendCard(sender, { title: "Your cart is empty 🛒", subtitle: "Add a cake to get started.", buttons: [btn("🛍️ Order Cakes", "SHOP"), btn("🏠 Home", "MENU")] });
+  if (s.cart.length === 0) return sendCard(sender, { title: "Your cart is empty 🛒", subtitle: "Add something to get started.", buttons: [btn("🛍️ Order Now", "SHOP"), btn("🏠 Home", "MENU")] });
   const lines = s.cart.map((l) => `• ${l.qty} × ${l.name} — ${naira(l.price * l.qty)}`).join("\n");
   const hint = cartTotal(s) >= FREE_DELIVERY_MIN ? "\n\n🎉 You get FREE delivery!" : `\n\nSpend ${naira(FREE_DELIVERY_MIN - cartTotal(s))} more to get FREE delivery 🚚`;
   await sendCard(sender, { title: `Your cart — ${naira(cartTotal(s))}`, subtitle: (lines + hint).slice(0, 640), buttons: [btn("✅ Pay / Checkout", "CHECKOUT"), btn("✏️ Change Cart", "EDIT_CART")] });
-  return sendOptions(sender, "Or:", [{ title: "➕ Add Another Cake", payload: "SHOP" }, { title: "💬 Talk to Staff", payload: "SUPPORT" }, { title: "🏠 Home", payload: "MENU" }]);
+  return sendOptions(sender, "Or:", [{ title: "➕ Add More", payload: "SHOP" }, { title: "💬 Talk to Staff", payload: "SUPPORT" }, { title: "🏠 Home", payload: "MENU" }]);
 }
 
 async function sendEditCart(s: Session) {
@@ -336,7 +336,7 @@ async function sendEditCart(s: Session) {
   const elements: any[] = s.cart.map((l, idx) => ({ title: `${l.name} — ${naira(l.price * l.qty)}`, subtitle: `Qty: ${l.qty} × ${naira(l.price)}`, buttons: [btn("➖ Remove 1", `REDUCE::${idx}`), btn("🗑️ Remove All", `REMOVE::${idx}`)] }));
   elements.push({ title: `Total: ${naira(cartTotal(s))}`, subtitle: "All done?", buttons: [btn("✅ Pay / Checkout", "CHECKOUT"), btn("🛒 View My Cart", "CART")] });
   await sendCarousel(sender, elements);
-  return sendOptions(sender, "Or:", [{ title: "➕ Add Another Cake", payload: "SHOP" }, { title: "🏠 Home", payload: "MENU" }]);
+  return sendOptions(sender, "Or:", [{ title: "➕ Add More", payload: "SHOP" }, { title: "🏠 Home", payload: "MENU" }]);
 }
 async function removeFromCart(s: Session, idx: number) { if (s.cart[idx]) s.cart.splice(idx, 1); await saveSession(s); await sendText(s.sender_id, "✓ Item removed."); return sendEditCart(s); }
 async function reduceQuantity(s: Session, idx: number) { if (s.cart[idx]) { s.cart[idx].qty -= 1; if (s.cart[idx].qty <= 0) s.cart.splice(idx, 1); await saveSession(s); } await sendText(s.sender_id, s.cart.length ? "✓ Quantity updated." : "✓ Cart is now empty."); return sendEditCart(s); }
@@ -421,7 +421,7 @@ async function createPaymentPage(s: Session, useSaved: boolean): Promise<string 
   ];
   if (s.draft.method === "delivery") custom_fields.push({ display_name: "Delivery Address", variable_name: "delivery_address", value: saved?.address || "" });
   const body: any = {
-    name: "Diamond Taste Order",
+    name: "thepufflette.co Order",
     description: s.cart.map((l) => `${l.qty}x ${l.name}`).join(", ").slice(0, 240),
     amount: total, // already kobo
     currency: "NGN",
@@ -473,7 +473,7 @@ async function trackOrder(s: Session, raw: string) {
 
 async function sendOrdersCarousel(sender: string) {
   const { data: orders } = await supabase.from("diamond_orders").select("order_number, status, items, total_price, created_at").eq("ig_sender_id", sender).order("created_at", { ascending: false }).limit(10);
-  if (!orders || orders.length === 0) return sendCard(sender, { title: "No orders found 📦", subtitle: "We couldn't find orders linked to this chat yet. Have your order ID? Tap Track Order.", buttons: [btn("📦 Track Order", "TRACK"), btn("🛍️ See Our Cakes", "SHOP"), btn("🏠 Home", "MENU")] });
+  if (!orders || orders.length === 0) return sendCard(sender, { title: "No orders found 📦", subtitle: "We couldn't find orders linked to this chat yet. Have your order ID? Tap Track Order.", buttons: [btn("📦 Track Order", "TRACK"), btn("🛍️ See Our Menu", "SHOP"), btn("🏠 Home", "MENU")] });
   const elements = orders.map((o: any) => {
     const itemsSummary = Array.isArray(o.items) ? o.items.map((i: any) => `${i.quantity ?? 1}× ${i.name}`).join(", ") : "Order items";
     return { title: `${o.order_number} — ${STATUS[o.status] || o.status?.toUpperCase()}`, subtitle: `${itemsSummary}\nTotal: ${naira(o.total_price)}`.slice(0, 640), buttons: [btn("💬 Talk to Staff", "SUPPORT"), btn("🛍️ Order Again", "SHOP")] };
@@ -485,24 +485,24 @@ async function sendOrdersCarousel(sender: string) {
 async function saveComplaint(s: Session, text: string) {
   try { await supabase.from("diamond_bot_complaints").insert({ sender_id: s.sender_id, order_number: s.draft.complaint_order ?? null, message: text }); } catch (e) { console.error("[DT] saveComplaint", e); }
   s.state = "menu"; s.draft.complaint_order = undefined;
-  return sendCard(s.sender_id, { title: "Complaint received ✅", subtitle: "Thank you — the Diamond Taste team has been notified and will reach out shortly.", buttons: [btn("🏠 Home", "MENU")] });
+  return sendCard(s.sender_id, { title: "Complaint received ✅", subtitle: "Thank you — the thepufflette.co team has been notified and will reach out shortly.", buttons: [btn("🏠 Home", "MENU")] });
 }
 
 // ───────────────────────────── human handoff ─────────────────────────────
 function sendSupportDisclaimer(sender: string) {
-  return sendCard(sender, { title: "💬 Talk to Our Staff", subtitle: "Want to order, track an order, or see our cakes? The buttons do that for you fast.\n\nStill want to chat with a real person? Tap below and a Diamond Taste staff member will reply right here.", buttons: [btn("✅ Yes, Connect Me", "HANDOFF_CONFIRM"), btn("🏠 Home", "MENU")] });
+  return sendCard(sender, { title: "💬 Talk to Our Staff", subtitle: "Want to order, track an order, or see our menu? The buttons do that for you fast.\n\nStill want to chat with a real person? Tap below and a thepufflette.co staff member will reply right here.", buttons: [btn("✅ Yes, Connect Me", "HANDOFF_CONFIRM"), btn("🏠 Home", "MENU")] });
 }
 async function confirmHandoff(s: Session) {
   s.handoff = true; s.handoff_at = new Date().toISOString(); s.state = "human";
   await notifyShopByEmail(s);
-  return sendOptions(s.sender_id, "✅ You're connected! A Diamond Taste staff member will reply here soon. Type your message below — the bot is paused for now.", [{ title: "🏠 Home", payload: "MENU" }]);
+  return sendOptions(s.sender_id, "✅ You're connected! A thepufflette.co staff member will reply here soon. Type your message below — the bot is paused for now.", [{ title: "🏠 Home", payload: "MENU" }]);
 }
 async function notifyShopByEmail(s: Session) {
   if (!RESEND_API_KEY) { console.warn("[DT] RESEND_API_KEY not set — skipping support email"); return; }
   const name = s.saved_details?.name || "Unknown", phone = s.saved_details?.phone || "N/A";
   try {
     await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({
-      from: SHOP_FROM_EMAIL, to: [SHOP_SUPPORT_EMAIL], subject: "🔔 Customer needs human support — Diamond Taste Bot",
+      from: SHOP_FROM_EMAIL, to: [SHOP_SUPPORT_EMAIL], subject: "🔔 Customer needs human support — thepufflette.co Bot",
       html: `<h2>A customer requested a human agent</h2><p><strong>Name:</strong> ${name}</p><p><strong>Phone:</strong> ${phone}</p><p><strong>Instagram Sender ID:</strong> <code>${s.sender_id}</code></p><p style="margin:24px 0;"><a href="https://www.instagram.com/direct/t/${s.sender_id}" style="background:#EC008C;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">💬 Open Instagram Chat</a></p><p>The bot is paused for this customer.</p><hr/><p style="color:#888;font-size:12px;">To re-enable: set handoff=false in diamond_bot_sessions where sender_id='${s.sender_id}'.</p>`,
     }) });
   } catch (e) { console.error("[DT] notifyShopByEmail failed:", e); }

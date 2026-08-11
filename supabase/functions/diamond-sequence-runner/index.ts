@@ -1,4 +1,4 @@
-// Diamond Taste — sequence runner.
+// thepufflette.co — sequence runner.
 //
 // Cron (hourly). For every ACTIVE sequence step, finds the customers currently in that
 // audience whose "send after" time has elapsed, and sends the email — ONCE PER PERSON,
@@ -21,7 +21,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "Diamond Taste <onboarding@resend.dev>";
+const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
 const REPLY_TO = FROM_EMAIL.match(/<(.+)>/)?.[1] || FROM_EMAIL;
 const WEBSITE = "https://yourdomain.com";
 const LINK = "#EC008C";
@@ -145,7 +145,7 @@ async function membersFor(aud: string) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "GET") return new Response("Diamond Taste sequence runner is ACTIVE.", { status: 200 });
+  if (req.method === "GET") return new Response("thepufflette.co sequence runner is ACTIVE.", { status: 200 });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   const { data: state } = await admin.from("diamond_email_send_state").select("paused_until").eq("id", 1).maybeSingle();

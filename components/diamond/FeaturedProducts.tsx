@@ -84,7 +84,7 @@ export default function FeaturedProducts() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
         >
-          <Link href="/shop" className="btn-ghost">View all cakes</Link>
+          <Link href="/shop" className="btn-ghost">View all treats</Link>
         </motion.div>
       </div>
     </section>

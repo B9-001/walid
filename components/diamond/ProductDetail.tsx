@@ -25,6 +25,7 @@ export default function ProductDetail({ id }: { id: string }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [note, setNote] = useState("");
   const [added, setAdded] = useState(false);
   const [stockErr, setStockErr] = useState("");
   const [related, setRelated] = useState<Product[]>([]);
@@ -77,6 +78,7 @@ export default function ProductDetail({ id }: { id: string }) {
 
   const soldOut = product !== null && product.stock_level !== null && product.stock_level === 0;
   const preorder = product !== null && isPreorder(product);
+  const onSale = product !== null && !!product.old_price && product.old_price > product.base_price;
 
   const gallery = useMemo(() => {
     if (!product) return [];
@@ -124,8 +126,10 @@ export default function ProductDetail({ id }: { id: string }) {
       price: product.base_price,
       quantity,
       preorder_release_at: preorder ? product.preorder_release_at : null,
+      note: note.trim() || undefined,
     });
     setAdded(true);
+    setNote("");
     setTimeout(() => setAdded(false), 2500);
     return true;
   };
@@ -156,7 +160,7 @@ export default function ProductDetail({ id }: { id: string }) {
               <img src={gallery[activeImg]} alt={product.name} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="font-script text-5xl text-brand-primary/30">Diamond Taste</span>
+                <span className="font-script text-5xl text-brand-primary/30">thepufflette.co</span>
               </div>
             )}
 
@@ -206,9 +210,23 @@ export default function ProductDetail({ id }: { id: string }) {
           <span className="eyebrow">{product.category}</span>
           <h1 className="font-display text-4xl md:text-5xl text-brand-dark leading-tight mt-2">{product.name}</h1>
 
-          <div className="mt-4">
+          <div className="mt-4 flex items-baseline gap-3 flex-wrap">
             <span className="font-display text-3xl text-brand-primary">{formatNaira(product.base_price)}</span>
+            {onSale && (
+              <span className="font-sans text-base text-brand-grey line-through">{formatNaira(product.old_price!)}</span>
+            )}
+            {onSale && (
+              <span className="font-sans text-[11px] font-bold text-brand-primary-dark uppercase tracking-wide">
+                Save {formatNaira(product.old_price! - product.base_price)}
+              </span>
+            )}
           </div>
+
+          {product.offer_line && (
+            <p className="font-sans text-[12px] font-bold tracking-wide text-brand-primary-dark uppercase mt-2">
+              {product.offer_line}
+            </p>
+          )}
 
           {preorder && (
             <div className="mt-5 flex items-start gap-3 bg-brand-blush/60 border border-brand-plum/20 rounded-2xl px-4 py-3.5">
@@ -233,6 +251,21 @@ export default function ProductDetail({ id }: { id: string }) {
               <span className="w-12 text-center font-sans font-semibold tabular-nums">{quantity}</span>
               <button onClick={() => setQuantity((q) => q + 1)} className="w-11 h-11 text-brand-primary text-lg hover:bg-brand-blush transition-colors">+</button>
             </div>
+          </div>
+
+          <div className="mt-8">
+            <label htmlFor="item-note" className="block font-sans text-[10px] label-track text-brand-dark/50 mb-2.5">
+              Special instructions <span className="normal-case text-brand-dark/30">(optional)</span>
+            </label>
+            <textarea
+              id="item-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="e.g. extra syrup, less sugar, write &lsquo;Happy Birthday&rsquo; on the box…"
+              className="w-full resize-none bg-brand-cream border border-brand-line rounded-2xl px-4 py-3 text-sm text-brand-dark placeholder:text-brand-dark/35 focus:outline-none focus:border-brand-primary transition-colors"
+            />
           </div>
 
           {/* Actions */}
