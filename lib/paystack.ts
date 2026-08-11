@@ -8,12 +8,14 @@
 //   LIVE key (pk_live_) → real money.
 const PAYSTACK_PUBLIC_KEY = "pk_test_e6adeb158fea543fca96c4eb38a8b4e2c2defc65";
 
-// Every payment splits to this subaccount (bearer: "subaccount" below, so the
-// subaccount — not the main account — absorbs the Paystack transaction fee).
-// Only ever set this to a subaccount you own — a wrong code here sends real
-// money to someone else's account (see git history for why this is called
-// out explicitly).
-const PAYSTACK_SUBACCOUNT_CODE = "ACCT_wsylcvrcirun563";
+// NO subaccount while on the test key above: a live-mode subaccount code
+// paired with a test-mode key fails at Paystack's payment-split step (this
+// combination is what broke test checkout — confirmed by a real test run).
+// Payments settle to the account that owns the key instead. Restore the
+// live subaccount (ACCT_wsylcvrcirun563) only alongside a live key — only
+// ever with a subaccount you own, a wrong code here sends real money to
+// someone else's account.
+const PAYSTACK_SUBACCOUNT_CODE = "";
 
 declare global {
   interface Window {
