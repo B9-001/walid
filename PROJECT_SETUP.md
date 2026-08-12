@@ -98,14 +98,15 @@ NEXT_PUBLIC_SUPABASE_URL=https://mlixtbyhsltflysatsib.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
-# Paystack Configuration
-NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_test_your_key_or_pk_live_your_key
-
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 **Important:** The `.env.local` file is git-ignored and never committed. Each environment (local, staging, production) needs its own configuration.
+
+**Paystack is not an environment variable.** The public key and subaccount code are hardcoded
+constants at the top of `lib/paystack.ts` — edit that file directly (see "Paystack Integration"
+below) rather than setting `NEXT_PUBLIC_PAYSTACK_*` anywhere.
 
 ## Getting Started
 
@@ -220,7 +221,8 @@ Use Paystack test keys during development:
 When ready to accept real payments:
 
 1. Get your live Paystack keys from [dashboard.paystack.com](https://dashboard.paystack.com)
-2. Update `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` in your environment
+2. Edit `PAYSTACK_PUBLIC_KEY` (and `PAYSTACK_SUBACCOUNT_CODE`, if you use one) at the top of
+   `lib/paystack.ts` — commit and redeploy. Only pair a live subaccount with a live key.
 3. Set up the payment webhook (optional but recommended)
 
 ## Deployment

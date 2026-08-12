@@ -103,16 +103,30 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 SUPABASE_URL=https://YOUR-PROJECT-REF.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_test_xxxxxxxx      # from your Paystack dashboard
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Get your Paystack keys from [dashboard.paystack.com](https://dashboard.paystack.com) →
-**Settings → API Keys & Webhooks**. Use the **test** keys while developing; switch to **live**
-keys when you're ready to take real money.
-
 > `.env.local` is git-ignored and never leaves your machine. The `.env.example` file is just a
 > template of which variables exist — see it for the full (optional) list.
+
+Your **Paystack** key is set separately, in code, not here — see Step 4b below.
+
+### Step 4b — Set your Paystack key
+
+Get your keys from [dashboard.paystack.com](https://dashboard.paystack.com) →
+**Settings → API Keys & Webhooks**. Use the **test** key while developing; switch to **live**
+when you're ready to take real money.
+
+Open `lib/paystack.ts` and edit the two constants at the top:
+
+```ts
+const PAYSTACK_PUBLIC_KEY = "pk_test_...";      // or pk_live_... for real money
+const PAYSTACK_SUBACCOUNT_CODE = "";             // your ACCT_... code, if you use one
+```
+
+These are hardcoded on purpose (not `NEXT_PUBLIC_PAYSTACK_*` env vars) so checkout always uses
+exactly this value, regardless of anything set in Vercel's project settings. Only pair a live
+subaccount with a live key — a live subaccount + test key breaks Paystack's payment-split step.
 
 ### Step 5 — Point Next.js at your Supabase images
 
@@ -171,8 +185,9 @@ That's it — your store is live locally. 🎉
 1. Push this folder to your **own** new GitHub repo (`git init`, commit, push).
 2. Go to [vercel.com](https://vercel.com) → **Add New → Project** → import that repo.
 3. In the project's **Settings → Environment Variables**, add every variable from your
-   `.env.local` (at least the Supabase + Paystack + `NEXT_PUBLIC_SITE_URL` ones). Set
-   `NEXT_PUBLIC_SITE_URL` to your real domain.
+   `.env.local` (at least the Supabase + `NEXT_PUBLIC_SITE_URL` ones). Set `NEXT_PUBLIC_SITE_URL`
+   to your real domain. Your Paystack key doesn't go here — it's already in `lib/paystack.ts`
+   from Step 4b, and ships with the code.
 4. Click **Deploy**. Vercel builds and hosts it, and auto-redeploys every time you push to GitHub.
 5. Add your custom domain under **Settings → Domains**.
 
@@ -235,7 +250,8 @@ next.config.ts            Next.js config (image hostname lives here)
 - **Images don't upload / show** → check your storage buckets exist, are **public**, have the
   upload policies (Step 3), and that `next.config.ts` has your project ref (Step 5).
 - **Can't get into `/admin`** → make sure your user's UID is in `diamond_admins` (Step 6).
-- **Payment popup errors** → check your Paystack public key is set and matches test/live mode.
+- **Payment popup errors** → check `PAYSTACK_PUBLIC_KEY` in `lib/paystack.ts` is correct and
+  matches test/live mode (a live subaccount code paired with a test key also fails here).
 - **Build fails on Vercel** → make sure all required environment variables are added in the
   Vercel project settings.
 
