@@ -148,11 +148,12 @@ bonus, not a starting point") and it depends on an `OPENROUTER_API_KEY` and prod
 ### `.env.example` — added in this pass
 Both `README.md` and `SETUP-GUIDE.md` instruct `cp .env.example .env.local`, but the file didn't
 exist in the export. Added, listing every `process.env.*` the Next.js app actually reads
-(`NEXT_PUBLIC_SUPABASE_URL/ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
-`NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`/`SUBACCOUNT_CODE`, `NEXT_PUBLIC_SITE_URL`, `CONTROL_PASSWORD`,
-`NEXT_PUBLIC_FB_PIXEL_ID`, `FB_CAPI_TOKEN`), plus a commented-out reference list of the Deno
-secrets the edge functions expect (`DT_RESEND_API_KEY`, `DT_PAYSTACK_SECRET`,
-`OPENROUTER_API_KEY`, etc. — those are set as Supabase project secrets, not in `.env.local`).
+(`NEXT_PUBLIC_SUPABASE_URL/ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`,
+`CONTROL_PASSWORD`, `NEXT_PUBLIC_FB_PIXEL_ID`, `FB_CAPI_TOKEN`, `FB_TEST_EVENT_CODE`), plus a
+commented-out reference list of the Deno secrets the edge functions expect (`DT_RESEND_API_KEY`,
+`DT_PAYSTACK_SECRET`, `OPENROUTER_API_KEY`, etc. — those are set as Supabase project secrets, not
+in `.env.local`). The Paystack **public key and subaccount code are not env vars** — they're
+hardcoded constants in `lib/paystack.ts` (see §11 below for why).
 
 ## 6. Authentication
 
@@ -265,14 +266,21 @@ The Supabase side (§ Status above) is done. What's left, in order:
 
 1. **Paystack keys** — get your test (then live) keys from
    [dashboard.paystack.com](https://dashboard.paystack.com) → Settings → API Keys & Webhooks, and
-   set `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` wherever you deploy.
+   edit the two constants at the top of `lib/paystack.ts` directly:
+   ```ts
+   const PAYSTACK_PUBLIC_KEY = "pk_test_...";      // or pk_live_... when you're ready for real money
+   const PAYSTACK_SUBACCOUNT_CODE = "";             // your ACCT_... code, live-key + live-subaccount only
+   ```
+   These are **not** environment variables — they're hardcoded so checkout always uses exactly
+   this value regardless of any stale `NEXT_PUBLIC_PAYSTACK_*` var sitting in Vercel. Pair a live
+   subaccount only with a live key (mixing test/live breaks Paystack's payment-split step);
+   commit and redeploy after editing.
 2. **Deploy** — push this repo to Vercel (or any Next.js host) and set these environment
    variables in the project settings:
    ```
    NEXT_PUBLIC_SUPABASE_URL=https://mlixtbyhsltflysatsib.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=<the anon/publishable key from Supabase → Settings → API>
    SUPABASE_SERVICE_ROLE_KEY=<the service_role key from the same page — keep secret>
-   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=<your Paystack public key>
    NEXT_PUBLIC_SITE_URL=<your real deployed domain, once you have one>
    CONTROL_PASSWORD=<optional — only if you want the /control analytics dashboard>
    ```
