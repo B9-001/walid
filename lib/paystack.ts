@@ -12,7 +12,7 @@ const PAYSTACK_PUBLIC_KEY = "pk_live_dc0821ea68d0f003d3c3352220548dc03013a75d";
 // paired with a *test* key is what broke checkout before; live+live is the
 // combination this was written for). Only ever set this to a subaccount you
 // own — a wrong code here sends real money to someone else's account.
-const PAYSTACK_SUBACCOUNT_CODE = "ACCT_wsylcvrcirun563";
+const PAYSTACK_SUBACCOUNT_CODE = "ACCT_ud6yo2g3g2tczpr";
 
 declare global {
   interface Window {
