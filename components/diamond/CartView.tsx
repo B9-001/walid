@@ -219,11 +219,14 @@ export default function CartView() {
   useEffect(() => {
     supabase
       .from("diamond_products")
-      .select("base_price, image_url, stock_level, active")
+      .select("base_price, image_url, stock_level, active, flavors")
       .eq("product_id", UPGRADE_PRODUCT_ID)
       .maybeSingle()
       .then(({ data }) => {
-        if (data && data.active !== false && (data.stock_level === null || data.stock_level > 0)) {
+        // Skip the upgrade if this product is sold in flavours — the one-click
+        // add has nowhere to ask which one, so it would add a flavour-less line.
+        const needsFlavor = Array.isArray(data?.flavors) && data.flavors.length > 0;
+        if (data && data.active !== false && !needsFlavor && (data.stock_level === null || data.stock_level > 0)) {
           setUpgradeProduct({ base_price: data.base_price, image_url: data.image_url });
         }
       });
