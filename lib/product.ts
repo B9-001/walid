@@ -1,12 +1,16 @@
 import type { Product } from "./types";
 
 // A product can be added straight to the cart (one click) when it has no size
-// tiers to choose from and a fixed price. Otherwise we send them to the detail
-// page to make their selection.
-export function isQuickAdd(p: Pick<Product, "sizes" | "base_price" | "stock_level">): boolean {
+// tiers and no flavours to choose from, and a fixed price. Otherwise we send
+// them to the detail page to make their selection — a one-click add would
+// otherwise put a flavour-less line in the cart that the kitchen can't fulfil.
+export function isQuickAdd(
+  p: Pick<Product, "sizes" | "base_price" | "stock_level"> & { flavors?: string[] },
+): boolean {
   const noSizes = !p.sizes || p.sizes.length === 0;
+  const noFlavors = !p.flavors || p.flavors.length === 0;
   const soldOut = p.stock_level !== null && p.stock_level === 0;
-  return noSizes && p.base_price > 0 && !soldOut;
+  return noSizes && noFlavors && p.base_price > 0 && !soldOut;
 }
 
 // A product is "on pre-order" while it's flagged and its release time is still in

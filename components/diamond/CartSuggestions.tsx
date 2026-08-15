@@ -8,7 +8,7 @@ import { formatNaira } from "@/lib/format";
 import { isQuickAdd } from "@/lib/product";
 import type { Product } from "@/lib/types";
 
-type SuggestionProduct = Pick<Product, "id" | "product_id" | "name" | "image_url" | "base_price" | "sizes" | "stock_level">;
+type SuggestionProduct = Pick<Product, "id" | "product_id" | "name" | "image_url" | "base_price" | "sizes" | "stock_level" | "flavors">;
 
 // Quick-add suggestions. When `gap` > 0, items that would close the gap (e.g.
 // reach the free-delivery threshold) are surfaced first and badged.
@@ -27,7 +27,7 @@ export default function CartSuggestions({
   useEffect(() => {
     supabase
       .from("diamond_products")
-      .select("id, product_id, name, image_url, base_price, sizes, stock_level")
+      .select("id, product_id, name, image_url, base_price, sizes, stock_level, flavors")
       .eq("active", true)
       .gt("base_price", 0)
       .order("base_price", { ascending: true })

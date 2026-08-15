@@ -26,6 +26,8 @@ export default function ProductDetail({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [note, setNote] = useState("");
+  const [flavor, setFlavor] = useState("");
+  const [flavorErr, setFlavorErr] = useState(false);
   const [added, setAdded] = useState(false);
   const [stockErr, setStockErr] = useState("");
   const [related, setRelated] = useState<Product[]>([]);
@@ -86,6 +88,13 @@ export default function ProductDetail({ id }: { id: string }) {
   }, [product]);
   const [activeImg, setActiveImg] = useState(0);
 
+  // Flavour options for this product. Empty (the default for every existing
+  // product) means no picker is shown and nothing about checkout changes.
+  const flavors = useMemo(
+    () => (Array.isArray(product?.flavors) ? product.flavors.filter(Boolean) : []),
+    [product],
+  );
+
   if (loading) {
     return <ProductDetailSkeleton />;
   }
@@ -108,8 +117,19 @@ export default function ProductDetail({ id }: { id: string }) {
 
   const handleAdd = async (): Promise<boolean> => {
     setStockErr("");
+    // A product that offers flavours needs one picked — otherwise the kitchen
+    // gets an order it can't fulfil.
+    if (flavors.length > 0 && !flavor) {
+      setFlavorErr(true);
+      return false;
+    }
     // Confirm live stock for the qty already in the cart plus what they're adding.
-    const inCart = items.find((it) => it.product_id === product.product_id)?.quantity || 0;
+    // Sum every line for this product — flavours (and notes) split one product
+    // across several lines, so a `find` here would undercount against stock.
+    const inCart = items.reduce(
+      (n, it) => (it.product_id === product.product_id ? n + it.quantity : n),
+      0,
+    );
     const { ok, available } = await checkOne(product.product_id, inCart + quantity);
     if (!ok) {
       setStockErr(
@@ -127,6 +147,7 @@ export default function ProductDetail({ id }: { id: string }) {
       quantity,
       preorder_release_at: preorder ? product.preorder_release_at : null,
       note: note.trim() || undefined,
+      flavor: flavor || undefined,
     });
     setAdded(true);
     setNote("");
@@ -242,6 +263,58 @@ export default function ProductDetail({ id }: { id: string }) {
 
           {product.description && (
             <p className="font-sans text-sm md:text-base text-brand-dark/70 leading-relaxed mt-5">{product.description}</p>
+          )}
+
+          {flavors.length > 0 && (
+            <div className="mt-8">
+              <span className="block font-sans text-[10px] label-track text-brand-dark/50 mb-2.5">
+                Choose your flavour
+              </span>
+              <div role="radiogroup" aria-label="Choose your flavour" className="flex flex-wrap gap-2.5">
+                {flavors.map((f) => {
+                  const picked = flavor === f;
+                  return (
+                    <label
+                      key={f}
+                      className={`inline-flex items-center gap-2.5 pl-3 pr-5 py-2.5 rounded-full border cursor-pointer transition-all select-none ${
+                        picked
+                          ? "border-brand-primary bg-brand-blush/60"
+                          : `bg-brand-light hover:border-brand-primary ${flavorErr ? "border-brand-primary/50" : "border-brand-line"}`
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="flavor"
+                        value={f}
+                        checked={picked}
+                        onChange={() => { setFlavor(f); setFlavorErr(false); }}
+                        className="sr-only"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
+                          picked ? "bg-brand-primary border-brand-primary" : "border-brand-line bg-brand-cream"
+                        }`}
+                      >
+                        {picked && (
+                          <svg className="w-3 h-3 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </span>
+                      <span className={`font-sans text-sm ${picked ? "font-semibold text-brand-dark" : "text-brand-dark/70"}`}>
+                        {f}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+              {flavorErr && (
+                <p className="mt-2.5 font-sans text-sm font-semibold text-brand-primary">
+                  Please pick a flavour first.
+                </p>
+              )}
+            </div>
           )}
 
           <div className="mt-8">

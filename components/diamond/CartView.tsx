@@ -24,7 +24,7 @@ import type { Product } from "@/lib/types";
 
 const COUPON_KEY = "diamond_coupon";
 
-type SuggestionProduct = Pick<Product, "product_id" | "name" | "image_url" | "base_price">;
+type SuggestionProduct = Pick<Product, "product_id" | "name" | "image_url" | "base_price" | "flavors">;
 
 export default function CartView() {
   const { items, subtotal, updateQty, removeItem, addItem, reconcile, ready } = useCart();
@@ -60,12 +60,18 @@ export default function CartView() {
   useEffect(() => {
     supabase
       .from("diamond_products")
-      .select("product_id, name, image_url, base_price")
+      .select("product_id, name, image_url, base_price, flavors")
       .eq("active", true)
       .gt("base_price", 0)
       .order("base_price", { ascending: true })
       .limit(12)
-      .then(({ data }) => setSuggestions((data as SuggestionProduct[]) || []));
+      // These add in one click, so anything needing a flavour pick is excluded —
+      // it's bought from its product page instead.
+      .then(({ data }) =>
+        setSuggestions(
+          ((data as SuggestionProduct[]) || []).filter((p) => !p.flavors || p.flavors.length === 0),
+        ),
+      );
   }, []);
 
   // The closest voucher the customer can unlock by spending a little more
@@ -367,6 +373,12 @@ export default function CartView() {
                       {it.bundle.components
                         .map((c) => `${c.quantity > 1 ? c.quantity + "× " : ""}${c.name}`)
                         .join(" · ")}
+                    </p>
+                  )}
+
+                  {it.flavor && (
+                    <p className="font-sans text-[12px] text-brand-dark/70 mt-1 leading-relaxed">
+                      Flavour: <span className="font-semibold text-brand-dark">{it.flavor}</span>
                     </p>
                   )}
 

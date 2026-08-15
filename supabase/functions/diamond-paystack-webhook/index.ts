@@ -158,7 +158,7 @@ async function handleChargeSuccess(data: any) {
   else if (Array.isArray(meta.cart)) cart = meta.cart;
   else if (typeof meta.cart === "string") { try { cart = JSON.parse(meta.cart); } catch { cart = []; } }
 
-  const items = cart.map((l: any) => ({ product_id: l.product_id ?? null, name: l.name, quantity: l.qty ?? l.quantity ?? 1, price: l.price, image: l.image ?? null, ...(l.note ? { note: l.note } : {}) }));
+  const items = cart.map((l: any) => ({ product_id: l.product_id ?? null, name: l.name, quantity: l.qty ?? l.quantity ?? 1, price: l.price, image: l.image ?? null, ...(l.note ? { note: l.note } : {}), ...(l.flavor ? { flavor: l.flavor } : {}) }));
   const deliveryFee = Number(o.delivery_fee ?? meta.delivery_fee ?? 0) || 0;
   const serviceFee = Number(o.service_fee ?? meta.service_fee ?? 0) || 0;
   const couponCode = o.coupon_code ?? null;

@@ -34,6 +34,9 @@ function sameLine(a: CartItem, b: AddInput) {
   // (two boxes may be picked differently; the upgrade must stay at ₦500). A note
   // also keeps a line separate — merging would silently hide or overwrite it.
   if (a.bundle || b.bundle || a.upgrade || b.upgrade || a.note || b.note) return false;
+  // Same product, different flavour → separate lines, so an Oreo box and a Lotus
+  // box of the same item don't collapse into one line the kitchen can't fulfil.
+  if (a.flavor !== b.flavor) return false;
   return a.product_id === b.product_id;
 }
 
@@ -98,6 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         upgrade: input.upgrade,
         worth: input.worth,
         note: input.note?.trim() || undefined,
+        flavor: input.flavor || undefined,
       };
       return [...prev, newItem];
     });
@@ -130,7 +134,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
     const { data, error } = await supabase
       .from("diamond_products")
-      .select("product_id, name, base_price, image_url, stock_level, active")
+      .select("product_id, name, base_price, image_url, stock_level, active, flavors")
       .in("product_id", ids);
     if (error) return []; // network hiccup — don't block the customer on our error
 
@@ -167,6 +171,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       const line: CartItem = { ...it };
+
+      // Flavour they picked may have been retired since it went in the cart.
+      // If the product still offers flavours but not this one, the line can't be
+      // fulfilled as ordered — drop it rather than quietly swap the flavour. If
+      // flavours were turned off for the product entirely, keep the line and
+      // just drop the now-meaningless flavour label.
+      if (line.flavor) {
+        const offered = Array.isArray(p.flavors) ? (p.flavors as string[]) : [];
+        if (offered.length > 0 && !offered.includes(line.flavor)) {
+          changes.push(`${p.name} is no longer available in ${line.flavor} and was removed.`);
+          continue;
+        }
+        if (offered.length === 0) {
+          changes.push(`${p.name} no longer comes in different flavours — we removed the ${line.flavor} choice.`);
+          delete line.flavor;
+        }
+      }
 
       // Stock — sold out removes the line, otherwise cap to what's left.
       if (p.stock_level !== null && p.stock_level < line.quantity) {

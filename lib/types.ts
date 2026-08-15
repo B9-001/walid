@@ -28,6 +28,9 @@ export type Product = {
   offer_line: string | null; // short caption shown with the sale, e.g. "15 Pancakes + 16 Puff Puff Pieces"
   is_special_offer: boolean; // gets its own promo card on the homepage + a highlighted line in the cart
   sizes: SizeTier[];  // kept for future use, not shown in UI yet
+  // Flavour options this product is sold in, e.g. ["Oreo", "Lotus"]. Empty (the
+  // default) means no flavour choice — the product page shows no picker at all.
+  flavors: string[];
   featured: boolean;
   active: boolean;
   stock_level: number | null; // null = unlimited; 0 = sold out
@@ -76,6 +79,9 @@ export type CartItem = {
   worth?: number;
   // Customer's special instructions for this specific item (e.g. "no nuts please").
   note?: string;
+  // Flavour the customer picked, when the product offers a choice. Two lines of
+  // the same product with different flavours never merge (see sameLine).
+  flavor?: string;
 };
 
 export type OrderItem = {
@@ -88,6 +94,7 @@ export type OrderItem = {
   upgrade?: boolean; // the ₦500 Classic Pancake Stack upgrade line
   preorder_release_at?: string | null;
   note?: string; // customer's special instructions for this item
+  flavor?: string; // flavour the customer picked, when the product offers a choice
 };
 
 export type Order = {
