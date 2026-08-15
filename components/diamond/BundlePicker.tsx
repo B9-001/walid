@@ -39,12 +39,16 @@ export default function BundlePicker({
     setLoading(true);
     supabase
       .from("diamond_products")
-      .select("product_id, name, category, base_price, image_url, stock_level, active")
+      .select("product_id, name, category, base_price, image_url, stock_level, active, flavors")
       .eq("active", true)
       .then(({ data }) => {
         const items = (data || [])
           .filter((p) => inPool(bundle, p))
           .filter((p) => p.stock_level === null || p.stock_level > 0) // in stock only
+          // A product sold in flavours can't go in a box: the picker has no
+          // per-item flavour choice, so it would produce a line the kitchen
+          // can't fulfil. It stays buyable from its own product page.
+          .filter((p) => !Array.isArray(p.flavors) || p.flavors.length === 0)
           .sort((a, b) => b.base_price - a.base_price);
         setPool(items);
         setLoading(false);
