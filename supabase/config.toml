@@ -1,0 +1,48 @@
+# thepufflette.co — Supabase CLI config.
+#
+# The important part of this file is the per-function `verify_jwt` settings
+# below. Without them the CLI defaults every function to verify_jwt = true,
+# which means each deploy of a publicly-called function has to remember
+# `--no-verify-jwt` on the command line. Forgetting it once on the Paystack
+# webhook silently breaks payment recovery: Paystack's calls start returning
+# 401 and paid orders stop being backstopped. Keeping the setting here makes
+# a plain `supabase functions deploy <name>` correct every time.
+#
+# Link this project with:
+#   supabase link --project-ref mlixtbyhsltflysatsib
+
+project_id = "mlixtbyhsltflysatsib"
+
+# ── Publicly-invoked functions (verify_jwt MUST stay false) ─────────────────
+# These are called by external services or opened straight from a browser, so
+# no Supabase JWT is ever present. Each one does its own authentication.
+
+# Paystack calls this on charge.success. Authenticates via the HMAC SHA-512
+# x-paystack-signature header checked against DT_PAYSTACK_SECRET.
+[functions.diamond-paystack-webhook]
+verify_jwt = false
+
+# Fan-out router that forwards the raw body + signature to the per-shop
+# webhooks; those are the security gate.
+[functions.central-paystack-webhook]
+verify_jwt = false
+
+# Resend delivery/open/click events. Authenticates via the Svix signature
+# when DT_RESEND_WEBHOOK_SECRET is set.
+[functions.diamond-resend-webhook]
+verify_jwt = false
+
+# One-click unsubscribe link opened from an email in the customer's browser.
+# Authenticates via its own signed ?e=<email>.<hmac> token.
+[functions.diamond-unsubscribe]
+verify_jwt = false
+
+# Instagram/Meta webhook — needs the public hub.challenge handshake to verify
+# the subscription.
+[functions.diamond-ig-bot]
+verify_jwt = false
+
+# ── Everything else keeps the default verify_jwt = true ─────────────────────
+# diamond-send-order-email, diamond-order-status-email and the AI email
+# functions are only ever called by our own code with an anon or service-role
+# key, so they should keep requiring a JWT. Don't add them here.
