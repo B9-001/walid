@@ -393,12 +393,17 @@ export default function CheckoutView() {
     // succeeds, so abandoned checkouts don't burn order numbers.
     const paymentRef = generatePaymentRef();
 
-    const itemsSummary = items.map((it) => `${it.quantity}× ${it.name}`).join(", ");
+    const itemsSummary = items
+      .map((it) => `${it.quantity}× ${it.name}${it.flavor ? ` (${it.flavor})` : ""}`)
+      .join(", ");
     const metadata = {
       // Structured copy of the whole order: survives on Paystack even if the
       // customer closes the tab before we finish saving it to our database.
       order: {
-        items: expandForOrder(items).map((l) => ({ product_id: l.product_id, name: l.name, quantity: l.quantity, price: l.price })),
+        // Keep `flavor` here: this metadata is what diamond-paystack-webhook
+        // rebuilds the order from when the client-side save never lands, so
+        // dropping it would lose the customer's pick on recovered orders.
+        items: expandForOrder(items).map((l) => ({ product_id: l.product_id, name: l.name, quantity: l.quantity, price: l.price, ...(l.flavor ? { flavor: l.flavor } : {}) })),
         subtotal,
         discount,
         coupon_code: couponLabel,
@@ -740,7 +745,9 @@ export default function CheckoutView() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-[13px] font-semibold text-brand-dark leading-tight truncate">{it.name}</p>
-                    <p className="font-sans text-[11px] text-brand-grey">×{it.quantity}</p>
+                    <p className="font-sans text-[11px] text-brand-grey">
+                      ×{it.quantity}{it.flavor ? ` · ${it.flavor}` : ""}
+                    </p>
                   </div>
                   <span className="font-sans text-[13px] font-semibold text-brand-plum whitespace-nowrap">
                     {formatNaira(it.price * it.quantity)}

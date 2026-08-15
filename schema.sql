@@ -33,6 +33,7 @@ create table if not exists diamond_products (
   base_price          integer not null default 0,     -- kobo (used when no size tiers)
   old_price           integer,                        -- kobo, struck-through sale price
   sizes               jsonb default '[]'::jsonb,      -- [{label, price, serves}] price in kobo
+  flavors             jsonb not null default '[]'::jsonb, -- ["Oreo","Lotus",…]; empty = no flavour picker
   featured            boolean default false,
   active              boolean default true,
   stock_level         integer,                         -- null = unlimited; 0 = sold out

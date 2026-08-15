@@ -18,11 +18,16 @@ type FormState = {
   offer_line: string;
   is_special_offer: boolean;
   stock_level: number | null; // null = unlimited
+  flavors: string[]; // empty = no flavour picker on the product page
   featured: boolean;
   active: boolean;
   preorder: boolean;
   preorder_release_at: string; // datetime-local value (local time, no tz)
 };
+
+// One-click options in the product form. Not a fixed list — anything typed into
+// "Add another flavour" is saved alongside these.
+const FLAVOR_PRESETS = ["Oreo", "Lotus", "Chocolate Sprinkle"];
 
 const blank = (cat: string): FormState => ({
   name: "",
@@ -35,6 +40,7 @@ const blank = (cat: string): FormState => ({
   offer_line: "",
   is_special_offer: false,
   stock_level: null,
+  flavors: [],
   featured: false,
   active: true,
   preorder: false,
@@ -58,6 +64,7 @@ export default function AdminProducts() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState<FormState>(blank(""));
+  const [newFlavor, setNewFlavor] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
 
@@ -93,6 +100,7 @@ export default function AdminProducts() {
       offer_line: p.offer_line || "",
       is_special_offer: p.is_special_offer ?? false,
       stock_level: p.stock_level ?? null,
+      flavors: Array.isArray(p.flavors) ? p.flavors : [],
       featured: p.featured,
       active: p.active,
       preorder: p.preorder ?? false,
@@ -147,6 +155,24 @@ export default function AdminProducts() {
     }
   };
 
+  // Flavours are matched case-insensitively so "oreo" can't be added twice.
+  const hasFlavor = (f: string) => form.flavors.some((x) => x.toLowerCase() === f.toLowerCase());
+
+  const toggleFlavor = (f: string) =>
+    setForm((prev) => ({
+      ...prev,
+      flavors: prev.flavors.some((x) => x.toLowerCase() === f.toLowerCase())
+        ? prev.flavors.filter((x) => x.toLowerCase() !== f.toLowerCase())
+        : [...prev.flavors, f],
+    }));
+
+  const addFlavor = () => {
+    const f = newFlavor.trim();
+    if (!f) return;
+    if (!hasFlavor(f)) setForm((prev) => ({ ...prev, flavors: [...prev.flavors, f] }));
+    setNewFlavor("");
+  };
+
   const removeImage = (i: number) =>
     setForm((f) => ({ ...f, images: f.images.filter((_, idx) => idx !== i) }));
 
@@ -175,6 +201,7 @@ export default function AdminProducts() {
         offer_line: form.offer_line.trim() || null,
         is_special_offer: form.is_special_offer,
         stock_level: form.stock_level,
+        flavors: form.flavors,
         featured: form.featured,
         active: form.active,
         preorder: form.preorder,
@@ -377,6 +404,63 @@ export default function AdminProducts() {
                   />
                   <p className="mt-1.5 text-[11px] text-brand-grey">
                     Gives this product its own promo card on the homepage (photo, badges, savings) and a highlighted line in the cart. Set Old price and Special offer line above to control what it shows.
+                  </p>
+                </div>
+
+                <div className="border-t border-brand-line pt-5">
+                  <Label>Flavour options <span className="normal-case opacity-60">(leave empty for no flavour choice)</span></Label>
+                  <div className="flex flex-wrap gap-2">
+                    {FLAVOR_PRESETS.map((f) => {
+                      const on = hasFlavor(f);
+                      return (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => toggleFlavor(f)}
+                          className={`inline-flex items-center gap-2 pl-2.5 pr-4 py-2 rounded-full border font-sans text-[11px] font-medium transition-all ${
+                            on
+                              ? "border-brand-primary bg-brand-blush/60 text-brand-dark"
+                              : "border-brand-line bg-brand-light text-brand-dark/60 hover:border-brand-primary"
+                          }`}
+                        >
+                          <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${on ? "bg-brand-primary border-brand-primary" : "border-brand-line bg-brand-cream"}`}>
+                            {on && <svg className="w-2.5 h-2.5 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                          </span>
+                          {f}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {form.flavors.filter((f) => !FLAVOR_PRESETS.some((p) => p.toLowerCase() === f.toLowerCase())).length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.flavors
+                        .filter((f) => !FLAVOR_PRESETS.some((p) => p.toLowerCase() === f.toLowerCase()))
+                        .map((f) => (
+                          <span key={f} className="inline-flex items-center gap-2 pl-4 pr-2 py-2 rounded-full border border-brand-primary bg-brand-blush/60 font-sans text-[11px] font-medium text-brand-dark">
+                            {f}
+                            <button type="button" onClick={() => toggleFlavor(f)} aria-label={`Remove ${f}`} className="text-brand-dark/40 hover:text-red-500">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                          </span>
+                        ))}
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 mt-3">
+                    <input
+                      value={newFlavor}
+                      onChange={(e) => setNewFlavor(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addFlavor(); } }}
+                      placeholder="Add another flavour…"
+                      className="flex-1 bg-brand-light border border-brand-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-primary"
+                    />
+                    <button type="button" onClick={addFlavor} className="px-5 rounded-xl border border-brand-line text-[10px] font-bold tracking-widest uppercase text-brand-dark hover:bg-brand-dark hover:text-brand-light transition-colors">
+                      Add
+                    </button>
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-brand-grey">
+                    Customers must pick one of these before adding this product to their cart, and their choice shows on the order and in the confirmation email. Leave empty and no flavour picker appears.
                   </p>
                 </div>
 

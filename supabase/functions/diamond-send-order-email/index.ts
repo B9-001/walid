@@ -51,7 +51,7 @@ function itemsRows(items: any[]): string {
     .map(
       (it) => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #eaddc9;"><strong style="color:${DARK};">${it.name}</strong> &times;${it.quantity ?? 1}${it.note ? `<br><span style="font-size:12px;color:#8a7c6f;font-style:italic;">“${it.note}”</span>` : ""}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #eaddc9;"><strong style="color:${DARK};">${it.name}</strong> &times;${it.quantity ?? 1}${it.flavor ? `<br><span style="font-size:12px;color:${COCOA};font-weight:600;">Flavour: ${it.flavor}</span>` : ""}${it.note ? `<br><span style="font-size:12px;color:#8a7c6f;font-style:italic;">“${it.note}”</span>` : ""}</td>
       <td align="right" style="padding:10px 0;border-bottom:1px solid #eaddc9;color:${COCOA};font-weight:600;white-space:nowrap;">${naira((it.price || 0) * (it.quantity ?? 1))}</td>
     </tr>`,
     )

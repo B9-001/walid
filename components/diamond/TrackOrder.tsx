@@ -116,7 +116,9 @@ export default function TrackOrder() {
                   <div key={i} className="flex justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-sans text-sm font-semibold text-brand-dark">{it.name}</p>
-                      <p className="font-sans text-[11px] text-brand-grey">×{it.quantity}</p>
+                      <p className="font-sans text-[11px] text-brand-grey">
+                        ×{it.quantity}{it.flavor ? ` · ${it.flavor}` : ""}
+                      </p>
                     </div>
                     <span className="font-sans text-sm font-semibold text-brand-plum whitespace-nowrap">
                       {formatNaira(it.price * it.quantity)}
