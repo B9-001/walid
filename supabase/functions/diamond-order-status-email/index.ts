@@ -48,7 +48,7 @@ function statusCopy(status: string, method: string): { title: string; line: stri
 function itemsRows(items: any[]): string {
   return (Array.isArray(items) ? items : []).map((it) => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #f0e0ea;"><strong style="color:${DARK};">${it.name}</strong> &times;${it.quantity ?? 1}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #f0e0ea;"><strong style="color:${DARK};">${it.name}</strong> &times;${it.quantity ?? 1}${it.flavor ? `<br><span style="font-size:12px;color:${PLUM};font-weight:600;">Flavour: ${it.flavor}</span>` : ""}</td>
       <td align="right" style="padding:10px 0;border-bottom:1px solid #f0e0ea;color:${PLUM};font-weight:600;white-space:nowrap;">${naira((it.price || 0) * (it.quantity ?? 1))}</td>
     </tr>`).join("");
 }
