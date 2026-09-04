@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { formatNaira } from "@/lib/format";
 import { validateCoupon, getAvailableVouchers, type AvailableVoucher } from "@/lib/coupon";
-import { setOfferMode } from "@/lib/offer";
+import { setOfferMode, freeDeliveryMin, OFFER_FREE_DELIVERY_MIN } from "@/lib/offer";
 import FreeDeliveryBar from "@/components/diamond/FreeDeliveryBar";
 import {
   hasBundle,
@@ -41,6 +41,17 @@ export default function CartView() {
   const [vouchers, setVouchers] = useState<AvailableVoucher[]>([]);
   const [loadingVouchers, setLoadingVouchers] = useState(true);
   const [suggestions, setSuggestions] = useState<SuggestionProduct[]>([]);
+  // Threshold checkout will actually apply, so the progress bar can't advertise
+  // a different figure from the one that unlocks free delivery.
+  const [freeThreshold, setFreeThreshold] = useState<number>(OFFER_FREE_DELIVERY_MIN);
+  useEffect(() => {
+    supabase
+      .from("diamond_site_settings")
+      .select("free_delivery_threshold")
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => setFreeThreshold(freeDeliveryMin(data?.free_delivery_threshold)));
+  }, []);
 
   const couponCtx = { userId: user?.id ?? null, email: user?.email ?? null };
   const cartLines = items.map((it) => ({ product_id: it.product_id, price: it.price, quantity: it.quantity }));
@@ -310,7 +321,7 @@ export default function CartView() {
             </p>
           </div>
         ) : (
-          <FreeDeliveryBar subtotal={subtotal} />
+          <FreeDeliveryBar subtotal={subtotal} threshold={freeThreshold} />
         )}
       </div>
 

@@ -12,7 +12,7 @@ import { validateCoupon, incrementCouponUsage } from "@/lib/coupon";
 import { payWithPaystack, generatePaymentRef, generateOrderNumber } from "@/lib/paystack";
 import { attributeReferral } from "@/lib/referral";
 import { getSource } from "@/lib/source";
-import { isOfferMode, setOfferMode, OFFER_FREE_DELIVERY_MIN, serviceFeeFor } from "@/lib/offer";
+import { isOfferMode, setOfferMode, freeDeliveryMin, serviceFeeFor } from "@/lib/offer";
 import { hasBundle, cartSavings, expandForOrder } from "@/lib/bundles";
 import { getShopStatus, DEFAULT_BUSINESS_HOURS, watTodayISO, addDaysISO, daySlots, isOpenDay, formatDateLabel } from "@/lib/hours";
 import type { SiteSettings } from "@/lib/types";
@@ -164,11 +164,11 @@ export default function CheckoutView() {
 
   const selectedArea = deliveryAreas.find((a) => a.id === selectedAreaId) ?? null;
 
-  // Free delivery for everyone (both funnels) once the order reaches ₦20,000.
-  // Admin's free_delivery_threshold can lower the bar, never raise it.
-  const freeThreshold = settings.free_delivery_threshold
-    ? Math.min(settings.free_delivery_threshold, OFFER_FREE_DELIVERY_MIN)
-    : OFFER_FREE_DELIVERY_MIN;
+  // Free delivery for everyone (both funnels) once the order reaches the
+  // threshold in force — admin's "Free delivery over" setting, or ₦20,000.
+  // Shared with the announcement bar and the cart progress bar so the figure
+  // customers are shown is always the one actually applied here.
+  const freeThreshold = freeDeliveryMin(settings.free_delivery_threshold);
 
   const baseDeliveryFee = method === "pickup" ? 0 : (selectedArea?.fee ?? 0);
   // Bundles always include free delivery; otherwise it unlocks at the ₦20k threshold.
@@ -532,10 +532,10 @@ export default function CheckoutView() {
       ) : offerMode ? (
         <div className="mb-9 bg-brand-primary/5 border border-brand-primary/30 rounded-2xl p-4 sm:p-5">
           <p className="font-sans text-sm text-brand-dark">
-            🚚 {subtotal >= OFFER_FREE_DELIVERY_MIN ? (
+            🚚 {subtotal >= freeThreshold ? (
               <><span className="font-bold text-brand-primary">FREE delivery</span> applied to this order.</>
             ) : (
-              <>Spend <span className="font-bold text-brand-primary">{formatNaira(OFFER_FREE_DELIVERY_MIN - subtotal)}</span> more for <span className="font-bold">FREE delivery</span>.</>
+              <>Spend <span className="font-bold text-brand-primary">{formatNaira(freeThreshold - subtotal)}</span> more for <span className="font-bold">FREE delivery</span>.</>
             )}
           </p>
         </div>
