@@ -4,10 +4,19 @@ import { formatNaira } from "@/lib/format";
 import { OFFER_FREE_DELIVERY_MIN } from "@/lib/offer";
 
 // "Add ₦X more to get FREE delivery" — shown on both carts.
-export default function FreeDeliveryBar({ subtotal }: { subtotal: number }) {
-  const gap = Math.max(0, OFFER_FREE_DELIVERY_MIN - subtotal);
-  const unlocked = subtotal >= OFFER_FREE_DELIVERY_MIN;
-  const pct = Math.min(100, Math.round((subtotal / OFFER_FREE_DELIVERY_MIN) * 100));
+// `threshold` should be the value checkout will actually apply (see
+// freeDeliveryMin in lib/offer). It falls back to the ₦20,000 default so the
+// bar still renders correctly before the settings row has loaded.
+export default function FreeDeliveryBar({
+  subtotal,
+  threshold = OFFER_FREE_DELIVERY_MIN,
+}: {
+  subtotal: number;
+  threshold?: number;
+}) {
+  const gap = Math.max(0, threshold - subtotal);
+  const unlocked = subtotal >= threshold;
+  const pct = Math.min(100, Math.round((subtotal / threshold) * 100));
 
   return (
     <div className={`rounded-2xl p-4 sm:p-5 border ${unlocked ? "bg-brand-primary/5 border-brand-primary/30" : "bg-brand-light border-brand-primary/25"}`}>

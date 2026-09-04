@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
+import { formatNaira } from "@/lib/format";
+import { freeDeliveryMin } from "@/lib/offer";
 
 export default function AnnouncementBar() {
   const [text, setText] = useState<string>("");
@@ -10,11 +12,21 @@ export default function AnnouncementBar() {
   useEffect(() => {
     supabase
       .from("diamond_site_settings")
-      .select("announcement")
+      .select("announcement, free_delivery_threshold")
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
-        if (data?.announcement) setText(data.announcement);
+        const custom = data?.announcement?.trim();
+        if (custom) {
+          setText(custom);
+          return;
+        }
+        // No custom announcement set (or the settings row doesn't exist yet):
+        // fall back to the free-delivery message rather than hiding the bar
+        // entirely. Built from the threshold actually in force, so it can never
+        // advertise a figure the checkout doesn't honour.
+        const min = freeDeliveryMin(data?.free_delivery_threshold);
+        setText(`Free delivery on orders over ${formatNaira(min)}`);
       });
   }, []);
 

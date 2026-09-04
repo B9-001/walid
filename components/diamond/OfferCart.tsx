@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/cart";
+import { supabase } from "@/lib/supabase";
 import { formatNaira } from "@/lib/format";
-import { setOfferMode, OFFER_FREE_DELIVERY_MIN } from "@/lib/offer";
+import { setOfferMode, freeDeliveryMin, OFFER_FREE_DELIVERY_MIN } from "@/lib/offer";
 import FreeDeliveryBar from "@/components/diamond/FreeDeliveryBar";
 import CartSuggestions from "@/components/diamond/CartSuggestions";
 
@@ -17,7 +18,19 @@ export default function OfferCart() {
   // Being on this page means they're in the offer funnel (no vouchers)
   useEffect(() => { setOfferMode(true); }, []);
 
-  const unlocked = subtotal >= OFFER_FREE_DELIVERY_MIN;
+  // Same threshold checkout applies, so this page can't promise free delivery
+  // the checkout then declines to give.
+  const [freeThreshold, setFreeThreshold] = useState<number>(OFFER_FREE_DELIVERY_MIN);
+  useEffect(() => {
+    supabase
+      .from("diamond_site_settings")
+      .select("free_delivery_threshold")
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => setFreeThreshold(freeDeliveryMin(data?.free_delivery_threshold)));
+  }, []);
+
+  const unlocked = subtotal >= freeThreshold;
 
   const [stockMsg, setStockMsg] = useState("");
   const [checkingStock, setCheckingStock] = useState(false);
@@ -63,7 +76,7 @@ export default function OfferCart() {
 
       {/* Free-delivery progress — the offer's hook */}
       <div className="mb-9">
-        <FreeDeliveryBar subtotal={subtotal} />
+        <FreeDeliveryBar subtotal={subtotal} threshold={freeThreshold} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -137,9 +150,9 @@ export default function OfferCart() {
       </div>
 
       <CartSuggestions
-        gap={Math.max(0, OFFER_FREE_DELIVERY_MIN - subtotal)}
+        gap={Math.max(0, freeThreshold - subtotal)}
         heading={unlocked ? "You might also like" : "Reach free delivery"}
-        note={unlocked ? undefined : "Add a little more to hit ₦20,000 and unlock free delivery"}
+        note={unlocked ? undefined : `Add a little more to hit ${formatNaira(freeThreshold)} and unlock free delivery`}
       />
     </div>
   );
