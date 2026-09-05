@@ -16,7 +16,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("DT_RESEND_API_KEY") || Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <onboarding@resend.dev>";
+const FROM_EMAIL = Deno.env.get("DT_FROM_EMAIL") || "thepufflette.co <orders@thepuffletteco.cc>";
 const SITE_URL = Deno.env.get("SITE_URL") || "https://www.thepuffletteco.cc";
 
 const PINK = "#EC008C", PLUM = "#8B3A62", DARK = "#2B1722";
