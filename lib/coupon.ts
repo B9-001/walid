@@ -172,9 +172,13 @@ export async function getAvailableVouchers(
   });
 }
 
+// Atomic in the database. The old version read usage_count and wrote back
+// value + 1, so two customers redeeming the same single-use voucher at the
+// same moment both read the same count and both wrote the same number — the
+// voucher's usage_limit never caught up and it could be redeemed more times
+// than allowed. diamond_increment_coupon_usage does the increment inside one
+// UPDATE, so concurrent redemptions can't lose each other's writes.
 export async function incrementCouponUsage(couponId: string) {
-  const { data } = await supabase.from("diamond_coupons").select("usage_count").eq("id", couponId).maybeSingle();
-  if (data) {
-    await supabase.from("diamond_coupons").update({ usage_count: (data.usage_count || 0) + 1 }).eq("id", couponId);
-  }
+  const { error } = await supabase.rpc("diamond_increment_coupon_usage", { p_coupon_id: couponId });
+  if (error) console.error("incrementCouponUsage failed:", error.message);
 }

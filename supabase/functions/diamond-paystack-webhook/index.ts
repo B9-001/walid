@@ -195,6 +195,16 @@ async function handleChargeSuccess(data: any) {
     }).select("order_number").single();
     if (!error) { order = ins; break; }
     if (error.code !== "23505") { console.error("[PS-WEBHOOK] order insert failed:", error); return; }
+    // 23505 is shared by every unique constraint on the table, so the message
+    // has to be inspected. Only an order_number collision is worth retrying.
+    // A payment_reference collision means the website saved this order in the
+    // gap between our idempotency check and this insert — the client owns it
+    // from here (including the confirmation email), so stop rather than
+    // burning five more inserts and logging a bogus failure.
+    if (error.message?.includes("payment_reference")) {
+      console.log(`[PS-WEBHOOK] ${reference} saved by the website mid-insert — nothing to recover`);
+      return;
+    }
   }
   if (!order) { console.error("[PS-WEBHOOK] could not generate a unique order number"); return; }
   console.log(`[PS-WEBHOOK] recovered order ${order.order_number} for ${reference}`);
@@ -203,6 +213,17 @@ async function handleChargeSuccess(data: any) {
   // recovering this order at all), so fire the Purchase event server-side —
   // otherwise this paid conversion would never reach Meta.
   await sendMetaPurchase({ order_number: order.order_number, total_price: amount, customer_email: customerEmail, customer_phone: customerPhone });
+
+  // Count the voucher redemption. The website does this itself after a normal
+  // save, but we only get here when it never ran — so without this a
+  // single-use voucher used on a recovered order stayed redeemable forever.
+  if (couponCode) {
+    try {
+      const { data: coupon } = await supabase
+        .from("diamond_coupons").select("id").eq("code", couponCode).maybeSingle();
+      if (coupon) await supabase.rpc("diamond_increment_coupon_usage", { p_coupon_id: coupon.id });
+    } catch (e) { console.error("[PS-WEBHOOK] coupon usage increment failed:", e); }
+  }
 
   // Stock is decremented by a DB trigger on insert (shared with website orders).
   // Fire the same admin + customer email as a normal order.

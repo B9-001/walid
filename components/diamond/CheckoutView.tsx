@@ -312,8 +312,14 @@ export default function CheckoutView() {
       /* non-fatal */
     }
 
-    for (const c of coupons) {
-      try { await incrementCouponUsage(c.couponId); } catch { /* non-fatal */ }
+    // Same guard as the confirmation email below: if this order was adopted
+    // from a row diamond-paystack-webhook already inserted, the webhook has
+    // already counted the redemption, and counting it again here would burn
+    // two uses of the voucher for one order.
+    if (!adoptedExisting) {
+      for (const c of coupons) {
+        try { await incrementCouponUsage(c.couponId); } catch { /* non-fatal */ }
+      }
     }
 
     // Best-effort confirmation email (edge function may not be deployed yet).
@@ -382,9 +388,21 @@ export default function CheckoutView() {
       const checks = await Promise.all(coupons.map((c) => validateCoupon(c.code, subtotal, { userId: user?.id ?? null, email: user?.email ?? null }, lines)));
       const stillValid = coupons.filter((_, i) => checks[i].valid);
       if (stillValid.length !== coupons.length) {
+        const dropped = coupons.filter((_, i) => !checks[i].valid).map((c) => c.code);
         setCoupons(stillValid);
         if (stillValid.length) localStorage.setItem(COUPON_KEY, JSON.stringify(stillValid));
         else localStorage.removeItem(COUPON_KEY);
+        // Stop here, exactly like the reconcile() guard above. `discount` and
+        // `total` were computed from the old `coupons` array and setCoupons()
+        // doesn't change them mid-render — falling through would charge the
+        // customer the discounted total for a voucher that is no longer valid
+        // (e.g. someone else just used up its last redemption) and record that
+        // discount on the order. The shop eats the difference.
+        setError(
+          `${dropped.join(", ")} ${dropped.length > 1 ? "are" : "is"} no longer valid. Your total has been updated — please review it and pay again.`
+        );
+        setSubmitting(false);
+        return;
       }
     }
 
